@@ -12,7 +12,6 @@ class IndexHandler(tornado.web.RequestHandler):
         self.render('index.html', hello_world='Hello, world!')
 
 class SocketConnection(tornadio2.conn.SocketConnection):
-    # Class level variable
     participants = set()
 
     def on_open(self, info):
@@ -20,15 +19,17 @@ class SocketConnection(tornadio2.conn.SocketConnection):
         self.participants.add(self)
 
     def on_message(self, message):
-        # Pong message back
-        for p in self.participants:
-            p.send(message)
+        for participant in self.participants:
+            if participant != self:
+                participant.send(message)
 
     def on_close(self):
         self.participants.remove(self)
 
 application = tornado.web.Application(
-    tornadio2.TornadioRouter(SocketConnection).apply_routes([
+    tornadio2.TornadioRouter(SocketConnection,{
+        'enabled_protocols': ['websocket', 'xhr-polling', 'jsonp-polling', 'htmlfile'],
+    }, namespace='socket').apply_routes([
         (r'/', IndexHandler),
         (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': STATIC_PATH})
     ]),
@@ -40,4 +41,5 @@ application = tornado.web.Application(
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
-    tornadio2.SocketServer(application)
+    tornadio2.SocketServer(application, auto_start=False)
+    tornado.ioloop.IOLoop().instance().start()
