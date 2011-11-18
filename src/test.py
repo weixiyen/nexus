@@ -69,6 +69,7 @@
 
 from game import Game
 import logging
+import tornado.ioloop
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -81,5 +82,4 @@ game.spawn('Lizard')
 game.spawn('Lizard')
 game.spawn('Lizard')
 
-for entity in game.entities:
-    logging.debug(list(entity.nearby()))
+tornado.ioloop.IOLoop.instance().start()
