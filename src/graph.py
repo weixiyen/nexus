@@ -35,10 +35,21 @@ class Node(object):
         y = self.y
 
         for i in range(8):
+            x2 = x + DX[i]
+            y2 = y + DY[i]
+
+            if x2 < 0 or y2 < 0:
+                continue
+
             try:
-                ret.append(self.graph.get_node(x + DX[i], y + DY[i]))
+                node = self.graph.get_node(x + DX[i], y + DY[i])
             except IndexError:
-                pass
+                continue
+
+            if not node.is_walkable():
+                continue
+
+            ret.append(node)
 
         return ret
 
@@ -95,7 +106,7 @@ class Graph(object):
             current_node.closed = True
 
             for neighbor in current_node.get_neigbhors():
-                if neighbor.closed or not neighbor.is_walkable():
+                if neighbor.closed:
                     continue
 
                 g_score = current_node.g + 1

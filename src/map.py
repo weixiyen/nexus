@@ -10,14 +10,25 @@ class Map(object):
         for i in range(height):
             self._data.append([0] * width)
 
-        for x in range(height / 8, height * 7 / 8):
-            self._data[width / 2][x] = 1
+        moo = width / 10
 
-        for x in range(height / 8, height * 7 / 8):
-            self._data[width / 5][x] = 1
+        for x in range(5, self.height * 3 / 4):
+            self._data[width / 10][moo + x] = 1
 
-        for y in range(width/8, width * 7 / 8):
-            self._data[y][height / 2] = 1
+        moo = 0
+
+        for x in range(5, self.height * 3 / 4):
+            self._data[-(width / 10 + 1)][moo + x] = 1
+
+        moo = width / 10
+
+        for y in range(5, self.height * 3 / 4):
+            self._data[moo + y][width / 10] = 1
+
+        moo = 0
+
+        for y in range(5, self.height * 3 / 4):
+            self._data[moo + y][-(width / 10 + 1)] = 1
 
         self.graph = Graph(self)
 

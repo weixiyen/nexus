@@ -16,7 +16,7 @@ class Game(object):
         tornado.ioloop.PeriodicCallback(self.next_iteration, 30).start()
 
         self.logger = logging.getLogger('game')
-        self.logger.setLevel(logging.DEBUG)
+#        self.logger.setLevel(logging.DEBUG)
 
     def serialize(self):
         return {

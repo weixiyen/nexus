@@ -48,7 +48,7 @@ class Entity(object):
         target = target or self.target
 
         if self.game.iteration_counter % 10:
-            if self.game.map.get_distance(self, target) > 10:
+            if self.game.map.get_distance(self, target) > 15:
                 self.target = None
                 self._movement_queue = None
                 self.game.logger.debug('Lost Aggro %r -> %r' % (self, target))
