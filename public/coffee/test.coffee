@@ -4,7 +4,9 @@ socket = io.connect "#{location.protocol}//#{location.host}",
 socket.on 'connect', ->
   console.log 'connected'
 
-socket.on 'game:init', (state) ->
+socket.on 'initialize', (state) ->
+  $('body').empty()
+
   for x in [0...state.map.length]
     row = state.map[x]
 
@@ -37,12 +39,6 @@ socket.on 'move', (entity) ->
 
 socket.on 'dead', (entity) ->
   $(".entity-#{entity.id}").removeClass("entity-#{entity.id}").css('background-color', 'white')
-
-socket.on 'log', (message) ->
-  console.log(message)
-
-socket.on 'message', (message) ->
-  console.log message
 
 socket.on 'disconnect', ->
   console.log 'disconnceted'

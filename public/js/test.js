@@ -6,8 +6,9 @@
   socket.on('connect', function() {
     return console.log('connected');
   });
-  socket.on('game:init', function(state) {
+  socket.on('initialize', function(state) {
     var column, entity, row, slot, x, y, _i, _len, _ref, _ref2, _ref3, _results;
+    $('body').empty();
     for (x = 0, _ref = state.map.length; 0 <= _ref ? x < _ref : x > _ref; 0 <= _ref ? x++ : x--) {
       row = state.map[x];
       for (y = 0, _ref2 = row.length; 0 <= _ref2 ? y < _ref2 : y > _ref2; 0 <= _ref2 ? y++ : y--) {
@@ -44,12 +45,6 @@
   });
   socket.on('dead', function(entity) {
     return $(".entity-" + entity.id).removeClass("entity-" + entity.id).css('background-color', 'white');
-  });
-  socket.on('log', function(message) {
-    return console.log(message);
-  });
-  socket.on('message', function(message) {
-    return console.log(message);
   });
   socket.on('disconnect', function() {
     return console.log('disconnceted');

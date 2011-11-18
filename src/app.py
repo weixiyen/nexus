@@ -30,7 +30,7 @@ class SocketConnection(tornadio2.conn.SocketConnection):
     def on_open(self, info):
         game = self.get_game()
         game.add_participant(self)
-        self.emit('game:init', game.serialize())
+        self.emit('initialize', game.serialize())
 
     def on_message(self, message):
         pass

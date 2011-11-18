@@ -50,7 +50,6 @@ class Game(object):
         mob = type_(self, name, x, y)
 
         logging.debug('Spawning %r' % mob)
-        self.emit('log', 'Spawning %r' % mob)
 
     @property
     def entities(self):

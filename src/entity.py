@@ -48,7 +48,6 @@ class Entity(object):
 
         if target and target.take_damage(1):
             logging.debug('Attacking %r -> %r' % (self, self._target))
-            self.emit('log', 'Attacking %r -> %r' % (self, self._target))
 
             if not target.is_alive():
                 self._target = None
@@ -72,14 +71,12 @@ class Entity(object):
             if random.randint(1, 10) == 5:
                 damage *= 2
                 logging.debug('Critical!')
-                self.emit('log', 'Critical!')
 
             self.hp -= damage
 
             if not self.is_alive():
                 self.game.remove_entity(self)
                 logging.debug('Killed %r' % self)
-                self.emit('log', 'Killed %r' % self)
                 self.emit('dead', self.serialize())
 
             return True
@@ -155,13 +152,11 @@ class Monster(MovableEntity):
                 self._last_move = now
 
                 logging.debug('Moving %r' % self)
-                self.emit('log', 'Moving %r' % self)
             else:
                 try:
                     self._target = self.nearby().next()
                     self.move_to(self._target)
                     self._walk_queue = astar(self.game.map, 4, dx, dy, self.x, self.y, self._target.x, self._target.y)
                     logging.debug('Targeting %r' % self._target)
-                    self.emit('log', 'Targeting %r' % self._target)
                 except StopIteration:
                     pass
