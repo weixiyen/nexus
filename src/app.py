@@ -4,6 +4,7 @@ import tornado.options
 import os
 import tornadio2
 import uuid
+import time
 from game import Game
 
 ROOT_PATH = os.path.dirname(__file__)
@@ -47,10 +48,9 @@ class SocketConnection(tornadio2.conn.SocketConnection):
     @tornadio2.event('move')
     def move(self, message):
         x, y = message
-        import time
         st = time.time()
         self.entity.move(x, y)
-        print '%.2f' % (time.time() - st)
+        self.entity.game.logger.debug('Player A*: %.2f' % (time.time() - st))
 
     def on_message(self, message):
         pass

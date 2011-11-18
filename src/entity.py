@@ -135,14 +135,14 @@ class MovableEntity(Entity):
             return
 
         if self._movement_queue:
-             if not ignore_atk and self.is_attacking() and self.game.map.get_distance(self, self.target) > 2:
-                 self.move_to(self.target)
+            if not ignore_atk and self.is_attacking() and self.game.map.get_distance(self, self.target) > 2:
+                self.move_to(self.target)
 
-             dx, dy = self.game.map.get_delta(self._movement_queue.pop(0))
+            x, y = self._movement_queue.pop()
 
-             self._move(self.x + dx, self.y + dy)
+            self._move(x, y)
 
-             raise StopIteration
+            raise StopIteration
 
     def next_iteration(self):
         self._execute_movement_queue()
