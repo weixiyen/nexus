@@ -1,5 +1,4 @@
 import math
-import logging
 import random
 from datetime import datetime, timedelta
 from astar import astar
@@ -61,7 +60,7 @@ class Entity(object):
     def get_distance(self, x, y):
         return math.sqrt(self.x * x + self.y * y)
 
-    def nearby(self, radius=10):
+    def nearby(self, radius=5):
         for entity in self.game.entities:
             if entity == self:
                 continue
@@ -111,8 +110,6 @@ dx = [1, 1, 0, -1, -1, -1, 0, 1]
 dy = [0, 1, 1, 1, 0, -1, -1, -1]
 
 class Monster(MovableEntity):
-    IDLE = 0
-
     def __init__(self, *args, **kwargs):
         MovableEntity.__init__(self, *args, **kwargs)
 
@@ -124,6 +121,14 @@ class Monster(MovableEntity):
         self._last_move = datetime.now()
         self.hp = 25
 
+    def aggro(self):
+        try:
+            self._target = self.nearby().next()
+            self._walk_queue = astar(self.game.map, 8, dx, dy, self.x, self.y, self._target.x, self._target.y)
+            self.game.logger.debug('Targeting %r' % self._target)
+        except StopIteration:
+            pass
+
     def iteration(self):
         now = datetime.now()
 
@@ -134,8 +139,9 @@ class Monster(MovableEntity):
            self.y += dy[op]
 
            self.move_to(self)
+           self.aggro()
         elif MovableEntity.iteration(self):
-            if self._last_move <= now - timedelta(seconds=1):
+            if self._last_move <= now - timedelta(seconds=2):
                 x = self.x
                 y = self.y
 
@@ -160,10 +166,4 @@ class Monster(MovableEntity):
 
                 self.game.logger.debug('Moving %r' % self)
             else:
-                try:
-                    self._target = self.nearby().next()
-                    self.move_to(self._target)
-                    self._walk_queue = astar(self.game.map, 8, dx, dy, self.x, self.y, self._target.x, self._target.y)
-                    self.game.logger.debug('Targeting %r' % self._target)
-                except StopIteration:
-                    pass
+                self.aggro()
