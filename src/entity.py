@@ -101,8 +101,8 @@ class MovableEntity(Entity):
 class Player(MovableEntity):
     pass
 
-dx = [1, 0, -1, 0]
-dy = [0, 1, 0, -1]
+dx = [1, 1, 0, -1, -1, -1, 0, 1]
+dy = [0, 1, 1, 1, 0, -1, -1, -1]
 
 class Monster(MovableEntity):
     IDLE = 0
@@ -148,7 +148,7 @@ class Monster(MovableEntity):
                 elif y > self.game.map.height - 1:
                     y = 0
 
-                self._walk_queue = astar(self.game.map, 4, dx, dy, self.x, self.y, x, y)
+                self._walk_queue = astar(self.game.map, 8, dx, dy, self.x, self.y, x, y)
 
                 self._last_move = now
 
@@ -157,7 +157,7 @@ class Monster(MovableEntity):
                 try:
                     self._target = self.nearby().next()
                     self.move_to(self._target)
-                    self._walk_queue = astar(self.game.map, 4, dx, dy, self.x, self.y, self._target.x, self._target.y)
+                    self._walk_queue = astar(self.game.map, 8, dx, dy, self.x, self.y, self._target.x, self._target.y)
                     logging.debug('Targeting %r' % self._target)
                 except StopIteration:
                     pass
