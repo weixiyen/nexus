@@ -1,0 +1,17 @@
+body {
+  overflow: hidden; }
+
+.pg-main {
+  position: absolute;
+  height: 0;
+  width: 0; }
+  .pg-main .map {
+    position: relative;
+    z-index: 0;
+    width: 0;
+    height: 0; }
+  .pg-main .interface {
+    position: absolute;
+    height: 0;
+    width: 0;
+    z-index: 1; }
