@@ -6,8 +6,8 @@ socket.on('connect', function () {
     console.log('connected')
 });
 
-socket.on('message', function () {
-    console.log(arguments)
+socket.on('message', function (message) {
+    console.log(message)
 });
 
 socket.on('disconnect', function () {

@@ -7,17 +7,28 @@ import datetime
 
 class Game(object):
     def __init__(self):
-        self.map = Map(20, 20)
+        self.participants = set()
+
+        self.map = Map(100, 100)
         self._entities = {}
 
         self.iteration()
+
+    def add_participant(self, p):
+        self.participants.add(p)
+
+    def remove_participant(self, p):
+        self.participants.remove(p)
+
+    def emit(self, *args):
+        for p in self.participants:
+            p.send(*args)
 
     def iteration(self):
         for entity in self.entities:
             entity.iteration()
 
         tornado.ioloop.IOLoop.instance().add_timeout(datetime.timedelta(milliseconds=30), self.iteration)
-
 
         logging.debug('Entities Alive: %r' % self.entities)
 
@@ -33,6 +44,7 @@ class Game(object):
         mob = type_(self, name, x, y)
 
         logging.debug('Spawning %r' % mob)
+        self.emit('Spawning %r' % mob)
 
     @property
     def entities(self):

@@ -12,19 +12,31 @@ class IndexHandler(tornado.web.RequestHandler):
         self.render('index.html', hello_world='Hello, world!')
 
 class SocketConnection(tornadio2.conn.SocketConnection):
-    participants = set()
+    @classmethod
+    def get_game(cls):
+        if not hasattr(cls, '_game'):
+            from game import Game
+            game = Game()
+            game.spawn('Lizard')
+            game.spawn('Lizard')
+            game.spawn('Lizard')
+            game.spawn('Lizard')
+            game.spawn('Lizard')
+            game.spawn('Lizard')
+            cls._game = game
+
+        return cls._game
 
     def on_open(self, info):
-        self.send('Welcome from the server.')
-        self.participants.add(self)
+        game = self.get_game()
+        game.add_participant(self)
 
     def on_message(self, message):
-        for participant in self.participants:
-            if participant != self:
-                participant.send(message)
+        pass
 
     def on_close(self):
-        self.participants.remove(self)
+        game = self.get_game()
+        game.remove_participant(self)
 
 application = tornado.web.Application(
     tornadio2.TornadioRouter(SocketConnection,{
