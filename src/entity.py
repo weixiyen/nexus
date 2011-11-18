@@ -26,6 +26,16 @@ class Entity(object):
     def __repr__(self):
         return '<%s: %s#%d [%d,%d]>' % (self.__class__.__name__, self.name, self.id, self.x, self.y)
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'x': self.x,
+            'y': self.y,
+            'hp': self.hp,
+            'target': self._target.id if self._target else None
+        }
+
     def emit(self, *args):
         self.game.emit(*args)
 
@@ -37,7 +47,7 @@ class Entity(object):
 
         if target and target.take_damage(1):
             logging.debug('Attacking %r -> %r' % (self, self._target))
-            self.emit('Attacking %r -> %r' % (self, self._target))
+            self.emit('log', 'Attacking %r -> %r' % (self, self._target))
 
             if not target.is_alive():
                 self._target = None
@@ -61,14 +71,15 @@ class Entity(object):
             if random.randint(1, 10) == 5:
                 damage *= 2
                 logging.debug('Critical!')
-                self.emit('Critical!')
+                self.emit('log', 'Critical!')
 
             self.hp -= damage
 
             if not self.is_alive():
                 self.game.remove_entity(self)
                 logging.debug('Killed %r' % self)
-                self.emit('Killed %r' % self)
+                self.emit('log', 'Killed %r' % self)
+                self.emit('dead', self.serialize())
 
             return True
         return False
@@ -84,7 +95,8 @@ class MovableEntity(Entity):
         self.x = x
         self.y = y
         logging.debug('Moving %r' % self)
-        self.emit('Moving %r' % self)
+        self.emit('log', 'Moving %r' % self)
+        self.emit('move', self.serialize())
 
     def move_to(self, entity):
         self.move(entity.x, entity.y)
@@ -95,13 +107,12 @@ class Player(MovableEntity):
 class Monster(MovableEntity):
     IDLE = 0
 
-
     def __init__(self, *args, **kwargs):
         MovableEntity.__init__(self, *args, **kwargs)
 
         self._home_x = self.x
         self._home_y = self.y
-        self._patrol_radius = 15
+        self._patrol_radius = 5
 
         self._last_move = datetime.now()
         self.hp = 10
@@ -138,6 +149,6 @@ class Monster(MovableEntity):
                     self._target = self.nearby().next()
                     self.move_to(self._target)
                     logging.debug('Targeting %r' % self._target)
-                    self.emit('Targeting %r' % self._target)
+                    self.emit('log', 'Targeting %r' % self._target)
                 except StopIteration:
                     pass

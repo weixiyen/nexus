@@ -9,10 +9,16 @@ class Game(object):
     def __init__(self):
         self.participants = set()
 
-        self.map = Map(100, 100)
+        self.map = Map(50, 50)
         self._entities = {}
 
         self.iteration()
+
+    def serialize(self):
+        return {
+            'map': self.map.serialize(),
+            'entities': [entity.serialize() for entity in self.entities]
+        }
 
     def add_participant(self, p):
         self.participants.add(p)
@@ -20,9 +26,9 @@ class Game(object):
     def remove_participant(self, p):
         self.participants.remove(p)
 
-    def emit(self, *args):
+    def emit(self, event, *args):
         for p in self.participants:
-            p.send(*args)
+            p.emit(event, *args)
 
     def iteration(self):
         for entity in self.entities:
@@ -44,7 +50,7 @@ class Game(object):
         mob = type_(self, name, x, y)
 
         logging.debug('Spawning %r' % mob)
-        self.emit('Spawning %r' % mob)
+        self.emit('log', 'Spawning %r' % mob)
 
     @property
     def entities(self):

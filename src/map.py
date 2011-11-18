@@ -18,3 +18,6 @@ class Map(object):
 
     def __getitem__(self, item):
         return self._data[item]
+
+    def serialize(self):
+        return self._data
