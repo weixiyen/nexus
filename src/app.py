@@ -3,6 +3,7 @@ import tornado.web
 import tornado.options
 import os
 import tornadio2
+from game import Game
 
 ROOT_PATH = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(ROOT_PATH, '../public')
@@ -15,15 +16,10 @@ class SocketConnection(tornadio2.conn.SocketConnection):
     @classmethod
     def get_game(cls):
         if not hasattr(cls, '_game'):
-            from game import Game
-            game = Game()
-            game.spawn('Lizard')
-            game.spawn('Lizard')
-            game.spawn('Lizard')
-            game.spawn('Lizard')
-            game.spawn('Lizard')
-            game.spawn('Lizard')
-            cls._game = game
+            cls._game = Game()
+
+            for i in xrange(10):
+                cls._game.spawn('Lizard')
 
         return cls._game
 
