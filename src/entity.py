@@ -24,7 +24,7 @@ class Entity(object):
         return self.name
 
     def __repr__(self):
-        return '<%s: (%d) %s [%d,%d]>' % (self.__class__.__name__, self.id, self.name, self.x, self.y)
+        return '<%s: %s#%d [%d,%d]>' % (self.__class__.__name__, self.name, self.id, self.x, self.y)
 
     def emit(self, *args):
         self.game.emit(*args)
