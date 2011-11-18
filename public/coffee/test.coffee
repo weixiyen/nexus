@@ -34,6 +34,7 @@ socket.on 'initialize', (state) ->
 socket.on 'move', (entity) ->
   color = if entity.target? then 'red' else 'gray'
 
+
   $(".entity-#{entity.id}").removeClass("entity-#{entity.id}").css('background-color', 'white')
   $("##{entity.x}-#{entity.y}").css('background-color', color).addClass("entity-#{entity.id}")
 

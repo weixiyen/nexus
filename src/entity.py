@@ -19,6 +19,7 @@ class Entity(object):
         self.hp = 0
         self._target = None
 
+        self._last_attack = datetime.now()
         self.game.add_entity(self)
 
     def __str__(self):
@@ -44,13 +45,18 @@ class Entity(object):
         return self._target is not None
 
     def attack(self, target=None):
-        target = target or self._target
+        now = datetime.now()
 
-        if target and target.take_damage(1):
-            logging.debug('Attacking %r -> %r' % (self, self._target))
+        if self._last_attack <= now - timedelta(milliseconds=100):
+            target = target or self._target
 
-            if not target.is_alive():
-                self._target = None
+            if target and target.take_damage(1):
+                self.game.logger.debug('Attacking %r -> %r' % (self, self._target))
+
+                if not target.is_alive():
+                    self._target = None
+
+            self._last_attack = now
 
     def get_distance(self, x, y):
         return math.sqrt(self.x * x + self.y * y)
@@ -70,13 +76,13 @@ class Entity(object):
         if self.is_alive():
             if random.randint(1, 10) == 5:
                 damage *= 2
-                logging.debug('Critical!')
+                self.game.logger.debug('Critical!')
 
             self.hp -= damage
 
             if not self.is_alive():
                 self.game.remove_entity(self)
-                logging.debug('Killed %r' % self)
+                self.game.logger.debug('Killed %r' % self)
                 self.emit('dead', self.serialize())
                 self.game.spawn(self.name)
 
@@ -116,7 +122,7 @@ class Monster(MovableEntity):
         self._walk_queue = []
 
         self._last_move = datetime.now()
-        self.hp = 10
+        self.hp = 25
 
     def iteration(self):
         now = datetime.now()
@@ -152,12 +158,12 @@ class Monster(MovableEntity):
 
                 self._last_move = now
 
-                logging.debug('Moving %r' % self)
+                self.game.logger.debug('Moving %r' % self)
             else:
                 try:
                     self._target = self.nearby().next()
                     self.move_to(self._target)
                     self._walk_queue = astar(self.game.map, 8, dx, dy, self.x, self.y, self._target.x, self._target.y)
-                    logging.debug('Targeting %r' % self._target)
+                    self.game.logger.debug('Targeting %r' % self._target)
                 except StopIteration:
                     pass

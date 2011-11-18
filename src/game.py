@@ -14,6 +14,9 @@ class Game(object):
 
         self.iteration()
 
+        self.logger = logging.getLogger('game')
+        self.logger.setLevel(logging.DEBUG)
+
     def serialize(self):
         return {
             'map': self.map.serialize(),
@@ -36,8 +39,6 @@ class Game(object):
 
         tornado.ioloop.IOLoop.instance().add_timeout(datetime.timedelta(milliseconds=30), self.iteration)
 
-        logging.debug('Entities Alive: %r' % self.entities)
-
     def spawn(self, name, x=None, y=None, type_=entity.Monster):
         if x is None or y is None:
             while True:
@@ -49,7 +50,7 @@ class Game(object):
 
         mob = type_(self, name, x, y)
 
-        logging.debug('Spawning %r' % mob)
+        self.logger.debug('Spawning %r' % mob)
 
     @property
     def entities(self):
