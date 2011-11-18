@@ -1,7 +1,6 @@
 import math
 import random
 from datetime import datetime, timedelta
-from astar import astar
 
 class Entity(object):
     id = 0
@@ -108,9 +107,6 @@ class MovableEntity(Entity):
 class Player(MovableEntity):
     pass
 
-dx = [1, 1, 0, -1, -1, -1, 0, 1]
-dy = [0, 1, 1, 1, 0, -1, -1, -1]
-
 class Monster(MovableEntity):
     def __init__(self, *args, **kwargs):
         MovableEntity.__init__(self, *args, **kwargs)
@@ -129,13 +125,13 @@ class Monster(MovableEntity):
 
         try:
             self._target = self.nearby().next()
-            self.astar(self._target.x, self._target.y)
+            self.find_route(self._target.x, self._target.y)
             self.game.logger.debug('Targeting %r' % self._target)
         except StopIteration:
             pass
 
-    def astar(self, x, y):
-        self._walk_queue = astar(self.game.map, 8, dx, dy, self.x, self.y, x, y)
+    def find_route(self, x, y):
+        self._walk_queue = self.game.map.find_route([self.x, self.y], [x, y])
 
     def iteration(self):
         now = datetime.now()
@@ -143,12 +139,12 @@ class Monster(MovableEntity):
         if self._walk_queue:
             if self.is_attacking():
                   if self.get_distance(self._target.x, self._target.y) > 1:
-                      self.astar(self._target.x, self._target.y)
+                      self.find_route(self._target.x, self._target.y)
 
             op = self._walk_queue.pop(0)
 
-            self.x += dx[op]
-            self.y += dy[op]
+            self.x += self.game.map.DX[op]
+            self.y += self.game.map.DY[op]
 
             self.move_to(self)
 
@@ -176,7 +172,7 @@ class Monster(MovableEntity):
                 elif y > self.game.map.height - 1:
                     y = 0
 
-                self.astar(x, y)
+                self.find_route(x, y)
 
                 self._last_move = now
 
