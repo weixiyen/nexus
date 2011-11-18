@@ -50,7 +50,8 @@ class Entity(object):
         target = target or self.target
 
         if isinstance(self, MovableEntity) and self.game.map.get_distance(self, target) > 1:
-            self.find_path_to(target)
+            self.move_to(target)
+            self._execute_movement_queue(True)
         elif self._last_attack <= now - timedelta(seconds=1):
             if target and target.take_damage(1):
                 self.game.logger.debug('Attacking %r -> %r' % (self, target))
@@ -102,56 +103,61 @@ class MovableEntity(Entity):
     def __init__(self, *args, **kwargs):
         Entity.__init__(self, *args, **kwargs)
 
-        self.movement_speed = 500
+        self.movement_speed = 5
 
         self._movement_queue = []
         self._last_movement = datetime.now()
 
-    def move(self, x, y):
+    def _move(self, x, y):
         self.x = x
         self.y = y
         self.emit('move', self.serialize())
 
+    def _move_to(self, entity):
+        self._move(entity.x, entity.y)
+
+    def move(self, x, y):
+        self._movement_queue = self.game.map.find_path([self.x, self.y], [x, y])
+
     def move_to(self, entity):
         self.move(entity.x, entity.y)
 
-    def find_path(self, x, y):
-        self._movement_queue = self.game.map.find_route([self.x, self.y], [x, y])
-
-    def find_path_to(self, entity):
-        self.find_path(entity.x, entity.y)
-
-    def iteration(self):
+    def _execute_movement_queue(self, ignore_atk=False):
         now = datetime.now()
 
-        if self._movement_queue and self._last_movement <= now - timedelta(milliseconds=1000 / self.movement_speed):
-            if self.is_attacking() and self.game.map.get_distance(self, self.target) > 1:
-                self.find_path_to(self.target)
+        if self._movement_queue and self._last_movement <= now - timedelta(milliseconds=10 / self.movement_speed):
+             if not ignore_atk and self.is_attacking() and self.game.map.get_distance(self, self.target) > 2:
+                 self.move_to(self.target)
 
-            dx, dy = self.game.map.get_delta(self._movement_queue.pop(0))
+             dx, dy = self.game.map.get_delta(self._movement_queue.pop(0))
 
-            self.move(self.x + dx, self.y + dy)
+             self._move(self.x + dx, self.y + dy)
 
-            self._last_movement = now
+             self._last_movement = now
 
-            raise StopIteration
+             raise StopIteration
 
+    def iteration(self):
+        self._execute_movement_queue()
         Entity.iteration(self)
 
 class Player(MovableEntity):
     def __init__(self, *args, **kwargs):
+        self.uid = kwargs.pop('uid')
+        self.connections = set()
+
         MovableEntity.__init__(self, *args, **kwargs)
 
         self.hp = 500
-        self.movement_speed = 1000
+        self.movement_speed = 10
 
 class Monster(MovableEntity):
     def __init__(self, *args, **kwargs):
         MovableEntity.__init__(self, *args, **kwargs)
 
-        self.hp = 25
+        self.hp = 5
 
-        self._patrol_radius = 5
+        self._patrol_radius = 10
         self._last_patrol = datetime.now()
 
     def aggro(self):
@@ -160,7 +166,7 @@ class Monster(MovableEntity):
 
         try:
             self.target = self.nearby().next()
-            self.find_path_to(self.target)
+            self.move_to(self.target)
             self.game.logger.debug('Targeting %r' % self.target)
         except StopIteration:
             pass
@@ -171,8 +177,9 @@ class Monster(MovableEntity):
         try:
             MovableEntity.iteration(self)
         except StopIteration as e:
-            self.aggro()
             raise e
+        finally:
+            self.aggro()
 
         if self._last_patrol <= now - timedelta(seconds=2):
             x = self.x
@@ -193,7 +200,7 @@ class Monster(MovableEntity):
             elif y > self.game.map.height - 1:
                 y = 0
 
-            self.find_path(x, y)
+            self.move(x, y)
 
             self._last_patrol = now
 

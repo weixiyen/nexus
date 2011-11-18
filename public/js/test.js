@@ -30,11 +30,6 @@
       }
       $('<br />').appendTo('body');
     }
-    $('body').on('click', '.tile', function() {
-      var pair;
-      pair = this.id.split('-');
-      return socket.emit('move', [parseInt(pair[0], 10), parseInt(pair[1], 10)]);
-    });
     _ref3 = state.entities;
     _results = [];
     for (_i = 0, _len = _ref3.length; _i < _len; _i++) {
@@ -73,5 +68,14 @@
   });
   socket.on('disconnect', function() {
     return console.log('disconnceted');
+  });
+  $(function() {
+    return $('body').on('click', '.tile', function(e) {
+      var pair;
+      e.stopPropagation();
+      e.preventDefault();
+      pair = this.id.split('-');
+      return socket.emit('move', [parseInt(pair[0], 10), parseInt(pair[1], 10)]);
+    });
   });
 }).call(this);

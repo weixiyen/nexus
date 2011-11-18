@@ -25,11 +25,22 @@ class Game(object):
 
     def add_participant(self, p):
         self.participants.add(p)
-        return self.spawn('Stanislav', type_=entity.Player)
+
+        for e in self.entities:
+            if isinstance(e, entity.Player):
+                if e.uid == p.uid:
+                    e.connections.add(p)
+                    return e
+
+        return self.spawn(p.uid, uid=p.uid, type_=entity.Player)
 
     def remove_participant(self, p):
         self.participants.remove(p)
-        self.remove_entity(p.entity)
+
+        p.entity.connections.remove(p)
+
+        if not p.entity.connections:
+            self.remove_entity(p.entity)
 
     def emit(self, event, *args):
         for p in self.participants:
@@ -44,7 +55,7 @@ class Game(object):
 
         tornado.ioloop.IOLoop.instance().add_timeout(datetime.timedelta(milliseconds=30), self.iteration)
 
-    def spawn(self, name, x=None, y=None, type_=entity.Monster):
+    def spawn(self, name, x=None, y=None, type_=entity.Monster, **kwargs):
         if x is None or y is None:
             while True:
                 x = random.randint(0, self.map.width - 1)
@@ -53,7 +64,7 @@ class Game(object):
                 if not self.map.is_obstacle(x, y):
                     break
 
-        mob = type_(self, name, x, y)
+        mob = type_(self, name, x, y, **kwargs)
 
         self.logger.debug('Spawning %r' % mob)
 
