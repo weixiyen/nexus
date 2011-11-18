@@ -78,6 +78,7 @@ class Entity(object):
                 self.game.remove_entity(self)
                 logging.debug('Killed %r' % self)
                 self.emit('dead', self.serialize())
+                self.game.spawn(self.name)
 
             return True
         return False
