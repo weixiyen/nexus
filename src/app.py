@@ -3,6 +3,7 @@ import tornado.web
 import tornado.options
 import os
 import tornadio2
+import uuid
 from game import Game
 
 ROOT_PATH = os.path.dirname(__file__)
@@ -16,6 +17,15 @@ class TestHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('test.html')
 
+    def get_current_user(self):
+        uid = self.get_cookie('uid')
+
+        if uid is None:
+            uid = uuid.uuid4().hex
+            self.set_cookie('uid', uid)
+
+        return uid
+
 class SocketConnection(tornadio2.conn.SocketConnection):
     @classmethod
     def get_game(cls):
@@ -27,7 +37,9 @@ class SocketConnection(tornadio2.conn.SocketConnection):
 
         return cls._game
 
-    def on_open(self, info):
+    def on_open(self, request):
+        self.uid = request.get_cookie('uid').value
+
         game = self.get_game()
         self.entity = game.add_participant(self)
         self.emit('initialize', game.serialize())
@@ -35,7 +47,7 @@ class SocketConnection(tornadio2.conn.SocketConnection):
     @tornadio2.event('move')
     def move(self, message):
         x, y = message
-        self.entity.find_path(x, y)
+        self.entity.move(x, y)
 
     def on_message(self, message):
         pass

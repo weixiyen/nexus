@@ -29,10 +29,6 @@ socket.on 'initialize', (state) ->
 
     $('<br />').appendTo('body')
 
-  $('body').on 'click', '.tile', ->
-    pair = this.id.split('-')
-    socket.emit('move', [parseInt(pair[0], 10), parseInt(pair[1], 10)])
-
   for entity in state.entities
     color = if entity.kind is 'Player' then 'blue' else 'gray'
     $("##{entity.x}-#{entity.y}").addClass("entity-#{entity.id}").css('background-color', color)
@@ -62,3 +58,10 @@ socket.on 'dead', (entity) ->
 
 socket.on 'disconnect', ->
   console.log 'disconnceted'
+
+$ ->
+  $('body').on 'click', '.tile', (e) ->
+    e.stopPropagation()
+    e.preventDefault()
+    pair = this.id.split('-')
+    socket.emit('move', [parseInt(pair[0], 10), parseInt(pair[1], 10)])
