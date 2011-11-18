@@ -38,6 +38,9 @@ socket.on 'move', (entity) ->
   $(".entity-#{entity.id}").removeClass("entity-#{entity.id}").css('background-color', 'white')
   $("##{entity.x}-#{entity.y}").css('background-color', color).addClass("entity-#{entity.id}")
 
+socket.on 'attack', (entityId) ->
+  $(".entity-#{entityId}").css('background-color', 'red')
+
 socket.on 'dead', (entity) ->
   $(".entity-#{entity.id}").removeClass("entity-#{entity.id}").css('background-color', 'white')
 

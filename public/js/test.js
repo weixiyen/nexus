@@ -43,6 +43,9 @@
     $(".entity-" + entity.id).removeClass("entity-" + entity.id).css('background-color', 'white');
     return $("#" + entity.x + "-" + entity.y).css('background-color', color).addClass("entity-" + entity.id);
   });
+  socket.on('attack', function(entityId) {
+    return $(".entity-" + entityId).css('background-color', 'red');
+  });
   socket.on('dead', function(entity) {
     return $(".entity-" + entity.id).removeClass("entity-" + entity.id).css('background-color', 'white');
   });

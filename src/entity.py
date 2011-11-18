@@ -58,9 +58,11 @@ class Entity(object):
             self._last_attack = now
 
     def get_distance(self, x, y):
-        return math.sqrt(self.x * x + self.y * y)
+        xd = x - self.x
+        yd = y - self.y
+        return math.sqrt(xd * xd + yd * yd)
 
-    def nearby(self, radius=5):
+    def nearby(self, radius=3):
         for entity in self.game.entities:
             if entity == self:
                 continue
@@ -122,25 +124,39 @@ class Monster(MovableEntity):
         self.hp = 25
 
     def aggro(self):
+        if self.is_attacking():
+            return
+
         try:
             self._target = self.nearby().next()
-            self._walk_queue = astar(self.game.map, 8, dx, dy, self.x, self.y, self._target.x, self._target.y)
+            self.astar(self._target.x, self._target.y)
             self.game.logger.debug('Targeting %r' % self._target)
         except StopIteration:
             pass
+
+    def astar(self, x, y):
+        self._walk_queue = astar(self.game.map, 8, dx, dy, self.x, self.y, x, y)
 
     def iteration(self):
         now = datetime.now()
 
         if self._walk_queue:
-           op = self._walk_queue.pop(0)
+            if self.is_attacking():
+                  if self.get_distance(self._target.x, self._target.y) > 1:
+                      self.astar(self._target.x, self._target.y)
 
-           self.x += dx[op]
-           self.y += dy[op]
+            op = self._walk_queue.pop(0)
 
-           self.move_to(self)
-           self.aggro()
-        elif MovableEntity.iteration(self):
+            self.x += dx[op]
+            self.y += dy[op]
+
+            self.move_to(self)
+
+            self.aggro()
+
+            return
+
+        if MovableEntity.iteration(self):
             if self._last_move <= now - timedelta(seconds=2):
                 x = self.x
                 y = self.y
@@ -160,7 +176,7 @@ class Monster(MovableEntity):
                 elif y > self.game.map.height - 1:
                     y = 0
 
-                self._walk_queue = astar(self.game.map, 8, dx, dy, self.x, self.y, x, y)
+                self.astar(x, y)
 
                 self._last_move = now
 
