@@ -1,6 +1,6 @@
 (function() {
   var socket;
-  socket = io.connect('http://localhost:8888', {
+  socket = io.connect("" + location.protocol + "//" + location.host, {
     resource: 'socket'
   });
   socket.on('connect', function() {
@@ -37,8 +37,10 @@
     return _results;
   });
   socket.on('move', function(entity) {
+    var color;
+    color = entity.target != null ? 'red' : 'gray';
     $(".entity-" + entity.id).removeClass("entity-" + entity.id).css('background-color', 'white');
-    return $("#" + entity.x + "-" + entity.y).css('background-color', 'gray').addClass("entity-" + entity.id);
+    return $("#" + entity.x + "-" + entity.y).css('background-color', color).addClass("entity-" + entity.id);
   });
   socket.on('dead', function(entity) {
     return $(".entity-" + entity.id).removeClass("entity-" + entity.id).css('background-color', 'white');

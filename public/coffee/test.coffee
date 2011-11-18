@@ -1,4 +1,4 @@
-socket = io.connect 'http://localhost:8888',
+socket = io.connect "#{location.protocol}//#{location.host}",
   resource: 'socket'
 
 socket.on 'connect', ->
@@ -30,8 +30,10 @@ socket.on 'game:init', (state) ->
     $("##{entity.x}-#{entity.y}").addClass("entity-#{entity.id}").css('background-color', 'gray')
 
 socket.on 'move', (entity) ->
+  color = if entity.target? then 'red' else 'gray'
+
   $(".entity-#{entity.id}").removeClass("entity-#{entity.id}").css('background-color', 'white')
-  $("##{entity.x}-#{entity.y}").css('background-color', 'gray').addClass("entity-#{entity.id}")
+  $("##{entity.x}-#{entity.y}").css('background-color', color).addClass("entity-#{entity.id}")
 
 socket.on 'dead', (entity) ->
   $(".entity-#{entity.id}").removeClass("entity-#{entity.id}").css('background-color', 'white')
