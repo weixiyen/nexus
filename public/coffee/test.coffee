@@ -27,11 +27,11 @@ socket.on 'game:init', (state) ->
     $('<br />').appendTo('body')
 
   for entity in state.entities
-    $("##{entity.x}-#{entity.y}").addClass("entity-#{entity.id}").css('background-color', 'green')
+    $("##{entity.x}-#{entity.y}").addClass("entity-#{entity.id}").css('background-color', 'gray')
 
 socket.on 'move', (entity) ->
   $(".entity-#{entity.id}").removeClass("entity-#{entity.id}").css('background-color', 'white')
-  $("##{entity.x}-#{entity.y}").css('background-color', 'green').addClass("entity-#{entity.id}")
+  $("##{entity.x}-#{entity.y}").css('background-color', 'gray').addClass("entity-#{entity.id}")
 
 socket.on 'dead', (entity) ->
   $(".entity-#{entity.id}").removeClass("entity-#{entity.id}").css('background-color', 'white')

@@ -32,13 +32,13 @@
     _results = [];
     for (_i = 0, _len = _ref3.length; _i < _len; _i++) {
       entity = _ref3[_i];
-      _results.push($("#" + entity.x + "-" + entity.y).addClass("entity-" + entity.id).css('background-color', 'green'));
+      _results.push($("#" + entity.x + "-" + entity.y).addClass("entity-" + entity.id).css('background-color', 'gray'));
     }
     return _results;
   });
   socket.on('move', function(entity) {
     $(".entity-" + entity.id).removeClass("entity-" + entity.id).css('background-color', 'white');
-    return $("#" + entity.x + "-" + entity.y).css('background-color', 'green').addClass("entity-" + entity.id);
+    return $("#" + entity.x + "-" + entity.y).css('background-color', 'gray').addClass("entity-" + entity.id);
   });
   socket.on('dead', function(entity) {
     return $(".entity-" + entity.id).removeClass("entity-" + entity.id).css('background-color', 'white');

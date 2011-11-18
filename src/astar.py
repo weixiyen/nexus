@@ -35,7 +35,10 @@ class Node(object):
 
 # A-star algorithm.
 # The path returned will be a string of digits of directions.
-def astar(test_map, n, m, dirs, dx, dy, xa, ya, xb, yb):
+def astar(test_map, dirs, dx, dy, xa, ya, xb, yb):
+    m = test_map.width
+    n = test_map.height
+
     closed_nodes_map = [] # map of closed (tried-out) nodes
     open_nodes_map = [] # map of open (not-yet-tried) nodes
     dir_map = [] # map of dirs
@@ -73,12 +76,12 @@ def astar(test_map, n, m, dirs, dx, dy, xa, ya, xb, yb):
         if x == xb and y == yb:
             # generate the path from finish to start
             # by following the dirs
-            path = ''
+            path = []
 
             while not (x == xa and y == ya):
                 j = dir_map[y][x]
                 c = str((j + dirs / 2) % dirs)
-                path = c + path
+                path.insert(0, int(c))
                 x += dx[j]
                 y += dy[j]
 
@@ -125,4 +128,4 @@ def astar(test_map, n, m, dirs, dx, dy, xa, ya, xb, yb):
                     pqi = 1 - pqi
                     heappush(pq[pqi], m0) # add the better node instead
 
-    return '' # if no route found
+    return [] # if no route found

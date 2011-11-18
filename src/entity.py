@@ -2,6 +2,7 @@ import math
 import logging
 import random
 from datetime import datetime, timedelta
+from astar import astar
 
 class Entity(object):
     id = 0
@@ -94,8 +95,6 @@ class MovableEntity(Entity):
     def move(self, x, y):
         self.x = x
         self.y = y
-        logging.debug('Moving %r' % self)
-        self.emit('log', 'Moving %r' % self)
         self.emit('move', self.serialize())
 
     def move_to(self, entity):
@@ -103,6 +102,9 @@ class MovableEntity(Entity):
 
 class Player(MovableEntity):
     pass
+
+dx = [1, 0, -1, 0]
+dy = [0, 1, 0, -1]
 
 class Monster(MovableEntity):
     IDLE = 0
@@ -113,6 +115,7 @@ class Monster(MovableEntity):
         self._home_x = self.x
         self._home_y = self.y
         self._patrol_radius = 5
+        self._walk_queue = []
 
         self._last_move = datetime.now()
         self.hp = 10
@@ -120,7 +123,14 @@ class Monster(MovableEntity):
     def iteration(self):
         now = datetime.now()
 
-        if MovableEntity.iteration(self):
+        if self._walk_queue:
+           op = self._walk_queue.pop(0)
+
+           self.x += dx[op]
+           self.y += dy[op]
+
+           self.move_to(self)
+        elif MovableEntity.iteration(self):
             if self._last_move <= now - timedelta(seconds=1):
                 x = self.x
                 y = self.y
@@ -129,7 +139,6 @@ class Monster(MovableEntity):
                     x += random.randint(-self._patrol_radius, self._patrol_radius)
                 else:
                     y += random.randint(-self._patrol_radius, self._patrol_radius)
-
 
                 if x < 0:
                     x = self.game.map.width - 1
@@ -141,13 +150,17 @@ class Monster(MovableEntity):
                 elif y > self.game.map.height - 1:
                     y = 0
 
-                self.move(x, y)
+                self._walk_queue = astar(self.game.map, 4, dx, dy, self.x, self.y, x, y)
 
                 self._last_move = now
+
+                logging.debug('Moving %r' % self)
+                self.emit('log', 'Moving %r' % self)
             else:
                 try:
                     self._target = self.nearby().next()
                     self.move_to(self._target)
+                    self._walk_queue = astar(self.game.map, 4, dx, dy, self.x, self.y, self._target.x, self._target.y)
                     logging.debug('Targeting %r' % self._target)
                     self.emit('log', 'Targeting %r' % self._target)
                 except StopIteration:
