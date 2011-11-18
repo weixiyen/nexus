@@ -1,7 +1,5 @@
 from heapq import heappush, heappop
 import math
-import time
-import random
 
 class Node(object):
     def __init__(self, x=0, y=0, distance=0, priority=0):
@@ -128,78 +126,3 @@ def astar(test_map, n, m, dirs, dx, dy, xa, ya, xb, yb):
                     heappush(pq[pqi], m0) # add the better node instead
 
     return '' # if no route found
-
-for _ in xrange(100):
-    # MAIN
-    dirs = 8 # number of possible directions to move on the map
-    if dirs == 4:
-        dx = [1, 0, -1, 0]
-        dy = [0, 1, 0, -1]
-    else:
-        dx = [1, 1, 0, -1, -1, -1, 0, 1]
-        dy = [0, 1, 1, 1, 0, -1, -1, -1]
-
-    n = 50 # horizontal size of the map
-    m = 50 # vertical size of the map
-    test_map = []
-    row = [0] * n
-    for i in range(m): # create empty map
-        test_map.append(list(row))
-
-    # fillout the map with a '+' pattern
-    for x in range(n / 8, n * 7 / 8):
-        test_map[m / 2][x] = 1
-    for y in range(m/8, m * 7 / 8):
-        test_map[y][n / 2] = 1
-
-    # randomly select start and finish locations from a list
-    sf = [
-        (0, 0, n - 1, m - 1),
-        (0, m - 1, n - 1, 0),
-        (n / 2 - 1, m / 2 - 1, n / 2 + 1, m / 2 + 1),
-        (n / 2 - 1, m / 2 + 1, n / 2 + 1, m / 2 - 1),
-        (n / 2 - 1, 0, n / 2 + 1, m - 1),
-        (n / 2 + 1, m - 1, n / 2 - 1, 0),
-        (0, m / 2 - 1, n - 1, m / 2 + 1),
-        (n - 1, m / 2 + 1, 0, m / 2 - 1)
-    ]
-
-    (xa, ya, xb, yb) = random.choice(sf)
-
-    print 'Map size (X,Y): ', n, m
-    print 'Start: ', xa, ya
-    print 'Finish: ', xb, yb
-    t = time.time()
-    route = astar(test_map, n, m, dirs, dx, dy, xa, ya, xb, yb)
-    print 'Time to generate the route (seconds): ', time.time() - t
-    print 'Route:'
-    print route
-
-    # mark the route on the map
-    if len(route) > 0:
-        x = xa
-        y = ya
-        test_map[y][x] = 2
-        for i in range(len(route)):
-            j = int(route[i])
-            x += dx[j]
-            y += dy[j]
-            test_map[y][x] = 3
-        test_map[y][x] = 4
-
-    # display the map with the route added
-    print 'Map:'
-    for y in range(m):
-        for x in range(n):
-            xy = test_map[y][x]
-            if not xy:
-                print '.', # space
-            elif xy == 1:
-                print 'O', # obstacle
-            elif xy == 2:
-                print 'S', # start
-            elif xy == 3:
-                print 'R', # route
-            elif xy == 4:
-                print 'F', # finish
-        print
