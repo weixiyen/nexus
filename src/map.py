@@ -1,5 +1,6 @@
 import math
 from heapq import heappush, heappop
+import collections
 
 class Node(object):
     def __init__(self, x=0, y=0, distance=0, priority=0):
@@ -25,6 +26,16 @@ class Node(object):
     def estimate(self, x, y):
         return Map.get_distance([x, y], [self.x, self.y])
 
+class Node2(object):
+    def __init__(self, x, y):
+        self.x, self.y = x, y
+
+    def __lt__(self, other): # comparison method for priority queue
+        return self.priority < other.priority
+
+    def estimate(self, x, y):
+        return Map.get_distance([x, y], [self.x, self.y])
+
 class Map(object):
     DX = [1, 1, 0, -1, -1, -1, 0, 1]
     DY = [0, 1, 1, 1, 0, -1, -1, -1]
@@ -39,12 +50,35 @@ class Map(object):
 
         for x in range(height / 8, height * 7 / 8):
             self._data[width / 2][x] = 1
+#
+#        for x in range(height / 8, height * 7 / 8):
+#            self._data[width / 5][x] = 1
 
         for y in range(width/8, width * 7 / 8):
             self._data[y][height / 2] = 1
 
-    def is_obstacle(self, x, y):
-        return self[y][x] == 1
+    def is_walkable(self, x, y):
+        return self[y][x] == 0
+
+    def find_path_v2(self, start, finish):
+        start = Node(*start)
+        finish = Node(*finish)
+
+        closedset = set()
+        openset = set(start)
+        came_from = self
+
+        g_score = collections.defaultdict(lambda: 0)
+        h_score = collections.defaultdict(lambda: 0)
+        f_score = collections.defaultdict(lambda: 0)
+
+        start = '%d,%d' % from_
+
+        h_score[start] = Map.get_distance(from_, to)
+        f_score[start] = g_score[start] + f_score[start]
+
+        while openset:
+            x
 
     def find_path(self, from_, to):
         dx = Map.DX
@@ -111,7 +145,7 @@ class Map(object):
                 ydy = y + dy[i]
 
                 if not (xdx < 0 or xdx > n-1 or ydy < 0 or ydy > m - 1
-                        or self.is_obstacle(xdx, ydy) == 1 or closed_nodes_map[ydy][xdx] == 1):
+                        or not self.is_walkable(xdx, ydy) == 1 or closed_nodes_map[ydy][xdx] == 1):
 
                     # generate a child node
                     m0 = Node(xdx, ydy, n0.distance, n0.priority)

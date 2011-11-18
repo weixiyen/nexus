@@ -45,9 +45,16 @@ class Entity(object):
         return self.target is not None
 
     def attack(self, target=None):
-        now = datetime.now()
-
         target = target or self.target
+
+        if self.game.iteration_counter % 10:
+            if self.game.map.get_distance(self, target) > 10:
+                self.target = None
+                self._movement_queue = None
+                self.game.logger.debug('Lost Aggro %r -> %r' % (self, target))
+            return
+
+        now = datetime.now()
 
         if isinstance(self, MovableEntity) and self.game.map.get_distance(self, target) > 1:
             self.move_to(target)
@@ -64,6 +71,9 @@ class Entity(object):
     def nearby(self, radius=3):
         for entity in self.game.entities:
             if entity == self:
+                continue
+
+            if isinstance(entity, self.__class__):
                 continue
 
             if self.game.map.get_distance(self, entity) <= radius:
@@ -84,7 +94,7 @@ class Entity(object):
                 self.emit('hp', self.hp)
 
             if not self.is_alive():
-                self.game.remove_entity(self)
+#                self.game.remove_entity(self)
                 self.game.logger.debug('Killed %r' % self)
                 self.emit('dead', self.serialize())
 
@@ -94,7 +104,7 @@ class Entity(object):
             return True
         return False
 
-    def iteration(self):
+    def next_iteration(self):
         if self.is_attacking():
             self.attack()
             raise StopIteration
@@ -103,10 +113,8 @@ class MovableEntity(Entity):
     def __init__(self, *args, **kwargs):
         Entity.__init__(self, *args, **kwargs)
 
-        self.movement_speed = 5
-
+        self.movement_speed = 2
         self._movement_queue = []
-        self._last_movement = datetime.now()
 
     def _move(self, x, y):
         self.x = x
@@ -123,9 +131,10 @@ class MovableEntity(Entity):
         self.move(entity.x, entity.y)
 
     def _execute_movement_queue(self, ignore_atk=False):
-        now = datetime.now()
+        if self.game.iteration_counter % self.movement_speed:
+            return
 
-        if self._movement_queue and self._last_movement <= now - timedelta(milliseconds=10 / self.movement_speed):
+        if self._movement_queue:
              if not ignore_atk and self.is_attacking() and self.game.map.get_distance(self, self.target) > 2:
                  self.move_to(self.target)
 
@@ -133,13 +142,11 @@ class MovableEntity(Entity):
 
              self._move(self.x + dx, self.y + dy)
 
-             self._last_movement = now
-
              raise StopIteration
 
-    def iteration(self):
+    def next_iteration(self):
         self._execute_movement_queue()
-        Entity.iteration(self)
+        Entity.next_iteration(self)
 
 class Player(MovableEntity):
     def __init__(self, *args, **kwargs):
@@ -149,7 +156,7 @@ class Player(MovableEntity):
         MovableEntity.__init__(self, *args, **kwargs)
 
         self.hp = 500
-        self.movement_speed = 10
+        self.movement_speed = 1
 
 class Monster(MovableEntity):
     def __init__(self, *args, **kwargs):
@@ -171,11 +178,11 @@ class Monster(MovableEntity):
         except StopIteration:
             pass
 
-    def iteration(self):
+    def next_iteration(self):
         now = datetime.now()
 
         try:
-            MovableEntity.iteration(self)
+            MovableEntity.next_iteration(self)
         except StopIteration as e:
             raise e
         finally:

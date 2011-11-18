@@ -3,7 +3,6 @@ import entity
 import random
 import logging
 import tornado.ioloop
-import datetime
 
 class Game(object):
     def __init__(self):
@@ -12,10 +11,12 @@ class Game(object):
         self.map = Map(50, 50)
         self._entities = {}
 
-        self.iteration()
+        self.iteration_counter = 0
+
+        tornado.ioloop.PeriodicCallback(self.next_iteration, 30).start()
 
         self.logger = logging.getLogger('game')
-#        self.logger.setLevel(logging.DEBUG)
+        self.logger.setLevel(logging.DEBUG)
 
     def serialize(self):
         return {
@@ -32,7 +33,9 @@ class Game(object):
                     e.connections.add(p)
                     return e
 
-        return self.spawn(p.uid, uid=p.uid, type_=entity.Player)
+        e = self.spawn(p.uid, uid=p.uid, type_=entity.Player)
+        e.connections.add(p)
+        return e
 
     def remove_participant(self, p):
         self.participants.remove(p)
@@ -46,14 +49,14 @@ class Game(object):
         for p in self.participants:
             p.emit(event, *args)
 
-    def iteration(self):
+    def next_iteration(self):
+        self.iteration_counter += 1
+
         for entity in self.entities:
             try:
-                entity.iteration()
+                entity.next_iteration()
             except StopIteration:
                 pass
-
-        tornado.ioloop.IOLoop.instance().add_timeout(datetime.timedelta(milliseconds=30), self.iteration)
 
     def spawn(self, name, x=None, y=None, type_=entity.Monster, **kwargs):
         if x is None or y is None:
@@ -61,7 +64,7 @@ class Game(object):
                 x = random.randint(0, self.map.width - 1)
                 y = random.randint(0, self.map.height - 1)
 
-                if not self.map.is_obstacle(x, y):
+                if self.map.is_walkable(x, y):
                     break
 
         mob = type_(self, name, x, y, **kwargs)
