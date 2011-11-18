@@ -15,6 +15,7 @@ socket.on 'initialize', (state) ->
 
       slot = $ '<div />',
         id: "#{x}-#{y}"
+        class: 'tile'
         css:
           width: 10
           height: 10
@@ -28,12 +29,21 @@ socket.on 'initialize', (state) ->
 
     $('<br />').appendTo('body')
 
+  $('body').on 'click', '.tile', ->
+    pair = this.id.split('-')
+    socket.emit('move', [parseInt(pair[0], 10), parseInt(pair[1], 10)])
+
   for entity in state.entities
-    $("##{entity.x}-#{entity.y}").addClass("entity-#{entity.id}").css('background-color', 'gray')
+    color = if entity.kind is 'Player' then 'blue' else 'gray'
+    $("##{entity.x}-#{entity.y}").addClass("entity-#{entity.id}").css('background-color', color)
+
+socket.on 'spawn', (entity) ->
+  color = if entity.kind is 'Player' then 'blue' else 'gray'
+  $("##{entity.x}-#{entity.y}").addClass("entity-#{entity.id}").css('background-color', color)
 
 socket.on 'move', (entity) ->
   color = if entity.target? then 'red' else 'gray'
-
+  color = 'blue' if entity.kind is 'Player'
 
   $(".entity-#{entity.id}").removeClass("entity-#{entity.id}").css('background-color', 'white')
   $("##{entity.x}-#{entity.y}").css('background-color', color).addClass("entity-#{entity.id}")

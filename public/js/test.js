@@ -7,7 +7,7 @@
     return console.log('connected');
   });
   socket.on('initialize', function(state) {
-    var column, entity, row, slot, x, y, _i, _len, _ref, _ref2, _ref3, _results;
+    var color, column, entity, row, slot, x, y, _i, _len, _ref, _ref2, _ref3, _results;
     $('body').empty();
     for (x = 0, _ref = state.map.length; 0 <= _ref ? x < _ref : x > _ref; 0 <= _ref ? x++ : x--) {
       row = state.map[x];
@@ -15,6 +15,7 @@
         column = row[y];
         slot = $('<div />', {
           id: "" + x + "-" + y,
+          "class": 'tile',
           css: {
             width: 10,
             height: 10,
@@ -29,17 +30,31 @@
       }
       $('<br />').appendTo('body');
     }
+    $('body').on('click', '.tile', function() {
+      var pair;
+      pair = this.id.split('-');
+      return socket.emit('move', [parseInt(pair[0], 10), parseInt(pair[1], 10)]);
+    });
     _ref3 = state.entities;
     _results = [];
     for (_i = 0, _len = _ref3.length; _i < _len; _i++) {
       entity = _ref3[_i];
-      _results.push($("#" + entity.x + "-" + entity.y).addClass("entity-" + entity.id).css('background-color', 'gray'));
+      color = entity.kind === 'Player' ? 'blue' : 'gray';
+      _results.push($("#" + entity.x + "-" + entity.y).addClass("entity-" + entity.id).css('background-color', color));
     }
     return _results;
+  });
+  socket.on('spawn', function(entity) {
+    var color;
+    color = entity.kind === 'Player' ? 'blue' : 'gray';
+    return $("#" + entity.x + "-" + entity.y).addClass("entity-" + entity.id).css('background-color', color);
   });
   socket.on('move', function(entity) {
     var color;
     color = entity.target != null ? 'red' : 'gray';
+    if (entity.kind === 'Player') {
+      color = 'blue';
+    }
     $(".entity-" + entity.id).removeClass("entity-" + entity.id).css('background-color', 'white');
     return $("#" + entity.x + "-" + entity.y).css('background-color', color).addClass("entity-" + entity.id);
   });

@@ -29,8 +29,13 @@ class SocketConnection(tornadio2.conn.SocketConnection):
 
     def on_open(self, info):
         game = self.get_game()
-        game.add_participant(self)
+        self.entity = game.add_participant(self)
         self.emit('initialize', game.serialize())
+
+    @tornadio2.event('move')
+    def move(self, message):
+        x, y = message
+        self.entity.find_path(x, y)
 
     def on_message(self, message):
         pass

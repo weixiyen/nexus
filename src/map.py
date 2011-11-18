@@ -23,15 +23,7 @@ class Node(object):
 
     # Estimation function for the remaining distance to the goal.
     def estimate(self, x, y):
-        xd = x - self.x
-        yd = y - self.y
-        # Euclidian Distance
-        d = math.sqrt(xd * xd + yd * yd)
-        # Manhattan distance
-        # d = abs(xd) + abs(yd)
-        # Chebyshev distance
-        # d = max(abs(xd), abs(yd))
-        return d
+        return Map.get_distance([x, y], [self.x, self.y])
 
 class Map(object):
     DX = [1, 1, 0, -1, -1, -1, 0, 1]
@@ -52,7 +44,7 @@ class Map(object):
             self._data[y][height / 2] = 1
 
     def is_obstacle(self, x, y):
-        return self[x][y] == 1
+        return self[y][x] == 1
 
     def find_route(self, from_, to):
         dx = Map.DX
@@ -119,7 +111,7 @@ class Map(object):
                 ydy = y + dy[i]
 
                 if not (xdx < 0 or xdx > n-1 or ydy < 0 or ydy > m - 1
-                        or self[ydy][xdx] == 1 or closed_nodes_map[ydy][xdx] == 1):
+                        or self.is_obstacle(xdx, ydy) == 1 or closed_nodes_map[ydy][xdx] == 1):
 
                     # generate a child node
                     m0 = Node(xdx, ydy, n0.distance, n0.priority)
@@ -155,6 +147,22 @@ class Map(object):
                         heappush(pq[pqi], m0) # add the better node instead
 
         return [] # if no route found
+
+    def get_delta(self, move):
+        return Map.DX[move], Map.DY[move]
+
+    @staticmethod
+    def get_distance(from_, to):
+        if not isinstance(from_, (list, tuple)):
+            from_ = (from_.x, from_.y)
+
+        if not isinstance(to, (list, tuple)):
+            to = (to.x, to.y)
+
+        xd = to[0] - from_[0]
+        yd = to[1] - from_[1]
+
+        return math.sqrt(xd * xd + yd * yd)
 
     def __getitem__(self, item):
         return self._data[item]

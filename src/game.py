@@ -15,7 +15,7 @@ class Game(object):
         self.iteration()
 
         self.logger = logging.getLogger('game')
-        self.logger.setLevel(logging.DEBUG)
+#        self.logger.setLevel(logging.DEBUG)
 
     def serialize(self):
         return {
@@ -25,9 +25,11 @@ class Game(object):
 
     def add_participant(self, p):
         self.participants.add(p)
+        return self.spawn('Stanislav', type_=entity.Player)
 
     def remove_participant(self, p):
         self.participants.remove(p)
+        self.remove_entity(p.entity)
 
     def emit(self, event, *args):
         for p in self.participants:
@@ -35,7 +37,10 @@ class Game(object):
 
     def iteration(self):
         for entity in self.entities:
-            entity.iteration()
+            try:
+                entity.iteration()
+            except StopIteration:
+                pass
 
         tornado.ioloop.IOLoop.instance().add_timeout(datetime.timedelta(milliseconds=30), self.iteration)
 
@@ -52,12 +57,18 @@ class Game(object):
 
         self.logger.debug('Spawning %r' % mob)
 
+        return mob
+
     @property
     def entities(self):
         return self._entities.values()
 
     def add_entity(self, entity):
         self._entities[entity.id] = entity
+        self.emit('spawn', entity.serialize())
 
     def remove_entity(self, entity):
-        del self._entities[entity.id]
+        try:
+            del self._entities[entity.id]
+        except KeyError:
+            pass
