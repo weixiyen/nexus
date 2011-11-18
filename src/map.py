@@ -13,6 +13,9 @@ class Map(object):
         for x in range(height / 8, height * 7 / 8):
             self._data[width / 2][x] = 1
 
+        for x in range(height / 8, height * 7 / 8):
+            self._data[width / 5][x] = 1
+
         for y in range(width/8, width * 7 / 8):
             self._data[y][height / 2] = 1
 
