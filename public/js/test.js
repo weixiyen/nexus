@@ -61,6 +61,13 @@
   socket.on('attack', function(entityId) {
     return $(".entity-" + entityId).css('background-color', 'red');
   });
+  socket.on('hp', function(hp) {
+    if (hp === 0) {
+      return console.log('You are dead....');
+    } else {
+      return console.log('Your HP is', hp);
+    }
+  });
   socket.on('dead', function(entity) {
     return $(".entity-" + entity.id).removeClass("entity-" + entity.id).css('background-color', 'white');
   });

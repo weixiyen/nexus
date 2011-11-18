@@ -51,6 +51,12 @@ socket.on 'move', (entity) ->
 socket.on 'attack', (entityId) ->
   $(".entity-#{entityId}").css('background-color', 'red')
 
+socket.on 'hp', (hp) ->
+  if hp == 0
+    console.log 'You are dead....'
+  else
+    console.log 'Your HP is', hp
+
 socket.on 'dead', (entity) ->
   $(".entity-#{entity.id}").removeClass("entity-#{entity.id}").css('background-color', 'white')
 

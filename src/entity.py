@@ -10,11 +10,13 @@ class Entity(object):
         self.id = Entity.id
         self.game = game
         self.name = name
+
         self.x = x
         self.y = y
 
         self.hp = 0
-        self._target = None
+
+        self.target = None
 
         self._last_attack = datetime.now()
         self.game.add_entity(self)
@@ -33,29 +35,28 @@ class Entity(object):
             'x': self.x,
             'y': self.y,
             'hp': self.hp,
-            'target': self._target.id if self._target else None
+            'target': self.target.id if self.target else None
         }
 
     def emit(self, *args):
         self.game.emit(*args)
 
-    def set_target(self, entity=None):
-        self._target = entity
-
     def is_attacking(self):
-        return self._target is not None
+        return self.target is not None
 
     def attack(self, target=None):
         now = datetime.now()
 
-        if self._last_attack <= now - timedelta(milliseconds=100):
-            target = target or self._target
+        target = target or self.target
 
+        if isinstance(self, MovableEntity) and self.game.map.get_distance(self, target) > 1:
+            self.find_path_to(target)
+        elif self._last_attack <= now - timedelta(seconds=1):
             if target and target.take_damage(1):
-                self.game.logger.debug('Attacking %r -> %r' % (self, self._target))
+                self.game.logger.debug('Attacking %r -> %r' % (self, target))
 
                 if not target.is_alive():
-                    self._target = None
+                    self.target = None
 
             self._last_attack = now
 
@@ -78,11 +79,16 @@ class Entity(object):
 
             self.hp -= damage
 
+            if isinstance(self, Player):
+                self.emit('hp', self.hp)
+
             if not self.is_alive():
                 self.game.remove_entity(self)
                 self.game.logger.debug('Killed %r' % self)
                 self.emit('dead', self.serialize())
-                self.game.spawn(self.name)
+
+                if isinstance(self, Monster):
+                    self.game.spawn(self.name)
 
             return True
         return False
@@ -96,7 +102,10 @@ class MovableEntity(Entity):
     def __init__(self, *args, **kwargs):
         Entity.__init__(self, *args, **kwargs)
 
+        self.movement_speed = 500
+
         self._movement_queue = []
+        self._last_movement = datetime.now()
 
     def move(self, x, y):
         self.x = x
@@ -113,13 +122,17 @@ class MovableEntity(Entity):
         self.find_path(entity.x, entity.y)
 
     def iteration(self):
-        if self._movement_queue:
-            if self.is_attacking() and self.game.map.get_distance(self, self._target) > 1:
-                self.find_path_to(self._target)
+        now = datetime.now()
+
+        if self._movement_queue and self._last_movement <= now - timedelta(milliseconds=1000 / self.movement_speed):
+            if self.is_attacking() and self.game.map.get_distance(self, self.target) > 1:
+                self.find_path_to(self.target)
 
             dx, dy = self.game.map.get_delta(self._movement_queue.pop(0))
 
             self.move(self.x + dx, self.y + dy)
+
+            self._last_movement = now
 
             raise StopIteration
 
@@ -130,6 +143,7 @@ class Player(MovableEntity):
         MovableEntity.__init__(self, *args, **kwargs)
 
         self.hp = 500
+        self.movement_speed = 1000
 
 class Monster(MovableEntity):
     def __init__(self, *args, **kwargs):
@@ -145,9 +159,9 @@ class Monster(MovableEntity):
             return
 
         try:
-            self.set_target(self.nearby().next())
-            self.find_path_to(self._target)
-            self.game.logger.debug('Targeting %r' % self._target)
+            self.target = self.nearby().next()
+            self.find_path_to(self.target)
+            self.game.logger.debug('Targeting %r' % self.target)
         except StopIteration:
             pass
 

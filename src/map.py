@@ -1,5 +1,46 @@
 import math
+import functools
 from heapq import heappush, heappop
+
+class memoized(object):
+    """
+    Decorator that caches a function's return value each time it is called.
+    If called later with the same arguments, the cached value is returned, and
+    not re-evaluated.
+    """
+    def __init__(self, func):
+        self.func = func
+        self.cache = {}
+    def __copy__(self):
+        """
+        Don't copy the cache in a copy.
+        """
+        return memoized(self.func)
+    def __deepcopy__(self, memo):
+        """
+        Don't copy the cache in a deep copy.
+        """
+        return memoized(self.func)
+
+    def __call__(self, *args):
+       try:
+           return self.cache[args]
+       except KeyError:
+           value = self.func(*args)
+           self.cache[args] = value
+           return value
+       except TypeError:
+           # uncachable -- for instance, passing a list as an argument.
+           # Better to not cache than to blow up entirely.
+           return self.func(*args)
+    def __repr__(self):
+        """Return the function's docstring."""
+        return self.func.__doc__
+    def __get__(self, obj, objtype):
+        """Support instance methods."""
+        return functools.partial(self.__call__, obj)
+    def clear_cache(self):
+        self.cache = {}
 
 class Node(object):
     def __init__(self, x=0, y=0, distance=0, priority=0):
@@ -46,6 +87,7 @@ class Map(object):
     def is_obstacle(self, x, y):
         return self[y][x] == 1
 
+    @memoized
     def find_route(self, from_, to):
         dx = Map.DX
         dy = Map.DY
