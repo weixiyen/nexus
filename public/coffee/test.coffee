@@ -33,7 +33,7 @@ class Entity
 class @Monster extends Entity
 
 class @Player extends Entity
-  constructor ->
+  constructor: ->
     super
     @zIndex = @zIndex * 1000
 

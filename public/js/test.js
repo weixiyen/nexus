@@ -54,6 +54,7 @@
     __extends(Player, Entity);
     function Player() {
       Player.__super__.constructor.apply(this, arguments);
+      this.zIndex = this.zIndex * 1000;
     }
     return Player;
   })();
