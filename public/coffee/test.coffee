@@ -1,3 +1,59 @@
+entities = {}
+
+class Entity
+  constructor: (data) ->
+    entities[@ata.id] = @
+    @data = data
+
+  render: ->
+    @$ = $ '<div />',
+      id: 'entity-' + @data.id
+      class: 'entity ' + @data.kind.toLowerCase()
+
+    @$.prependTo('#map')
+
+  moveTo: (data) ->
+    @data = data
+
+    @$.css
+      left: data.x * 12
+      top: data.y * 12
+
+    if @data.target?
+      @$.addClass('attacking')
+    else
+      @$.removeClass('attacking')
+
+class @Monster extends Entity
+
+class @Player extends Entity
+
+class Map
+  constructor: (@state) ->
+    $('#map').remove()
+
+  render: ->
+    map = $ '<div />',
+      id: 'map'
+      css:
+        width: 600
+        height: 600
+
+    for y in [0...@state.length]
+      row = @state[y]
+
+      for x in [0...row.length]
+        column = row[x]
+
+        slot = $ '<div />',
+          id: "#{x}-#{y}"
+          class: 'tile'
+
+        slot.addClass('walkable') if column == 0
+        slot.appendTo(map)
+
+    $('body').html(map)
+
 socket = io.connect "#{location.protocol}//#{location.host}",
   resource: 'socket'
 
@@ -5,47 +61,19 @@ socket.on 'connect', ->
   console.log 'connected'
 
 socket.on 'initialize', (state) ->
-  $('body').empty()
-
-  for x in [0...state.map.length]
-    row = state.map[x]
-
-    for y in [0...row.length]
-      column = row[y]
-
-      slot = $ '<div />',
-        id: "#{x}-#{y}"
-        class: 'tile'
-        css:
-          width: 10
-          height: 10
-          display: 'inline-block'
-          border: '1px solid black'
-
-      if column == 1
-        slot.css('background-color', 'black')
-
-      slot.appendTo('body')
-
-    $('<br />').appendTo('body')
+  new Map(state.map).render()
 
   for entity in state.entities
-    color = if entity.kind is 'Player' then 'blue' else 'gray'
-    $("##{entity.x}-#{entity.y}").addClass("entity-#{entity.id}").css('background-color', color)
+    entity = new window[entity.kind](entity)
+    entity.render()
 
 socket.on 'spawn', (entity) ->
-  color = if entity.kind is 'Player' then 'blue' else 'gray'
-  $("##{entity.x}-#{entity.y}").addClass("entity-#{entity.id}").css('background-color', color)
+  entity = new window[entity.kind](entity)
+  entity.render()
 
-socket.on 'move', (entity) ->
-  color = if entity.target? then 'red' else 'gray'
-  color = 'blue' if entity.kind is 'Player'
-
-  $(".entity-#{entity.id}").removeClass("entity-#{entity.id}").css('background-color', 'white')
-  $("##{entity.x}-#{entity.y}").css('background-color', color).addClass("entity-#{entity.id}")
-
-socket.on 'attack', (entityId) ->
-  $(".entity-#{entityId}").css('background-color', 'red')
+socket.on 'move', (data) ->
+  entity = entities[data.id]
+  entity.moveTo(data)
 
 socket.on 'hp', (hp) ->
   if hp == 0
@@ -54,7 +82,6 @@ socket.on 'hp', (hp) ->
     console.log 'Your HP is', hp
 
 socket.on 'dead', (entity) ->
-  $(".entity-#{entity.id}").removeClass("entity-#{entity.id}").css('background-color', 'white')
 
 socket.on 'disconnect', ->
   console.log 'disconnceted'

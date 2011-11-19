@@ -13,7 +13,8 @@ class Game(object):
 
         self.iteration_counter = 0
 
-        tornado.ioloop.PeriodicCallback(self.next_iteration, 30).start()
+        self._pc = tornado.ioloop.PeriodicCallback(self.next_iteration, 30)
+        self._pc.start()
 
         self.logger = logging.getLogger('game')
 #        self.logger.setLevel(logging.DEBUG)
