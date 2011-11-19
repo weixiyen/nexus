@@ -38,13 +38,13 @@ class SocketConnection(tornadio2.conn.SocketConnection):
         if not hasattr(cls, '_game'):
             cls._game = Game()
 
-            for i in xrange(100):
+            for i in xrange(25):
                 cls._game.spawn('Lizard')
 
-            cls._game.spawn('Turret', type_=Turret)
-            cls._game.spawn('Turret', type_=Turret)
-            cls._game.spawn('Turret', type_=Turret)
-            cls._game.spawn('Turret', type_=Turret)
+#            cls._game.spawn('Turret', type_=Turret)
+#            cls._game.spawn('Turret', type_=Turret)
+#            cls._game.spawn('Turret', type_=Turret)
+#            cls._game.spawn('Turret', type_=Turret)
 
         return cls._game
 

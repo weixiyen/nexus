@@ -29,11 +29,6 @@ class Entity
       left: @data.x * 12
       top: @data.y * 12
 
-    if @data.target?
-      @$.addClass('attacking')
-    else
-      @$.removeClass('attacking')
-
 class @Monster extends Entity
 class @Turret extends Entity
 class @Player extends Entity
@@ -98,6 +93,17 @@ socket.on 'hp', (hp) ->
 
 socket.on 'death', (entityId) ->
   entities[entityId].kill()
+
+
+socket.on 'target', (id, targetId) ->
+  entity = entities[id]
+
+  if entity.target?
+    entity.$.removeClass('attacking')
+  else if targetId?
+    entity.$.addClass('attacking')
+
+  entity.target = targetId
 
 socket.on 'disconnect', ->
   console.log 'disconnceted'

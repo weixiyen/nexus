@@ -34,15 +34,10 @@
     Entity.prototype.moveTo = function(x, y) {
       this.data.x = x;
       this.data.y = y;
-      this.$.css({
+      return this.$.css({
         left: this.data.x * 12,
         top: this.data.y * 12
       });
-      if (this.data.target != null) {
-        return this.$.addClass('attacking');
-      } else {
-        return this.$.removeClass('attacking');
-      }
     };
     return Entity;
   })();
@@ -139,6 +134,16 @@
   });
   socket.on('death', function(entityId) {
     return entities[entityId].kill();
+  });
+  socket.on('target', function(id, targetId) {
+    var entity;
+    entity = entities[id];
+    if (entity.target != null) {
+      entity.$.removeClass('attacking');
+    } else if (targetId != null) {
+      entity.$.addClass('attacking');
+    }
+    return entity.target = targetId;
   });
   socket.on('disconnect', function() {
     return console.log('disconnceted');

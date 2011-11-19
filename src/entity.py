@@ -6,10 +6,10 @@ BASE_STATS = {
     'mp': 0,
     'attack': 0,
     'range_attack': 0,
-    'movement_speed': 30,
-    'aggro_range': 5,
-    'leash': 10,
-    'patrol': 10
+    'movement_speed': 1,
+    'aggro_range': 3,
+    'leash': 15,
+    'patrol': 5
 }
 
 class Entity(object):
@@ -55,6 +55,14 @@ class Entity(object):
     def is_attacking(self):
         return self.target is not None
 
+    def set_target(self, target):
+        self.target = target
+
+        if target is None:
+            self.emit('target', self.id, None)
+        else:
+            self.emit('target', self.id, target.id)
+
     def attack(self, target=None):
         if not self.stats['attack']:
             return
@@ -62,12 +70,12 @@ class Entity(object):
         target = target or self.target
 
         if not target.is_alive():
-            self.target = None
+            self.set_target(None)
             return
 
         if self.game.iteration_counter % 10:
             if self.game.map.get_distance(self, target) > self.stats['leash']:
-                self.target = None
+                self.set_target(None)
                 self._movement_queue = None
                 self.game.logger.debug('Lost Aggro %r -> %r' % (self, target))
             return
@@ -82,7 +90,7 @@ class Entity(object):
                 self.game.logger.debug('Attacking %r -> %r' % (self, target))
 
                 if not target.is_alive():
-                    self.target = None
+                    self.set_target(None)
 
             self._last_attack = now
 
@@ -103,7 +111,7 @@ class Entity(object):
     def take_damage(self, from_, damage):
         if self.is_alive():
             if not isinstance(self, Player) and self.target is None:
-                self.target = from_
+                self.set_target(from_)
 
             if random.randint(1, 10) == 5:
                 damage *= 2
@@ -175,9 +183,15 @@ class Player(MovableEntity):
 
         MovableEntity.__init__(self, *args, **kwargs)
 
+        self.stats['hp'] = 500
+
 class Monster(MovableEntity):
     def __init__(self, *args, **kwargs):
         MovableEntity.__init__(self, *args, **kwargs)
+
+        self.stats['hp'] = 10
+        self.stats['attack'] = 1
+        self.stats['movement_speed'] = 10
 
         self._last_patrol = datetime.now()
 
@@ -186,7 +200,7 @@ class Monster(MovableEntity):
             return
 
         try:
-            self.target = self.nearby(self.stats['aggro_range']).next()
+            self.set_target(self.nearby(self.stats['aggro_range']).next())
             self.move_to(self.target)
             self.game.logger.debug('Targeting %r' % self.target)
         except StopIteration:
@@ -231,15 +245,18 @@ class Turret(Entity):
     def __init__(self, *args, **kwargs):
         Entity.__init__(self, *args, **kwargs)
 
+        self.stats['hp'] = 100
+        self.stats['attack'] = 10
+
     def aggro(self):
         if self.is_attacking():
             return
 
         try:
-            self.target = self.nearby(self.stats['aggro_range']).next()
+            self.set_target(self.nearby(self.stats['aggro_range']).next())
             self.game.logger.debug('Targeting %r' % self.target)
         except StopIteration:
-            self.target = None
+            self.set_target(None)
 
     def next_iteration(self):
         self.aggro()
