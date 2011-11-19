@@ -31,11 +31,12 @@
       this.$.remove();
       return delete entities[this.data.id];
     };
-    Entity.prototype.moveTo = function(data) {
-      this.data = data;
+    Entity.prototype.moveTo = function(x, y) {
+      this.data.x = x;
+      this.data.y = y;
       this.$.css({
-        left: data.x * 12,
-        top: data.y * 12
+        left: this.data.x * 12,
+        top: this.data.y * 12
       });
       if (this.data.target != null) {
         return this.$.addClass('attacking');
@@ -124,10 +125,10 @@
     entity = new window[entity.kind](entity);
     return entity.render();
   });
-  socket.on('move', function(data) {
+  socket.on('move', function(id, x, y) {
     var entity;
-    entity = entities[data.id];
-    return entity.moveTo(data);
+    entity = entities[id];
+    return entity.moveTo(x, y);
   });
   socket.on('hp', function(hp) {
     if (hp === 0) {

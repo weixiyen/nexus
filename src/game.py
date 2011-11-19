@@ -3,18 +3,23 @@ import entity
 import random
 import logging
 import tornado.ioloop
+from datetime import timedelta
+
+FPS = 60
 
 class Game(object):
     def __init__(self):
+        self.ioloop =  tornado.ioloop.IOLoop.instance()
+        self.deadline = timedelta(milliseconds=1000 / FPS)
+
         self.participants = set()
 
         self.map = Map(50, 50)
         self._entities = {}
 
         self.iteration_counter = 0
-
-        self._pc = tornado.ioloop.PeriodicCallback(self.next_iteration, 30)
-        self._pc.start()
+        self.next_iteration()
+#        tornado.ioloop.PeriodicCallback(self.next_iteration, 1000 / FPS).start()
 
         self.logger = logging.getLogger('game')
         self.logger.setLevel(logging.DEBUG)
@@ -58,6 +63,8 @@ class Game(object):
                 entity.next_iteration()
             except StopIteration:
                 pass
+
+        self.ioloop.add_timeout(self.deadline, self.next_iteration)
 
     def spawn(self, name, x=None, y=None, type_=entity.Monster, **kwargs):
         if x is None or y is None:

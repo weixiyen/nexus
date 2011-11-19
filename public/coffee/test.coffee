@@ -21,12 +21,13 @@ class Entity
     @$.remove()
     delete entities[@data.id]
 
-  moveTo: (data) ->
-    @data = data
+  moveTo: (x, y) ->
+    @data.x = x
+    @data.y = y
 
     @$.css
-      left: data.x * 12
-      top: data.y * 12
+      left: @data.x * 12
+      top: @data.y * 12
 
     if @data.target?
       @$.addClass('attacking')
@@ -85,9 +86,9 @@ socket.on 'spawn', (entity) ->
   entity = new window[entity.kind](entity)
   entity.render()
 
-socket.on 'move', (data) ->
-  entity = entities[data.id]
-  entity.moveTo(data)
+socket.on 'move', (id, x, y) ->
+  entity = entities[id]
+  entity.moveTo(x, y)
 
 socket.on 'hp', (hp) ->
   if hp == 0
