@@ -24,8 +24,8 @@ events.spawn (entity)->
   game.addEntity entity
 
 # move an entity
-events.move (movementData)->
-  game.moveEntity(movementData)
+events.move (id, x, y)->
+  game.moveEntity(id, x, y)
 
 events.death (entityId)->
   game.removeEntity(entityId)

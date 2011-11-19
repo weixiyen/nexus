@@ -22,8 +22,8 @@
   events.spawn(function(entity) {
     return game.addEntity(entity);
   });
-  events.move(function(movementData) {
-    return game.moveEntity(movementData);
+  events.move(function(id, x, y) {
+    return game.moveEntity(id, x, y);
   });
   events.death(function(entityId) {
     return game.removeEntity(entityId);

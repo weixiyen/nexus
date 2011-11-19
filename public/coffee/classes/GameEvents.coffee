@@ -17,8 +17,8 @@ class @GameEvents
       fn(data)
 
   move: (fn) ->
-    @socket.on 'move', (data) ->
-      fn(data)
+    @socket.on 'move', (data...) ->
+      fn(data[0], data[1], data[2])
 
   death: (fn) ->
     @socket.on 'death', (data) ->

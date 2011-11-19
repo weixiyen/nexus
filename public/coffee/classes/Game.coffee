@@ -60,10 +60,7 @@ class @Game
     @entities[STUB+entityId].remove()
     delete @entities[ STUB + entityId ]
 
-  moveEntity: (moveData)->
-    id = moveData.id
-    x = moveData.x
-    y = moveData.y
+  moveEntity: (id, x, y)->
     @entities[STUB+id].moveTo(x,y)
 
   addToCanvas: ($element)->

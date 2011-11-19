@@ -78,11 +78,7 @@
       this.entities[STUB + entityId].remove();
       return delete this.entities[STUB + entityId];
     };
-    Game.prototype.moveEntity = function(moveData) {
-      var id, x, y;
-      id = moveData.id;
-      x = moveData.x;
-      y = moveData.y;
+    Game.prototype.moveEntity = function(id, x, y) {
       return this.entities[STUB + id].moveTo(x, y);
     };
     Game.prototype.addToCanvas = function($element) {

@@ -1,4 +1,5 @@
 (function() {
+  var __slice = Array.prototype.slice;
   this.GameEvents = (function() {
     function GameEvents(options) {
       var $document;
@@ -23,8 +24,10 @@
       });
     };
     GameEvents.prototype.move = function(fn) {
-      return this.socket.on('move', function(data) {
-        return fn(data);
+      return this.socket.on('move', function() {
+        var data;
+        data = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        return fn(data[0], data[1], data[2]);
       });
     };
     GameEvents.prototype.death = function(fn) {
