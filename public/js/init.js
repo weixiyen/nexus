@@ -61,4 +61,7 @@
       return game.panStop('down');
     }
   });
+  $(window).blur(function() {
+    return game.panStopAll();
+  });
 }).call(this);

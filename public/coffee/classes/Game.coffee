@@ -75,6 +75,11 @@ class @Game
     @panning[dir] = false
     @removeLoopItem('pan:'+dir)
 
+  panStopAll: ->
+    for dir, value of @panning
+      if @panning[dir] == true
+        @panStop(dir)
+
   pan: (dir)->
     style =
       left: @left

@@ -52,3 +52,6 @@ $document.keyup (e)->
     game.panStop('up')
   if code == 83
     game.panStop('down')
+
+$(window).blur ->
+  game.panStopAll()

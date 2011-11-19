@@ -100,6 +100,16 @@
       this.panning[dir] = false;
       return this.removeLoopItem('pan:' + dir);
     };
+    Game.prototype.panStopAll = function() {
+      var dir, value, _ref, _results;
+      _ref = this.panning;
+      _results = [];
+      for (dir in _ref) {
+        value = _ref[dir];
+        _results.push(this.panning[dir] === true ? this.panStop(dir) : void 0);
+      }
+      return _results;
+    };
     Game.prototype.pan = function(dir) {
       var style;
       style = {
