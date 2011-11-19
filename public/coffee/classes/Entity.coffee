@@ -18,6 +18,7 @@ class @Entity
     @y = data.y
     @left = @x * GRID_W
     @top = @y * GRID_H
+    @sprite = null
 
     @target = data.target or null
 
@@ -57,6 +58,7 @@ class @MovableEntity extends Entity
     @moving = false
     @endLeft = @left
     @endTop = @top
+    @curDir = null #current direction
 
   startMoving: ->
     game.addLoopItem 'unit:'+@id+':move', @speed, =>
@@ -66,6 +68,7 @@ class @MovableEntity extends Entity
   _moveTowardsGoal: ->
 
     stopX = stopY = false
+    @direction = null
 
     changeX = STEP_X
     changeY = STEP_Y
@@ -77,17 +80,21 @@ class @MovableEntity extends Entity
     nextLeft = @left
     nextTop = @top
 
-    if @left > @endLeft
-      nextLeft -= changeX
-
-    if @left < @endLeft
-      nextLeft += changeX
-
     if @top > @endTop
       nextTop -= changeY
+      @direction = 'up'
 
     if @top < @endTop
       nextTop += changeY
+      @direction = 'down'
+
+    if @left > @endLeft
+      nextLeft -= changeX
+      @direction = 'left'
+
+    if @left < @endLeft
+      nextLeft += changeX
+      @direction = 'right'
 
     if Math.abs(@left - @endLeft) <= STEP_X
       nextLeft = @endLeft
@@ -99,6 +106,7 @@ class @MovableEntity extends Entity
 
     if stopX && stopY
       @moving = false
+      @direction = null
 
     @left = nextLeft
     @top = nextTop
@@ -107,9 +115,29 @@ class @MovableEntity extends Entity
       top: @top
       zIndex: @top
 
+    @animateSprite()
+
   _movingDiagonally: ->
     if @left != @endLeft && @top != @endTop then return true
     return false
+
+  animateSprite: ->
+
+    if @curDir == @direction then return
+
+    if @sprite
+      @sprite.stop(@id)
+      @sprite = null
+    @curDir = @direction
+
+    if @curDir == null then return
+
+    @sprite = new Sprite
+      id: @id
+      el: @$elBody
+      queue: @anim[@curDir]
+      skip: @animationSkip
+    @sprite.start()
 
 class @Monster extends MovableEntity
 
@@ -119,6 +147,29 @@ class @Monster extends MovableEntity
     @width = 65
     @height = 60
     @imgurl = IMGPATH + 'sprite_monster.png'
+
+    @animationSkip = 4
+    @anim =
+      down: [
+        "0 0",
+        "-65px 0",
+        "-130px 0"
+        ]
+      up: [
+        "-195px 0",
+        "-260px 0",
+        "-325px 0"
+        ]
+      left: [
+        "-390px 0",
+        "-455px 0",
+        "-520px 0"
+        ]
+      right: [
+        "-585px 0",
+        "-650px 0",
+        "-715px 0"
+        ]
 
     @create()
     @startMoving()

@@ -25,6 +25,7 @@
       this.y = data.y;
       this.left = this.x * GRID_W;
       this.top = this.y * GRID_H;
+      this.sprite = null;
       this.target = data.target || null;
     }
     Entity.prototype.isAlive = function() {
@@ -69,6 +70,7 @@
       this.moving = false;
       this.endLeft = this.left;
       this.endTop = this.top;
+      this.curDir = null;
     }
     MovableEntity.prototype.startMoving = function() {
       return game.addLoopItem('unit:' + this.id + ':move', this.speed, __bind(function() {
@@ -81,6 +83,7 @@
     MovableEntity.prototype._moveTowardsGoal = function() {
       var changeX, changeY, nextLeft, nextTop, stopX, stopY;
       stopX = stopY = false;
+      this.direction = null;
       changeX = STEP_X;
       changeY = STEP_Y;
       if (this._movingDiagonally()) {
@@ -89,17 +92,21 @@
       }
       nextLeft = this.left;
       nextTop = this.top;
-      if (this.left > this.endLeft) {
-        nextLeft -= changeX;
-      }
-      if (this.left < this.endLeft) {
-        nextLeft += changeX;
-      }
       if (this.top > this.endTop) {
         nextTop -= changeY;
+        this.direction = 'up';
       }
       if (this.top < this.endTop) {
         nextTop += changeY;
+        this.direction = 'down';
+      }
+      if (this.left > this.endLeft) {
+        nextLeft -= changeX;
+        this.direction = 'left';
+      }
+      if (this.left < this.endLeft) {
+        nextLeft += changeX;
+        this.direction = 'right';
       }
       if (Math.abs(this.left - this.endLeft) <= STEP_X) {
         nextLeft = this.endLeft;
@@ -111,20 +118,42 @@
       }
       if (stopX && stopY) {
         this.moving = false;
+        this.direction = null;
       }
       this.left = nextLeft;
       this.top = nextTop;
-      return this.$el.css({
+      this.$el.css({
         left: this.left,
         top: this.top,
         zIndex: this.top
       });
+      return this.animateSprite();
     };
     MovableEntity.prototype._movingDiagonally = function() {
       if (this.left !== this.endLeft && this.top !== this.endTop) {
         return true;
       }
       return false;
+    };
+    MovableEntity.prototype.animateSprite = function() {
+      if (this.curDir === this.direction) {
+        return;
+      }
+      if (this.sprite) {
+        this.sprite.stop(this.id);
+        this.sprite = null;
+      }
+      this.curDir = this.direction;
+      if (this.curDir === null) {
+        return;
+      }
+      this.sprite = new Sprite({
+        id: this.id,
+        el: this.$elBody,
+        queue: this.anim[this.curDir],
+        skip: this.animationSkip
+      });
+      return this.sprite.start();
     };
     return MovableEntity;
   })();
@@ -136,6 +165,13 @@
       this.width = 65;
       this.height = 60;
       this.imgurl = IMGPATH + 'sprite_monster.png';
+      this.animationSkip = 4;
+      this.anim = {
+        down: ["0 0", "-65px 0", "-130px 0"],
+        up: ["-195px 0", "-260px 0", "-325px 0"],
+        left: ["-390px 0", "-455px 0", "-520px 0"],
+        right: ["-585px 0", "-650px 0", "-715px 0"]
+      };
       this.create();
       this.startMoving();
     }
