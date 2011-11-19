@@ -2,30 +2,24 @@
 <html>
 <head>
     <title>Heros of Kabam</title>
+    <link rel="stylesheet" href="{{ static_url('css/ui.css') }}" />
 </head>
-<body>
+<body scroll="no">
 
-<div class="pg-main">
-    <div id="map" class="map"></div>
-    <div id="interface" class="ui-interface"></div>
-</div>
+<div id="game" class="ui-game"></div>
+<div id="map" class="ui-map"></div>
 
 <script src="{{ static_url('js/socket.io.js') }}"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
 <script src="{{ static_url('js/jquery.loop.js') }}"></script>
 <script src="{{ static_url('js/jquery.polygon.js') }}"></script>
 <script src="{{ static_url('js/jquery.astar.js') }}"></script>
 
-<script src="{{ static_url('js/util.js') }}"></script>
-
-<script src="{{ static_url('js/Map.js') }}"></script>
-<script src="{{ static_url('js/User.js') }}"></script>
-<script src="{{ static_url('js/Unit.js') }}"></script>
-<script src="{{ static_url('js/Chatbox.js') }}"></script>
-<script src="{{ static_url('js/Partybox.js') }}"></script>
-<script src="{{ static_url('js/Minimap.js') }}"></script>
-<script src="{{ static_url('js/Sprite.js') }}"></script>
+<script src="{{ static_url('js/classes/Game.js') }}"></script>
+<script src="{{ static_url('js/classes/GameEvents.js') }}"></script>
+<script src="{{ static_url('js/classes/Map.js') }}"></script>
+<script src="{{ static_url('js/classes/Entity.js') }}"></script>
 
 <script src="{{ static_url('js/init.js') }}"></script>
 
