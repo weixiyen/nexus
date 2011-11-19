@@ -1,12 +1,26 @@
 from datetime import datetime, timedelta
 import random
 
+class Delayer(object):
+    def __init__(self, ms=100):
+        self.delta = timedelta(milliseconds=ms)
+        self.last_time = datetime.now() - self.delta
+
+    def is_ready(self):
+        now = datetime.now()
+
+        if self.last_time <= now - self.delta:
+            self.last_time = now
+            return True
+
+        return False
+
 BASE_STATS = {
     'hp': 0,
     'mp': 0,
     'attack': 0,
     'range_attack': 0,
-    'movement_speed': 1,
+    'movement_speed': 100,
     'aggro_range': 3,
     'leash': 15,
     'patrol': 10
@@ -143,6 +157,7 @@ class MovableEntity(Entity):
         Entity.__init__(self, *args, **kwargs)
 
         self._movement_queue = []
+        self._delayer = Delayer(self.stats['movement_speed'])
 
     def _move(self, x, y):
         self.x = x
@@ -158,15 +173,18 @@ class MovableEntity(Entity):
     def move_to(self, entity):
         self.move(entity.x, entity.y)
 
-    def _execute_movement_queue(self, ignore_atk=False):
-        if self.game.iteration_counter % (1 / self.stats['movement_speed']):
-            return
+    def next_move(self):
+        return self._movement_queue.pop()
 
-        if self._movement_queue:
+    def is_moving(self):
+        return len(self._movement_queue) != 0
+
+    def _execute_movement_queue(self, ignore_atk=False):
+        if self.is_moving() and self._delayer.is_ready():
             if not ignore_atk and self.is_attacking() and self.game.map.get_distance(self, self.target) > 2:
                 self.move_to(self.target)
 
-            x, y = self._movement_queue.pop()
+            x, y = self.next_move()
 
             self._move(x, y)
 
@@ -184,7 +202,6 @@ class Player(MovableEntity):
         MovableEntity.__init__(self, *args, **kwargs)
 
         self.stats['hp'] = 500
-        self.stats['movement_speed'] = 0.5
 
 class Monster(MovableEntity):
     def __init__(self, *args, **kwargs):
@@ -192,7 +209,7 @@ class Monster(MovableEntity):
 
         self.stats['hp'] = 10
         self.stats['attack'] = 1
-        self.stats['movement_speed'] = 0.05
+        self.stats['movement_speed'] = 80
 
         self._last_patrol = datetime.now()
 
@@ -217,7 +234,7 @@ class Monster(MovableEntity):
         finally:
             self.aggro()
 
-        if self._last_patrol <= now - timedelta(seconds=random.randint(5, 10)):
+        if not self.is_moving() and self._last_patrol <= now - timedelta(seconds=random.randint(5, 10)):
             x = self.x
             y = self.y
 

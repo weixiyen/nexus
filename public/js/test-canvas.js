@@ -73,7 +73,7 @@
           _results2 = [];
           for (x = 0, _ref2 = row.length; 0 <= _ref2 ? x < _ref2 : x > _ref2; 0 <= _ref2 ? x++ : x--) {
             column = row[x];
-            _results2.push(column === 0 ? (ctx.fillStyle = 'white', ctx.fillRect(x * 10, y * 10, 10, 10), ctx.strokeStyle = 'black', ctx.strokeRect(x * 10, y * 10, 10, 10)) : (ctx.fillStyle = 'black', ctx.fillRect(x * 10, y * 10, 10, 10)));
+            _results2.push(column === 1 ? (ctx.fillStyle = 'black', ctx.fillRect(x * 10, y * 10, 10, 10)) : void 0);
           }
           return _results2;
         })());
@@ -89,8 +89,9 @@
     return console.log('connected');
   });
   socket.on('initialize', function(state) {
-    var ctx, entity, map, render, _i, _len, _ref;
-    ctx = $('canvas')[0].getContext('2d');
+    var canvas, ctx, entity, map, render, _i, _len, _ref;
+    canvas = $('canvas')[0];
+    ctx = canvas.getContext('2d');
     window.entities = {};
     map = new Map(state.map);
     _ref = state.entities;
@@ -99,14 +100,17 @@
       new window[entity.kind](entity);
     }
     render = function() {
-      var entity, _, _ref2;
+      var entity, _, _ref2, _results;
+      window.webkitRequestAnimationFrame(render);
+      ctx.clearRect(0, 0, 600, 600);
       map.render(ctx);
       _ref2 = window.entities;
+      _results = [];
       for (_ in _ref2) {
         entity = _ref2[_];
-        entity.render(ctx);
+        _results.push(entity.render(ctx));
       }
-      return window.webkitRequestAnimationFrame(render);
+      return _results;
     };
     return window.webkitRequestAnimationFrame(render);
   });

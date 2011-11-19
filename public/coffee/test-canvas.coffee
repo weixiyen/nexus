@@ -44,12 +44,7 @@ class Map
       for x in [0...row.length]
         column = row[x]
 
-        if column == 0
-          ctx.fillStyle = 'white'
-          ctx.fillRect(x * 10 , y * 10, 10, 10)
-          ctx.strokeStyle = 'black'
-          ctx.strokeRect(x * 10 , y * 10, 10, 10)
-        else
+        if column == 1
           ctx.fillStyle = 'black'
           ctx.fillRect(x * 10 , y * 10, 10, 10)
 
@@ -60,7 +55,8 @@ socket.on 'connect', ->
   console.log 'connected'
 
 socket.on 'initialize', (state) ->
-  ctx = $('canvas')[0].getContext('2d')
+  canvas = $('canvas')[0]
+  ctx = canvas.getContext('2d')
 
   window.entities ={}
 
@@ -70,12 +66,14 @@ socket.on 'initialize', (state) ->
     new window[entity.kind](entity)
 
   render = ->
+    window.webkitRequestAnimationFrame(render)
+
+    ctx.clearRect(0, 0 , 600, 600)
+
     map.render(ctx)
 
     for _, entity of window.entities
       entity.render(ctx)
-
-    window.webkitRequestAnimationFrame(render)
 
   window.webkitRequestAnimationFrame(render)
 
