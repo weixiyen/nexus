@@ -27,6 +27,10 @@
       });
       return this.$.prependTo('#map');
     };
+    Entity.prototype.kill = function() {
+      this.$.remove();
+      return delete entities[this.data.id];
+    };
     Entity.prototype.moveTo = function(data) {
       this.data = data;
       this.$.css({
@@ -34,10 +38,8 @@
         top: data.y * 12
       });
       if (this.data.target != null) {
-        if (!this.$.hasClass('attacking')) {
-          return this.$.addClass('attacking');
-        }
-      } else if (this.$.hasClass('attacking')) {
+        return this.$.addClass('attacking');
+      } else {
         return this.$.removeClass('attacking');
       }
     };
@@ -49,6 +51,13 @@
       Monster.__super__.constructor.apply(this, arguments);
     }
     return Monster;
+  })();
+  this.Turret = (function() {
+    __extends(Turret, Entity);
+    function Turret() {
+      Turret.__super__.constructor.apply(this, arguments);
+    }
+    return Turret;
   })();
   this.Player = (function() {
     __extends(Player, Entity);
@@ -89,7 +98,7 @@
           slot.appendTo(map);
         }
       }
-      return $('body').html(map);
+      return $('body').append(map);
     };
     return Map;
   })();
@@ -127,17 +136,22 @@
       return console.log('Your HP is', hp);
     }
   });
-  socket.on('dead', function(entity) {});
+  socket.on('death', function(entityId) {
+    return entities[entityId].kill();
+  });
   socket.on('disconnect', function() {
     return console.log('disconnceted');
   });
   $(function() {
-    return $('body').on('click', '.tile', function(e) {
+    $('body').on('click', '.tile', function(e) {
       var data;
       e.stopPropagation();
       e.preventDefault();
       data = $(this).data();
       return socket.emit('move', [data.x, data.y]);
+    });
+    return $('#spawn').on('click', function(e) {
+      return socket.emit('spawn', []);
     });
   });
 }).call(this);
