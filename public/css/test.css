@@ -27,3 +27,11 @@
   background-color: gray; }
   .monster.attacking {
     background-color: red !important; }
+
+.turret {
+  background-color: #8a2be2; }
+  .turret.attacking {
+    background-color: red !important; }
+
+#spawn {
+  float: right; }

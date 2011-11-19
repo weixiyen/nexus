@@ -6,6 +6,7 @@ import tornadio2
 import uuid
 import time
 from game import Game
+from entity import Turret
 
 ROOT_PATH = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(ROOT_PATH, '../public')
@@ -33,8 +34,13 @@ class SocketConnection(tornadio2.conn.SocketConnection):
         if not hasattr(cls, '_game'):
             cls._game = Game()
 
-            for i in xrange(10):
+            for i in xrange(100):
                 cls._game.spawn('Lizard')
+
+            cls._game.spawn('Turret', type_=Turret)
+            cls._game.spawn('Turret', type_=Turret)
+            cls._game.spawn('Turret', type_=Turret)
+            cls._game.spawn('Turret', type_=Turret)
 
         return cls._game
 
@@ -44,6 +50,18 @@ class SocketConnection(tornadio2.conn.SocketConnection):
         game = self.get_game()
         self.entity = game.add_participant(self)
         self.emit('initialize', game.serialize())
+
+    @tornadio2.event('spawn')
+    def spawn(self, message):
+        game = self.get_game()
+
+        for i in xrange(100):
+            game.spawn('Lizard')
+
+        game.spawn('Turret', type_=Turret)
+        game.spawn('Turret', type_=Turret)
+        game.spawn('Turret', type_=Turret)
+        game.spawn('Turret', type_=Turret)
 
     @tornadio2.event('move')
     def move(self, message):

@@ -17,6 +17,10 @@ class Entity
 
     @$.prependTo('#map')
 
+  kill: ->
+    @$.remove()
+    delete entities[@data.id]
+
   moveTo: (data) ->
     @data = data
 
@@ -25,13 +29,12 @@ class Entity
       top: data.y * 12
 
     if @data.target?
-      if not @$.hasClass('attacking')
-        @$.addClass('attacking')
-    else if @$.hasClass('attacking')
+      @$.addClass('attacking')
+    else
       @$.removeClass('attacking')
 
 class @Monster extends Entity
-
+class @Turret extends Entity
 class @Player extends Entity
   constructor: ->
     super
@@ -63,7 +66,7 @@ class Map
         slot.addClass('walkable') if column == 0
         slot.appendTo(map)
 
-    $('body').html(map)
+    $('body').append(map)
 
 socket = io.connect "#{location.protocol}//#{location.host}",
   resource: 'socket'
@@ -92,7 +95,8 @@ socket.on 'hp', (hp) ->
   else
     console.log 'Your HP is', hp
 
-socket.on 'dead', (entity) ->
+socket.on 'death', (entityId) ->
+  entities[entityId].kill()
 
 socket.on 'disconnect', ->
   console.log 'disconnceted'
@@ -103,3 +107,6 @@ $ ->
     e.preventDefault()
     data = $(this).data()
     socket.emit('move', [data.x, data.y])
+
+  $('#spawn').on 'click', (e) ->
+    socket.emit('spawn', [])
