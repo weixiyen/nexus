@@ -65,8 +65,9 @@
   this.MovableEntity = (function() {
     __extends(MovableEntity, Entity);
     function MovableEntity(entity) {
+      var _ref;
       MovableEntity.__super__.constructor.apply(this, arguments);
-      this.speed = entity.speed || Infinity;
+      this.speed = ((_ref = entity.stats) != null ? _ref.speed : void 0) ? Math.ceil(1 / entity.stats.speed * 3) : 0;
       this.moving = false;
       this.endLeft = this.left;
       this.endTop = this.top;
@@ -127,7 +128,7 @@
         top: this.top,
         zIndex: this.top
       });
-      return this.animateSprite();
+      return this.walk();
     };
     MovableEntity.prototype._movingDiagonally = function() {
       if (this.left !== this.endLeft && this.top !== this.endTop) {
@@ -135,7 +136,7 @@
       }
       return false;
     };
-    MovableEntity.prototype.animateSprite = function() {
+    MovableEntity.prototype.walk = function() {
       if (this.curDir === this.direction) {
         return;
       }
@@ -169,11 +170,10 @@
     __extends(Monster, MovableEntity);
     function Monster(entity) {
       Monster.__super__.constructor.apply(this, arguments);
-      this.speed = 3;
       this.width = 65;
       this.height = 60;
       this.imgurl = IMGPATH + 'sprite_monster.png';
-      this.animationSkip = 4;
+      this.animationSkip = 3;
       this.anim = {
         down: ["0 0", "-65px 0", "-130px 0"],
         up: ["-195px 0", "-260px 0", "-325px 0"],

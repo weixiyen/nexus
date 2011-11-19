@@ -9,7 +9,7 @@ BASE_STATS = {
     'movement_speed': 1,
     'aggro_range': 3,
     'leash': 15,
-    'patrol': 5
+    'patrol': 10
 }
 
 class Entity(object):
@@ -159,7 +159,7 @@ class MovableEntity(Entity):
         self.move(entity.x, entity.y)
 
     def _execute_movement_queue(self, ignore_atk=False):
-        if self.game.iteration_counter % self.stats['movement_speed']:
+        if self.game.iteration_counter % (1 / self.stats['movement_speed']):
             return
 
         if self._movement_queue:
@@ -184,7 +184,7 @@ class Player(MovableEntity):
         MovableEntity.__init__(self, *args, **kwargs)
 
         self.stats['hp'] = 500
-        self.stats['movement_speed'] = 1
+        self.stats['movement_speed'] = 0.5
 
 class Monster(MovableEntity):
     def __init__(self, *args, **kwargs):
@@ -192,7 +192,7 @@ class Monster(MovableEntity):
 
         self.stats['hp'] = 10
         self.stats['attack'] = 1
-        self.stats['movement_speed'] = 2
+        self.stats['movement_speed'] = 0.05
 
         self._last_patrol = datetime.now()
 
@@ -217,7 +217,7 @@ class Monster(MovableEntity):
         finally:
             self.aggro()
 
-        if self._last_patrol <= now - timedelta(seconds=random.randint(1, 5)):
+        if self._last_patrol <= now - timedelta(seconds=random.randint(5, 10)):
             x = self.x
             y = self.y
 

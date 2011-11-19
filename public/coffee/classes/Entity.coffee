@@ -54,7 +54,7 @@ class @Entity
 class @MovableEntity extends Entity
   constructor: (entity)->
     super
-    @speed = entity.speed || Infinity
+    @speed = if entity.stats?.speed then Math.ceil(1 / entity.stats.speed * 3) else 0
     @moving = false
     @endLeft = @left
     @endTop = @top
@@ -73,13 +73,16 @@ class @MovableEntity extends Entity
     changeX = STEP_X
     changeY = STEP_Y
 
+    # if moving diagonally, reduce mob speed
     if @_movingDiagonally()
       changeX -= 2
       changeY -= 1
 
+    # default nextLeft and nextTop values
     nextLeft = @left
     nextTop = @top
 
+    # set nextTop and nextLeft values including direction
     if @top > @endTop
       nextTop -= changeY
       @direction = 'up'
@@ -96,6 +99,7 @@ class @MovableEntity extends Entity
       nextLeft += changeX
       @direction = 'right'
 
+    # if end point less than the change amount, just have mob jump to end point
     if Math.abs(@left - @endLeft) <= STEP_X
       nextLeft = @endLeft
       stopX = true
@@ -104,6 +108,7 @@ class @MovableEntity extends Entity
       nextTop = @endTop
       stopY = true
 
+    # if mob is not moving, set moving to false and direction to null
     if stopX && stopY
       @moving = false
       @direction = null
@@ -115,13 +120,14 @@ class @MovableEntity extends Entity
       top: @top
       zIndex: @top
 
-    @animateSprite()
+    # animate sprite when moving
+    @walk()
 
   _movingDiagonally: ->
     if @left != @endLeft && @top != @endTop then return true
     return false
 
-  animateSprite: ->
+  walk: ->
 
     if @curDir == @direction then return
 
@@ -148,12 +154,11 @@ class @Monster extends MovableEntity
 
   constructor: (entity)->
     super
-    @speed = 3
     @width = 65
     @height = 60
     @imgurl = IMGPATH + 'sprite_monster.png'
 
-    @animationSkip = 4
+    @animationSkip = 3
     @anim =
       down: [
         "0 0",

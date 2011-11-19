@@ -11,14 +11,7 @@ from entity import Turret
 ROOT_PATH = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(ROOT_PATH, '../public')
 
-class IndexHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render('index.html', hello_world='Hello, world!')
-
-class TestHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render('test.html')
-
+class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         uid = self.get_cookie('uid')
 
@@ -27,6 +20,14 @@ class TestHandler(tornado.web.RequestHandler):
             self.set_cookie('uid', uid)
 
         return uid
+
+class IndexHandler(BaseHandler):
+    def get(self):
+        self.render('index.html', hello_world='Hello, world!')
+
+class TestHandler(BaseHandler):
+    def get(self):
+        self.render('test.html')
 
 class TestCanvasHandler(TestHandler):
     def get(self):
