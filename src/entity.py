@@ -4,12 +4,12 @@ import random
 class Delayer(object):
     def __init__(self, ms=100):
         self.delta = timedelta(milliseconds=ms)
-        self.last_time = datetime.now() - self.delta
+        self.last_time = None
 
     def is_ready(self):
         now = datetime.now()
 
-        if self.last_time <= now - self.delta:
+        if self.last_time is None or self.last_time <= now - self.delta:
             self.last_time = now
             return True
 
@@ -20,7 +20,7 @@ BASE_STATS = {
     'mp': 0,
     'attack': 0,
     'range_attack': 0,
-    'movement_speed': 100,
+    'movement_speed': 500,
     'aggro_range': 3,
     'leash': 15,
     'patrol': 10
