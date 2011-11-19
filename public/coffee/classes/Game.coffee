@@ -20,6 +20,17 @@ class @Game
       down: false
     @beginLoop()
 
+  beginLoop: ->
+    @loopCount = 0
+    gameLoop = =>
+      requestAnimFrame(gameLoop)
+      if @loopCount == 999999 then @loopCount = 0
+      for loopId, loopItem of @loopItems
+        if @loopCount % loopItem.frequency then continue
+        loopItem.fn(@loopCount)
+      @loopCount += 1
+    gameLoop()
+
   reset: ->
     @$canvas.empty()
     @entities = {}
@@ -66,16 +77,6 @@ class @Game
   addToCanvas: ($element)->
     @$canvas.append($element)
 
-  beginLoop: ->
-    count = 0
-    setInterval =>
-      if count == 999999 then count = 0
-      for loopId, loopItem of @loopItems
-        if count % loopItem.frequency then continue
-        loopItem.fn(@loopCount)
-      count += 1
-    , INTERVAL
-
   addLoopItem: (loopId, frequency, fn) ->
     @loopItems[loopId] =
       frequency: frequency
@@ -116,3 +117,5 @@ class @Game
     @top = style.top
 
     @renderOffset()
+
+

@@ -157,6 +157,14 @@
     };
     return MovableEntity;
   })();
+  this.Turret = (function() {
+    __extends(Turret, Entity);
+    function Turret(entity) {
+      Turret.__super__.constructor.apply(this, arguments);
+      console.log('turr');
+    }
+    return Turret;
+  })();
   this.Monster = (function() {
     __extends(Monster, MovableEntity);
     function Monster(entity) {

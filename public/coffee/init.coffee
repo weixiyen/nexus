@@ -60,3 +60,4 @@ $document.keyup (e)->
 
 $window.blur ->
   game.panStopAll()
+

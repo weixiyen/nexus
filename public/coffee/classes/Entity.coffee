@@ -139,6 +139,11 @@ class @MovableEntity extends Entity
       skip: @animationSkip
     @sprite.start()
 
+class @Turret extends Entity
+  constructor: (entity)->
+    super
+    console.log 'turr'
+
 class @Monster extends MovableEntity
 
   constructor: (entity)->

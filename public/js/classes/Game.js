@@ -22,6 +22,27 @@
       };
       this.beginLoop();
     }
+    Game.prototype.beginLoop = function() {
+      var gameLoop;
+      this.loopCount = 0;
+      gameLoop = __bind(function() {
+        var loopId, loopItem, _ref;
+        requestAnimFrame(gameLoop);
+        if (this.loopCount === 999999) {
+          this.loopCount = 0;
+        }
+        _ref = this.loopItems;
+        for (loopId in _ref) {
+          loopItem = _ref[loopId];
+          if (this.loopCount % loopItem.frequency) {
+            continue;
+          }
+          loopItem.fn(this.loopCount);
+        }
+        return this.loopCount += 1;
+      }, this);
+      return gameLoop();
+    };
     Game.prototype.reset = function() {
       this.$canvas.empty();
       return this.entities = {};
@@ -83,25 +104,6 @@
     };
     Game.prototype.addToCanvas = function($element) {
       return this.$canvas.append($element);
-    };
-    Game.prototype.beginLoop = function() {
-      var count;
-      count = 0;
-      return setInterval(__bind(function() {
-        var loopId, loopItem, _ref;
-        if (count === 999999) {
-          count = 0;
-        }
-        _ref = this.loopItems;
-        for (loopId in _ref) {
-          loopItem = _ref[loopId];
-          if (count % loopItem.frequency) {
-            continue;
-          }
-          loopItem.fn(this.loopCount);
-        }
-        return count += 1;
-      }, this), INTERVAL);
     };
     Game.prototype.addLoopItem = function(loopId, frequency, fn) {
       return this.loopItems[loopId] = {
