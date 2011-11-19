@@ -125,7 +125,7 @@ class MovableEntity(Entity):
     def __init__(self, *args, **kwargs):
         Entity.__init__(self, *args, **kwargs)
 
-        self.movement_speed = 100
+        self.movement_speed = 30
         self._movement_queue = []
 
     def _move(self, x, y):

@@ -1,5 +1,6 @@
 class @GameEvents
-  constructor: ->
+  constructor: (options)->
+    $document = $(document)
     @socket = io.connect "#{location.protocol}//#{location.host}",
       resource: 'socket'
 
@@ -17,4 +18,8 @@ class @GameEvents
 
   move: (fn) ->
     @socket.on 'move', (data) ->
+      fn(data)
+
+  death: (fn) ->
+    @socket.on 'death', (data) ->
       fn(data)

@@ -5,6 +5,7 @@ class @Game
 
   constructor: (options)->
     @$canvas = options.$canvas
+    @loopItems = {}
     @entities = {}
     @beginLoop()
 
@@ -40,9 +41,17 @@ class @Game
   beginLoop: ->
     count = 0
     setInterval =>
-      for entityId, entity of @entities
-        entity.nextIteration(count)
+      if count == 999999 then count = 0
+      for loopId, loopItem of @loopItems
+        if count % loopItem.frequency then continue
+        loopItem.fn(@loopCount)
       count += 1
     , INTERVAL
 
-  registerLoop: ->
+  registerLoopItem: (loopId, frequency, fn) ->
+    @loopItems[loopId] =
+      frequency: frequency
+      fn: fn
+
+  removeLoopItem: (loopId) ->
+    delete loopItems[loopId]

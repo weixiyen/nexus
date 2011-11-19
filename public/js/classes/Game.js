@@ -6,6 +6,7 @@
     INTERVAL = 30;
     function Game(options) {
       this.$canvas = options.$canvas;
+      this.loopItems = {};
       this.entities = {};
       this.beginLoop();
     }
@@ -52,16 +53,30 @@
       var count;
       count = 0;
       return setInterval(__bind(function() {
-        var entity, entityId, _ref;
-        _ref = this.entities;
-        for (entityId in _ref) {
-          entity = _ref[entityId];
-          entity.nextIteration(count);
+        var loopId, loopItem, _ref;
+        if (count === 999999) {
+          count = 0;
+        }
+        _ref = this.loopItems;
+        for (loopId in _ref) {
+          loopItem = _ref[loopId];
+          if (count % loopItem.frequency) {
+            continue;
+          }
+          loopItem.fn(this.loopCount);
         }
         return count += 1;
       }, this), INTERVAL);
     };
-    Game.prototype.registerLoop = function() {};
+    Game.prototype.registerLoopItem = function(loopId, frequency, fn) {
+      return this.loopItems[loopId] = {
+        frequency: frequency,
+        fn: fn
+      };
+    };
+    Game.prototype.removeLoopItem = function(loopId) {
+      return delete loopItems[loopId];
+    };
     return Game;
   })();
 }).call(this);

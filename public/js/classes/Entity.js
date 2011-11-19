@@ -24,8 +24,7 @@
       this.x = data.x;
       this.y = data.y;
       this.left = this.x * GRID_W;
-      this.top = this.x * GRID_H;
-      this.actionQueue = [];
+      this.top = this.y * GRID_H;
       this.target = data.target || null;
     }
     Entity.prototype.isAlive = function() {
@@ -57,18 +56,8 @@
       });
       return this.$el.append(this.$elBody);
     };
-    Entity.prototype.nextIteration = function(loopCount) {
-      var fn, _i, _len, _ref, _results;
-      _ref = this.actionQueue;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        fn = _ref[_i];
-        _results.push(fn(loopCount));
-      }
-      return _results;
-    };
-    Entity.prototype.addAction = function(fn) {
-      return this.actionQueue.push(fn);
+    Entity.prototype.remove = function() {
+      return this.$el.remove();
     };
     return Entity;
   })();
@@ -80,18 +69,18 @@
       this.moving = false;
       this.endLeft = this.left;
       this.endTop = this.top;
-      this.addAction(__bind(function(loopCount) {
+    }
+    MovableEntity.prototype.startMoving = function() {
+      return game.registerLoopItem('unit:' + this.id + ':move', this.speed, __bind(function() {
         if (!this.moving) {
-          return;
-        }
-        if (loopCount % this.speed) {
           return;
         }
         return this._moveTowardsGoal();
       }, this));
-    }
+    };
     MovableEntity.prototype._moveTowardsGoal = function() {
-      var changeX, changeY, nextLeft, nextTop;
+      var changeX, changeY, nextLeft, nextTop, stopX, stopY;
+      stopX = stopY = false;
       changeX = STEP_X;
       changeY = STEP_Y;
       if (this._movingDiagonally()) {
@@ -112,11 +101,23 @@
       if (this.top < this.endTop) {
         nextTop += changeY;
       }
+      if (Math.abs(this.left - this.endLeft) <= STEP_X) {
+        nextLeft = this.endLeft;
+        stopX = true;
+      }
+      if (Math.abs(this.top - this.endTop) <= STEP_Y) {
+        nextTop = this.endTop;
+        stopY = true;
+      }
+      if (stopX && stopY) {
+        this.moving = false;
+      }
       this.left = nextLeft;
       this.top = nextTop;
       return this.$el.css({
         left: this.left,
-        top: this.top
+        top: this.top,
+        zIndex: this.top
       });
     };
     MovableEntity.prototype._movingDiagonally = function() {
@@ -131,11 +132,12 @@
     __extends(Monster, MovableEntity);
     function Monster(entity) {
       Monster.__super__.constructor.apply(this, arguments);
-      this.speed = 5;
+      this.speed = 4;
       this.width = 65;
       this.height = 60;
       this.imgurl = IMGPATH + 'sprite_monster.png';
       this.create();
+      this.startMoving();
     }
     Monster.prototype.moveTo = function(x, y) {
       this.moving = true;
@@ -148,7 +150,7 @@
     __extends(Player, MovableEntity);
     function Player(entity) {
       Player.__super__.constructor.apply(this, arguments);
-      this.speed = 5;
+      this.speed = 3;
       this.width = 40;
       this.height = 64;
       this.imgurl = IMGPATH + 'sprite_user.png';

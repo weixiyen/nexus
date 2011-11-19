@@ -17,9 +17,7 @@ class @Entity
     @x = data.x
     @y = data.y
     @left = @x * GRID_W
-    @top = @x * GRID_H
-
-    @actionQueue = []
+    @top = @y * GRID_H
 
     @target = data.target or null
 
@@ -49,12 +47,8 @@ class @Entity
 
     @$el.append(@$elBody)
 
-  nextIteration: (loopCount)->
-    for fn in @actionQueue
-      fn(loopCount)
-
-  addAction: (fn)->
-    @actionQueue.push fn
+  remove: ->
+    @$el.remove()
 
 class @MovableEntity extends Entity
   constructor: (entity)->
@@ -64,12 +58,14 @@ class @MovableEntity extends Entity
     @endLeft = @left
     @endTop = @top
 
-    @addAction (loopCount)=>
+  startMoving: ->
+    game.registerLoopItem 'unit:'+@id+':move', @speed, =>
       if !@moving then return
-      if loopCount % @speed then return
       @_moveTowardsGoal()
 
   _moveTowardsGoal: ->
+
+    stopX = stopY = false
 
     changeX = STEP_X
     changeY = STEP_Y
@@ -95,15 +91,21 @@ class @MovableEntity extends Entity
 
     if Math.abs(@left - @endLeft) <= STEP_X
       nextLeft = @endLeft
+      stopX = true
 
     if Math.abs(@top - @endTop) <= STEP_Y
       nextTop = @endTop
+      stopY = true
+
+    if stopX && stopY
+      @moving = false
 
     @left = nextLeft
     @top = nextTop
     @$el.css
       left: @left
       top: @top
+      zIndex: @top
 
   _movingDiagonally: ->
     if @left != @endLeft && @top != @endTop then return true
@@ -113,11 +115,12 @@ class @Monster extends MovableEntity
 
   constructor: (entity)->
     super
-    @speed = 5
+    @speed = 4
     @width = 65
     @height = 60
     @imgurl = IMGPATH + 'sprite_monster.png'
     @create()
+    @startMoving()
 
   moveTo: (x, y)->
     @moving = true
@@ -127,7 +130,7 @@ class @Monster extends MovableEntity
 class @Player extends MovableEntity
   constructor: (entity)->
     super
-    @speed = 5
+    @speed = 3
     @width = 40
     @height = 64
     @imgurl = IMGPATH + 'sprite_user.png'

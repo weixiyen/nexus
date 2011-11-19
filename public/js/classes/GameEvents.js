@@ -1,6 +1,8 @@
 (function() {
   this.GameEvents = (function() {
-    function GameEvents() {
+    function GameEvents(options) {
+      var $document;
+      $document = $(document);
       this.socket = io.connect("" + location.protocol + "//" + location.host, {
         resource: 'socket'
       });
@@ -22,6 +24,11 @@
     };
     GameEvents.prototype.move = function(fn) {
       return this.socket.on('move', function(data) {
+        return fn(data);
+      });
+    };
+    GameEvents.prototype.death = function(fn) {
+      return this.socket.on('death', function(data) {
         return fn(data);
       });
     };
