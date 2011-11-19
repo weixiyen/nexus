@@ -17,7 +17,7 @@ class Game(object):
         self._pc.start()
 
         self.logger = logging.getLogger('game')
-#        self.logger.setLevel(logging.DEBUG)
+        self.logger.setLevel(logging.DEBUG)
 
     def serialize(self):
         return {

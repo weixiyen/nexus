@@ -13,11 +13,17 @@
     function Entity(data) {
       entities[data.id] = this;
       this.data = data;
+      this.zIndex = this.data.id;
     }
     Entity.prototype.render = function() {
       this.$ = $('<div />', {
-        id: 'entity-' + this.data.id,
-        "class": 'entity ' + this.data.kind.toLowerCase()
+        id: 'entity' + this.data.id,
+        "class": 'entity ' + this.data.kind.toLowerCase(),
+        css: {
+          left: this.data.x * 12,
+          top: this.data.y * 12,
+          zIndex: this.zIndex
+        }
       });
       return this.$.prependTo('#map');
     };
@@ -28,8 +34,10 @@
         top: data.y * 12
       });
       if (this.data.target != null) {
-        return this.$.addClass('attacking');
-      } else {
+        if (!this.$.hasClass('attacking')) {
+          return this.$.addClass('attacking');
+        }
+      } else if (this.$.hasClass('attacking')) {
         return this.$.removeClass('attacking');
       }
     };
@@ -68,7 +76,10 @@
         for (x = 0, _ref2 = row.length; 0 <= _ref2 ? x < _ref2 : x > _ref2; 0 <= _ref2 ? x++ : x--) {
           column = row[x];
           slot = $('<div />', {
-            id: "" + x + "-" + y,
+            data: {
+              x: x,
+              y: y
+            },
             "class": 'tile'
           });
           if (column === 0) {
@@ -121,11 +132,11 @@
   });
   $(function() {
     return $('body').on('click', '.tile', function(e) {
-      var pair;
+      var data;
       e.stopPropagation();
       e.preventDefault();
-      pair = this.id.split('-');
-      return socket.emit('move', [parseInt(pair[0], 10), parseInt(pair[1], 10)]);
+      data = $(this).data();
+      return socket.emit('move', [data.x, data.y]);
     });
   });
 }).call(this);

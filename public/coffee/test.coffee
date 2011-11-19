@@ -4,11 +4,16 @@ class Entity
   constructor: (data) ->
     entities[data.id] = @
     @data = data
+    @zIndex = @data.id
 
   render: ->
     @$ = $ '<div />',
-      id: 'entity-' + @data.id
+      id: 'entity' + @data.id
       class: 'entity ' + @data.kind.toLowerCase()
+      css:
+        left: @data.x * 12
+        top: @data.y * 12
+        zIndex: @zIndex
 
     @$.prependTo('#map')
 
@@ -20,13 +25,17 @@ class Entity
       top: data.y * 12
 
     if @data.target?
-      @$.addClass('attacking')
-    else
+      if not @$.hasClass('attacking')
+        @$.addClass('attacking')
+    else if @$.hasClass('attacking')
       @$.removeClass('attacking')
 
 class @Monster extends Entity
 
 class @Player extends Entity
+  constructor ->
+    super
+    @zIndex = @zIndex * 1000
 
 class Map
   constructor: (@state) ->
@@ -46,7 +55,9 @@ class Map
         column = row[x]
 
         slot = $ '<div />',
-          id: "#{x}-#{y}"
+          data:
+            x: x
+            y: y
           class: 'tile'
 
         slot.addClass('walkable') if column == 0
@@ -90,5 +101,5 @@ $ ->
   $('body').on 'click', '.tile', (e) ->
     e.stopPropagation()
     e.preventDefault()
-    pair = this.id.split('-')
-    socket.emit('move', [parseInt(pair[0], 10), parseInt(pair[1], 10)])
+    data = $(this).data()
+    socket.emit('move', [data.x, data.y])
