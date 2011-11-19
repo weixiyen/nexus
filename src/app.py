@@ -53,7 +53,11 @@ class SocketConnection(tornadio2.conn.SocketConnection):
 
         game = self.get_game()
         self.entity = game.add_participant(self)
-        self.emit('initialize', game.serialize())
+
+        state = game.serialize()
+        state['me'] = self.entity.id
+
+        self.emit('initialize', state)
 
     @tornadio2.event('spawn')
     def spawn(self, message):
