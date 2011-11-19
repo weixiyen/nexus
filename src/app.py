@@ -28,6 +28,10 @@ class TestHandler(tornado.web.RequestHandler):
 
         return uid
 
+class TestCanvasHandler(TestHandler):
+    def get(self):
+        self.render('test-canvas.html')
+
 class SocketConnection(tornadio2.conn.SocketConnection):
     @classmethod
     def get_game(cls):
@@ -83,6 +87,7 @@ application = tornado.web.Application(
     }, namespace='socket').apply_routes([
         (r'/', IndexHandler),
         (r'/test', TestHandler),
+        (r'/test-canvas', TestCanvasHandler),
         (r'/public/(.*)', tornado.web.StaticFileHandler, {'path': STATIC_PATH})
     ]),
     template_path=os.path.join(ROOT_PATH, '../templates'),
