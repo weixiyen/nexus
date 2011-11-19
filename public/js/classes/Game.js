@@ -5,7 +5,7 @@
     STUB = 'ent-';
     INTERVAL = 30;
     PAN_SPEED = 1;
-    PAN_DIST = 10;
+    PAN_DIST = 15;
     UI_HEIGHT = 50;
     function Game(options) {
       this.$canvas = options.$canvas;

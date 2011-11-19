@@ -6,7 +6,7 @@ BASE_STATS = {
     'mp': 0,
     'attack': 0,
     'range_attack': 0,
-    'movement_speed': 1,
+    'movement_speed': 200,
     'aggro_range': 3,
     'leash': 15,
     'patrol': 5

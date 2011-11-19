@@ -169,7 +169,7 @@
     __extends(Monster, MovableEntity);
     function Monster(entity) {
       Monster.__super__.constructor.apply(this, arguments);
-      this.speed = 4;
+      this.speed = 3;
       this.width = 65;
       this.height = 60;
       this.imgurl = IMGPATH + 'sprite_monster.png';

@@ -148,7 +148,7 @@ class @Monster extends MovableEntity
 
   constructor: (entity)->
     super
-    @speed = 4
+    @speed = 3
     @width = 65
     @height = 60
     @imgurl = IMGPATH + 'sprite_monster.png'
