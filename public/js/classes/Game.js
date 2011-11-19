@@ -1,17 +1,19 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   this.Game = (function() {
-    var INTERVAL, PAN_DIST, PAN_SPEED, STUB;
+    var INTERVAL, PAN_DIST, PAN_SPEED, STUB, UI_HEIGHT;
     STUB = 'ent-';
     INTERVAL = 30;
     PAN_SPEED = 1;
     PAN_DIST = 10;
+    UI_HEIGHT = 50;
     function Game(options) {
       this.$canvas = options.$canvas;
       this.loopItems = {};
       this.entities = {};
       this.left = 0;
       this.top = 0;
+      this.userId = null;
       this.panning = {
         left: false,
         right: false,
@@ -24,6 +26,25 @@
       this.$canvas.empty();
       return this.entities = {};
     };
+    Game.prototype.renderOffset = function() {
+      var style;
+      style = {
+        left: this.left,
+        top: this.top
+      };
+      this.$canvas.css(style);
+      return map.$canvas.css(style);
+    };
+    Game.prototype.setUserId = function(entityId) {
+      return this.userId = entityId;
+    };
+    Game.prototype.centerOnUser = function() {
+      var me;
+      me = this.entities[STUB + this.userId];
+      this.left = -me.left - me.width / 2 + $window.width() / 2;
+      this.top = -me.top - me.height / 2 + $window.height() / 2 - UI_HEIGHT;
+      return this.renderOffset();
+    };
     Game.prototype.addEntities = function(entities) {
       var entity, _i, _len, _results;
       _results = [];
@@ -35,8 +56,13 @@
     };
     Game.prototype.addEntity = function(entityData) {
       var entity;
+      if (this.entities[STUB + entityData.id]) {
+        return;
+      }
       entity = null;
-      if (window.hasOwnProperty(entityData.kind)) {
+      if (entityData.id === this.userId) {
+        entity = new User(entityData);
+      } else if (window.hasOwnProperty(entityData.kind)) {
         entity = new window[entityData.kind](entityData);
       }
       if (entity === null) {
@@ -127,8 +153,7 @@
       }
       this.left = style.left;
       this.top = style.top;
-      this.$canvas.css(style);
-      return map.$canvas.css(style);
+      return this.renderOffset();
     };
     return Game;
   })();

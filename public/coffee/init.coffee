@@ -1,3 +1,6 @@
+@$document = $(document)
+@$window = $(window)
+
 @game = new Game
   $canvas: $('#game')
 
@@ -12,46 +15,48 @@ events = new GameEvents
 events.init (data)->
   game.reset()
   map.reset()
-  game.addEntities data.entities
+  game.setUserId(data.me)
+  game.addEntities(data.entities)
+  game.centerOnUser()
 
 # spawn an entity
 events.spawn (entity)->
-  console.log 'mob spawned', entity
+  game.addEntity entity
 
 # move an entity
 events.move (movementData)->
-  game.moveEntity movementData
+  game.moveEntity(movementData)
 
 events.death (entityId)->
   game.removeEntity(entityId)
-
-$document = $(document)
 
 $document.keydown (e)->
   e.preventDefault()
   e.stopPropagation()
   code = e.which
   if code == 65
-    game.panStart('left')
-  if code == 68
     game.panStart('right')
+  if code == 68
+    game.panStart('left')
   if code == 87
-    game.panStart('up')
-  if code == 83
     game.panStart('down')
+  if code == 83
+    game.panStart('up')
+  if code == 32
+    game.centerOnUser()
 
 $document.keyup (e)->
   e.preventDefault()
   e.stopPropagation()
   code = e.which
   if code == 65
-    game.panStop('left')
-  if code == 68
     game.panStop('right')
+  if code == 68
+    game.panStop('left')
   if code == 87
-    game.panStop('up')
-  if code == 83
     game.panStop('down')
+  if code == 83
+    game.panStop('up')
 
-$(window).blur ->
+$window.blur ->
   game.panStopAll()

@@ -1,5 +1,7 @@
 (function() {
-  var $document, events;
+  var events;
+  this.$document = $(document);
+  this.$window = $(window);
   this.game = new Game({
     $canvas: $('#game')
   });
@@ -13,10 +15,12 @@
   events.init(function(data) {
     game.reset();
     map.reset();
-    return game.addEntities(data.entities);
+    game.setUserId(data.me);
+    game.addEntities(data.entities);
+    return game.centerOnUser();
   });
   events.spawn(function(entity) {
-    return console.log('mob spawned', entity);
+    return game.addEntity(entity);
   });
   events.move(function(movementData) {
     return game.moveEntity(movementData);
@@ -24,23 +28,25 @@
   events.death(function(entityId) {
     return game.removeEntity(entityId);
   });
-  $document = $(document);
   $document.keydown(function(e) {
     var code;
     e.preventDefault();
     e.stopPropagation();
     code = e.which;
     if (code === 65) {
-      game.panStart('left');
-    }
-    if (code === 68) {
       game.panStart('right');
     }
+    if (code === 68) {
+      game.panStart('left');
+    }
     if (code === 87) {
-      game.panStart('up');
+      game.panStart('down');
     }
     if (code === 83) {
-      return game.panStart('down');
+      game.panStart('up');
+    }
+    if (code === 32) {
+      return game.centerOnUser();
     }
   });
   $document.keyup(function(e) {
@@ -49,19 +55,19 @@
     e.stopPropagation();
     code = e.which;
     if (code === 65) {
-      game.panStop('left');
-    }
-    if (code === 68) {
       game.panStop('right');
     }
+    if (code === 68) {
+      game.panStop('left');
+    }
     if (code === 87) {
-      game.panStop('up');
+      game.panStop('down');
     }
     if (code === 83) {
-      return game.panStop('down');
+      return game.panStop('up');
     }
   });
-  $(window).blur(function() {
+  $window.blur(function() {
     return game.panStopAll();
   });
 }).call(this);

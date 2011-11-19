@@ -4,6 +4,7 @@ class @Game
   INTERVAL = 30
   PAN_SPEED = 1
   PAN_DIST = 10
+  UI_HEIGHT = 50 #height of bottom interface used to center user correctly
 
   constructor: (options)->
     @$canvas = options.$canvas
@@ -11,6 +12,7 @@ class @Game
     @entities = {}
     @left = 0
     @top = 0
+    @userId = null
     @panning =
       left: false
       right: false
@@ -22,13 +24,32 @@ class @Game
     @$canvas.empty()
     @entities = {}
 
+  renderOffset: ->
+    style =
+      left: @left
+      top: @top
+    @$canvas.css style
+    map.$canvas.css style
+
+  setUserId: (entityId)->
+    @userId = entityId
+
+  centerOnUser: ->
+    me = @entities[STUB+@userId]
+    @left = -me.left - me.width / 2 + $window.width() / 2
+    @top = -me.top - me.height / 2 + $window.height() / 2 - UI_HEIGHT
+    @renderOffset()
+
   addEntities: (entities)->
     for entity in entities
       @addEntity entity
 
   addEntity: (entityData)->
+    if @entities[STUB+entityData.id] then return
     entity = null
-    if window.hasOwnProperty(entityData.kind)
+    if entityData.id == @userId
+      entity = new User(entityData)
+    else if window.hasOwnProperty(entityData.kind)
       entity = new window[entityData.kind](entityData)
     if entity == null then return
     @entities[STUB+entity.id] = entity
@@ -96,5 +117,4 @@ class @Game
     @left = style.left
     @top = style.top
 
-    @$canvas.css style
-    map.$canvas.css style
+    @renderOffset()

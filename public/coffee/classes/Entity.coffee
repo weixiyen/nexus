@@ -143,3 +143,13 @@ class @Player extends MovableEntity
     @moving = true
     @endLeft = x * GRID_W
     @endTop = y * GRID_H
+
+class @User extends MovableEntity
+  constructor: (entity)->
+    super
+    @speed = 3
+    @width = 40
+    @height = 64
+    @imgurl = IMGPATH + 'sprite_user.png'
+
+    @create()

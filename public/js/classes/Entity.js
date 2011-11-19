@@ -164,4 +164,16 @@
     };
     return Player;
   })();
+  this.User = (function() {
+    __extends(User, MovableEntity);
+    function User(entity) {
+      User.__super__.constructor.apply(this, arguments);
+      this.speed = 3;
+      this.width = 40;
+      this.height = 64;
+      this.imgurl = IMGPATH + 'sprite_user.png';
+      this.create();
+    }
+    return User;
+  })();
 }).call(this);
