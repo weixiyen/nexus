@@ -5,11 +5,11 @@
   $canvas: $('#game')
 
 @map = new Map
-    $canvas: $('#map')
+  $canvas: $('#map')
 
 events = new GameEvents
-    game: game
-    map: map
+  game: game
+  map: map
 
 # initialize the game canvas
 events.init (data)->
