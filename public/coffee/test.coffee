@@ -2,7 +2,7 @@ entities = {}
 
 class Entity
   constructor: (data) ->
-    entities[@ata.id] = @
+    entities[data.id] = @
     @data = data
 
   render: ->

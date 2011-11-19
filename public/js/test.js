@@ -11,7 +11,7 @@
   entities = {};
   Entity = (function() {
     function Entity(data) {
-      entities[this.ata.id] = this;
+      entities[data.id] = this;
       this.data = data;
     }
     Entity.prototype.render = function() {
