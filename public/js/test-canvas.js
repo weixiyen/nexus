@@ -17,21 +17,22 @@
       this.queue = [];
     }
     Entity.prototype.render = function(ctx) {
+      var _ref;
       if (this.dead) {
         return;
       }
       if (this.queue.length) {
-        this.data = this.queue.shift();
+        _ref = this.queue.shift(), this.data.x = _ref[0], this.data.y = _ref[1];
       }
-      ctx.fillStyle = self.target != null ? 'red' : this.color;
+      ctx.fillStyle = this.data.target != null ? 'red' : this.color;
       return ctx.fillRect(this.data.x * 10, this.data.y * 10, 10, 10);
     };
     Entity.prototype.kill = function() {
       this.dead = true;
       return delete window.entities[this.data.id];
     };
-    Entity.prototype.moveTo = function(data) {
-      return this.queue.push(data);
+    Entity.prototype.moveTo = function(x, y) {
+      return this.queue.push([x, y]);
     };
     return Entity;
   })();
@@ -113,10 +114,15 @@
     entity = new window[entity.kind](entity);
     return entity.render($('canvas')[0].getContext('2d'));
   });
-  socket.on('move', function(data) {
+  socket.on('move', function(entityId, x, y) {
     var entity;
-    entity = entities[data.id];
-    return entity.moveTo(data);
+    entity = entities[entityId];
+    return entity.moveTo(x, y);
+  });
+  socket.on('target', function(id, targetId) {
+    var entity;
+    entity = entities[id];
+    return entity.data.target = targetId;
   });
   socket.on('hp', function(hp) {
     if (hp === 0) {

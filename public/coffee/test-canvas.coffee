@@ -11,17 +11,17 @@ class Entity
     return if @dead
 
     if (@queue.length)
-      @data = @queue.shift()
+      [@data.x, @data.y] = @queue.shift()
 
-    ctx.fillStyle = if self.target? then 'red' else @color
+    ctx.fillStyle = if @data.target? then 'red' else @color
     ctx.fillRect(@data.x * 10, @data.y * 10, 10, 10)
 
   kill: ->
     @dead = true
     delete window.entities[@data.id]
 
-  moveTo: (data) ->
-    @queue.push(data)
+  moveTo: (x, y) ->
+    @queue.push([x, y])
 
 class @Monster extends Entity
 class @Turret extends Entity
@@ -83,9 +83,13 @@ socket.on 'spawn', (entity) ->
   entity = new window[entity.kind](entity)
   entity.render($('canvas')[0].getContext('2d'))
 
-socket.on 'move', (data) ->
-  entity = entities[data.id]
-  entity.moveTo(data)
+socket.on 'move', (entityId, x, y) ->
+  entity = entities[entityId]
+  entity.moveTo(x, y)
+
+socket.on 'target', (id, targetId) ->
+  entity = entities[id]
+  entity.data.target = targetId
 
 socket.on 'hp', (hp) ->
   if hp == 0

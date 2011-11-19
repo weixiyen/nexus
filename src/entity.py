@@ -6,7 +6,7 @@ BASE_STATS = {
     'mp': 0,
     'attack': 0,
     'range_attack': 0,
-    'movement_speed': 200,
+    'movement_speed': 1,
     'aggro_range': 3,
     'leash': 15,
     'patrol': 5
@@ -184,6 +184,7 @@ class Player(MovableEntity):
         MovableEntity.__init__(self, *args, **kwargs)
 
         self.stats['hp'] = 500
+        self.stats['movement_speed'] = 1
 
 class Monster(MovableEntity):
     def __init__(self, *args, **kwargs):
@@ -191,7 +192,7 @@ class Monster(MovableEntity):
 
         self.stats['hp'] = 10
         self.stats['attack'] = 1
-        self.stats['movement_speed'] = 10
+        self.stats['movement_speed'] = 2
 
         self._last_patrol = datetime.now()
 
