@@ -71,7 +71,7 @@
       this.endTop = this.top;
     }
     MovableEntity.prototype.startMoving = function() {
-      return game.registerLoopItem('unit:' + this.id + ':move', this.speed, __bind(function() {
+      return game.addLoopItem('unit:' + this.id + ':move', this.speed, __bind(function() {
         if (!this.moving) {
           return;
         }
@@ -155,8 +155,13 @@
       this.height = 64;
       this.imgurl = IMGPATH + 'sprite_user.png';
       this.create();
+      this.startMoving();
     }
-    Player.prototype.moveTo = function(x, y) {};
+    Player.prototype.moveTo = function(x, y) {
+      this.moving = true;
+      this.endLeft = x * GRID_W;
+      return this.endTop = y * GRID_H;
+    };
     return Player;
   })();
 }).call(this);

@@ -2,11 +2,20 @@ class @Game
 
   STUB = 'ent-'
   INTERVAL = 30
+  PAN_SPEED = 1
+  PAN_DIST = 10
 
   constructor: (options)->
     @$canvas = options.$canvas
     @loopItems = {}
     @entities = {}
+    @left = 0
+    @top = 0
+    @panning =
+      left: false
+      right: false
+      up: false
+      down: false
     @beginLoop()
 
   reset: ->
@@ -48,10 +57,39 @@ class @Game
       count += 1
     , INTERVAL
 
-  registerLoopItem: (loopId, frequency, fn) ->
+  addLoopItem: (loopId, frequency, fn) ->
     @loopItems[loopId] =
       frequency: frequency
       fn: fn
 
   removeLoopItem: (loopId) ->
-    delete loopItems[loopId]
+    delete @loopItems[loopId]
+
+  panStart: (dir)->
+    if @panning[dir] then return
+    @panning[dir] = true
+    @addLoopItem 'pan:'+dir, PAN_SPEED, =>
+      @pan(dir)
+
+  panStop: (dir)->
+    @panning[dir] = false
+    @removeLoopItem('pan:'+dir)
+
+  pan: (dir)->
+    style =
+      left: @left
+      top: @top
+    if dir == 'left'
+      style.left -= PAN_DIST
+    else if dir == 'right'
+      style.left += PAN_DIST
+    else if dir == 'up'
+      style.top -= PAN_DIST
+    else if dir == 'down'
+      style.top += PAN_DIST
+
+    @left = style.left
+    @top = style.top
+
+    @$canvas.css style
+    map.$canvas.css style

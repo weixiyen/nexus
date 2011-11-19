@@ -1,13 +1,23 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   this.Game = (function() {
-    var INTERVAL, STUB;
+    var INTERVAL, PAN_DIST, PAN_SPEED, STUB;
     STUB = 'ent-';
     INTERVAL = 30;
+    PAN_SPEED = 1;
+    PAN_DIST = 10;
     function Game(options) {
       this.$canvas = options.$canvas;
       this.loopItems = {};
       this.entities = {};
+      this.left = 0;
+      this.top = 0;
+      this.panning = {
+        left: false,
+        right: false,
+        up: false,
+        down: false
+      };
       this.beginLoop();
     }
     Game.prototype.reset = function() {
@@ -68,14 +78,47 @@
         return count += 1;
       }, this), INTERVAL);
     };
-    Game.prototype.registerLoopItem = function(loopId, frequency, fn) {
+    Game.prototype.addLoopItem = function(loopId, frequency, fn) {
       return this.loopItems[loopId] = {
         frequency: frequency,
         fn: fn
       };
     };
     Game.prototype.removeLoopItem = function(loopId) {
-      return delete loopItems[loopId];
+      return delete this.loopItems[loopId];
+    };
+    Game.prototype.panStart = function(dir) {
+      if (this.panning[dir]) {
+        return;
+      }
+      this.panning[dir] = true;
+      return this.addLoopItem('pan:' + dir, PAN_SPEED, __bind(function() {
+        return this.pan(dir);
+      }, this));
+    };
+    Game.prototype.panStop = function(dir) {
+      this.panning[dir] = false;
+      return this.removeLoopItem('pan:' + dir);
+    };
+    Game.prototype.pan = function(dir) {
+      var style;
+      style = {
+        left: this.left,
+        top: this.top
+      };
+      if (dir === 'left') {
+        style.left -= PAN_DIST;
+      } else if (dir === 'right') {
+        style.left += PAN_DIST;
+      } else if (dir === 'up') {
+        style.top -= PAN_DIST;
+      } else if (dir === 'down') {
+        style.top += PAN_DIST;
+      }
+      this.left = style.left;
+      this.top = style.top;
+      this.$canvas.css(style);
+      return map.$canvas.css(style);
     };
     return Game;
   })();

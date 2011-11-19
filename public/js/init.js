@@ -27,6 +27,38 @@
   $document = $(document);
   $document.keydown(function(e) {
     var code;
-    return code = e.which;
+    e.preventDefault();
+    e.stopPropagation();
+    code = e.which;
+    if (code === 65) {
+      game.panStart('left');
+    }
+    if (code === 68) {
+      game.panStart('right');
+    }
+    if (code === 87) {
+      game.panStart('up');
+    }
+    if (code === 83) {
+      return game.panStart('down');
+    }
+  });
+  $document.keyup(function(e) {
+    var code;
+    e.preventDefault();
+    e.stopPropagation();
+    code = e.which;
+    if (code === 65) {
+      game.panStop('left');
+    }
+    if (code === 68) {
+      game.panStop('right');
+    }
+    if (code === 87) {
+      game.panStop('up');
+    }
+    if (code === 83) {
+      return game.panStop('down');
+    }
   });
 }).call(this);

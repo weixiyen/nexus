@@ -59,7 +59,7 @@ class @MovableEntity extends Entity
     @endTop = @top
 
   startMoving: ->
-    game.registerLoopItem 'unit:'+@id+':move', @speed, =>
+    game.addLoopItem 'unit:'+@id+':move', @speed, =>
       if !@moving then return
       @_moveTowardsGoal()
 
@@ -119,6 +119,7 @@ class @Monster extends MovableEntity
     @width = 65
     @height = 60
     @imgurl = IMGPATH + 'sprite_monster.png'
+
     @create()
     @startMoving()
 
@@ -134,7 +135,11 @@ class @Player extends MovableEntity
     @width = 40
     @height = 64
     @imgurl = IMGPATH + 'sprite_user.png'
+
     @create()
+    @startMoving()
 
   moveTo: (x, y)->
-
+    @moving = true
+    @endLeft = x * GRID_W
+    @endTop = y * GRID_H

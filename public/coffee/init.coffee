@@ -2,11 +2,11 @@
   $canvas: $('#game')
 
 @map = new Map
-  $canvas: $('#map')
+    $canvas: $('#map')
 
 events = new GameEvents
-  game: game
-  map: map
+    game: game
+    map: map
 
 # initialize the game canvas
 events.init (data)->
@@ -26,10 +26,29 @@ events.death (entityId)->
   game.removeEntity(entityId)
 
 $document = $(document)
-$document.keydown (e)->
-  code = e.which
 
-  # left = 65
-  # right = 68
-  # up = 87
-  # down = 83
+$document.keydown (e)->
+  e.preventDefault()
+  e.stopPropagation()
+  code = e.which
+  if code == 65
+    game.panStart('left')
+  if code == 68
+    game.panStart('right')
+  if code == 87
+    game.panStart('up')
+  if code == 83
+    game.panStart('down')
+
+$document.keyup (e)->
+  e.preventDefault()
+  e.stopPropagation()
+  code = e.which
+  if code == 65
+    game.panStop('left')
+  if code == 68
+    game.panStop('right')
+  if code == 87
+    game.panStop('up')
+  if code == 83
+    game.panStop('down')
