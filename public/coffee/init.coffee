@@ -31,32 +31,45 @@ events.death (entityId)->
   game.removeEntity(entityId)
 
 $document.keydown (e)->
-  e.preventDefault()
-  e.stopPropagation()
+  captured = false
   code = e.which
   if code == 65
+    captured = true
     game.panStart('right')
   if code == 68
+    captured = true
     game.panStart('left')
   if code == 87
+    captured = true
     game.panStart('down')
   if code == 83
+    captured = true
     game.panStart('up')
   if code == 32
+    captured = true
     game.centerOnUser()
+  if captured == true
+    e.preventDefault()
+    e.stopPropagation()
 
 $document.keyup (e)->
-  e.preventDefault()
-  e.stopPropagation()
+  captured = false
   code = e.which
   if code == 65
+    captured = true
     game.panStop('right')
   if code == 68
+    captured = true
     game.panStop('left')
   if code == 87
+    captured = true
     game.panStop('down')
   if code == 83
+    captured = true
     game.panStop('up')
+  if captured == true
+    e.preventDefault()
+    e.stopPropagation()
 
 $window.blur ->
   game.panStopAll()

@@ -29,42 +29,57 @@
     return game.removeEntity(entityId);
   });
   $document.keydown(function(e) {
-    var code;
-    e.preventDefault();
-    e.stopPropagation();
+    var captured, code;
+    captured = false;
     code = e.which;
     if (code === 65) {
+      captured = true;
       game.panStart('right');
     }
     if (code === 68) {
+      captured = true;
       game.panStart('left');
     }
     if (code === 87) {
+      captured = true;
       game.panStart('down');
     }
     if (code === 83) {
+      captured = true;
       game.panStart('up');
     }
     if (code === 32) {
-      return game.centerOnUser();
+      captured = true;
+      game.centerOnUser();
+    }
+    if (captured === true) {
+      e.preventDefault();
+      return e.stopPropagation();
     }
   });
   $document.keyup(function(e) {
-    var code;
-    e.preventDefault();
-    e.stopPropagation();
+    var captured, code;
+    captured = false;
     code = e.which;
     if (code === 65) {
+      captured = true;
       game.panStop('right');
     }
     if (code === 68) {
+      captured = true;
       game.panStop('left');
     }
     if (code === 87) {
+      captured = true;
       game.panStop('down');
     }
     if (code === 83) {
-      return game.panStop('up');
+      captured = true;
+      game.panStop('up');
+    }
+    if (captured === true) {
+      e.preventDefault();
+      return e.stopPropagation();
     }
   });
   $window.blur(function() {
