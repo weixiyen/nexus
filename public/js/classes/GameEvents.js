@@ -46,6 +46,11 @@
         return fn(id, name);
       });
     };
+    GameEvents.prototype.damageTaken = function(fn) {
+      return this.socket.on('damage-taken', function(id, amt, isCritical) {
+        return fn(id, amt, isCritical);
+      });
+    };
     GameEvents.prototype.moveMe = function(x, y) {
       return this.socket.emit('move', [x, y]);
     };

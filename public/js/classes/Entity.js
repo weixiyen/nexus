@@ -21,6 +21,7 @@
       this.hp = data.hp;
       this.kind = data.kind;
       this.name = data.name;
+      this.stats = data.stats;
       this.x = data.x;
       this.y = data.y;
       this.left = this.x * GRID_W;
@@ -60,11 +61,23 @@
         "class": 'name',
         css: {
           left: this.width / 2 - 50,
-          top: -10
+          top: -25
         }
       });
       this.$elName.html(this.name);
-      return this.$el.append(this.$elName, this.$elBody);
+      this.$elBar = $('<div/>', {
+        "class": 'bar br2',
+        css: {
+          left: this.width / 2 - 25,
+          top: -10
+        }
+      });
+      this.$elHp = $('<div/>', {
+        "class": 'hp br2'
+      });
+      this.$elBar.append(this.$elHp);
+      this.$el.append(this.$elName, this.$elBar, this.$elBody);
+      return this.setHp(this.stats.hp);
     };
     Entity.prototype.remove = function() {
       return this.$el.remove();
@@ -84,6 +97,17 @@
     Entity.prototype.changeName = function(name) {
       this.name = name;
       return this.$elName.html(name);
+    };
+    Entity.prototype.takeDamage = function(amt, isCrit) {
+      return this.setHp(this.hp - amt);
+    };
+    Entity.prototype.setHp = function(hp) {
+      var perc;
+      this.hp = hp;
+      perc = Math.ceil(this.hp / this.stats.hp * 100) + '%';
+      return this.$elHp.css({
+        width: perc
+      });
     };
     return Entity;
   })();

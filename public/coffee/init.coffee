@@ -38,6 +38,9 @@ events.target (aggressorId, targetId) ->
 events.nameChange (id, name)->
   game.changeName(id, name)
 
+events.damageTaken (id, amt, isCrit) ->
+  game.damageTaken(id, amt, isCrit)
+
 $document.on 'keydown', (e)->
   captured = false
   code = e.which

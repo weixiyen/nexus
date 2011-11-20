@@ -34,6 +34,9 @@
   events.nameChange(function(id, name) {
     return game.changeName(id, name);
   });
+  events.damageTaken(function(id, amt, isCrit) {
+    return game.damageTaken(id, amt, isCrit);
+  });
   $document.on('keydown', function(e) {
     var captured, code;
     captured = false;

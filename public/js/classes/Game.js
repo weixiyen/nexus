@@ -123,6 +123,12 @@
       }
       return this.entities[STUB + id].changeName(name);
     };
+    Game.prototype.damageTaken = function(id, amt, isCrit) {
+      if (!this.entitiesExist(id)) {
+        return;
+      }
+      return this.entities[STUB + id].takeDamage(amt, isCrit);
+    };
     Game.prototype.entitiesExist = function() {
       var id, ids, _i, _len;
       ids = 1 <= arguments.length ? __slice.call(arguments, 0) : [];

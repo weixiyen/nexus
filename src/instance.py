@@ -43,7 +43,7 @@ class Instance(object):
             for i in xrange(25):
                 instance.spawn('Lizard', hp=10, attack=1)
 
-            instance.spawn('Turret', kind=StationaryMonster, hp=100, attack=3)
+            #instance.spawn('Turret', kind=StationaryMonster, hp=100, attack=3)
 
             instance.start()
 

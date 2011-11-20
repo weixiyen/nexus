@@ -8,12 +8,12 @@ STEP_Y = 3
 class @Entity
   STUB = 'ent-'
   constructor: (data)->
-
     # entity stats
     @id = data.id
     @hp = data.hp
     @kind = data.kind
     @name = data.name
+    @stats = data.stats
     @x = data.x
     @y = data.y
     @left = @x * GRID_W
@@ -51,10 +51,23 @@ class @Entity
       class: 'name'
       css:
         left: @width / 2 - 50
-        top: -10
+        top: -25
     @$elName.html(@name)
 
-    @$el.append(@$elName, @$elBody)
+    @$elBar = $ '<div/>',
+      class: 'bar br2'
+      css:
+        left: @width / 2 - 25
+        top: -10
+
+    @$elHp = $ '<div/>',
+      class: 'hp br2'
+
+    @$elBar.append(@$elHp)
+
+    @$el.append(@$elName, @$elBar, @$elBody)
+
+    @setHp(@stats.hp)
 
   remove: ->
     @$el.remove()
@@ -74,6 +87,15 @@ class @Entity
   changeName: (name)->
     @name = name
     @$elName.html(name)
+
+  takeDamage: (amt, isCrit)->
+    @setHp(@hp - amt)
+
+  setHp: (hp)->
+    @hp = hp
+    perc = Math.ceil(@hp / @stats.hp * 100) + '%'
+    @$elHp.css
+      width: perc
 
 class @MovableEntity extends Entity
   constructor: (entity)->

@@ -4,6 +4,11 @@ body
     margin: 0
     background: #efefef
 
+.br2
+    -webkit-border-radius: 2px
+    -moz-border-radius: 2px
+    border-radius: 2px
+
 .ui-map
     position: absolute
     background: #693509
@@ -23,7 +28,7 @@ body
                 font: bold 11px Arial
                 width: 100px
                 text-align: center
-                position: relative
+                position: absolute
         &.player
             .name
                 color: #aecfff
@@ -31,7 +36,7 @@ body
                 font: bold 11px Arial
                 width: 100px
                 text-align: center
-                position: relative
+                position: absolute
         &.unit
             .name
                 color: yellow
@@ -39,6 +44,18 @@ body
                 font: bold 11px Arial
                 width: 100px
                 text-align: center
-                position: relative
+                position: absolute
             .name.red
                 color: #ff9a8a
+
+        .bar
+            background: #333
+            position: absolute
+            border: 1px solid #333
+            width: 50px
+
+            .hp
+                height: 5px
+                background: #adff2f
+                max-width: 100%
+                width: 100%

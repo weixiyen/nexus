@@ -33,5 +33,9 @@ class @GameEvents
     @socket.on 'name-change', (id, name) ->
       fn(id, name)
 
+  damageTaken: (fn) ->
+    @socket.on 'damage-taken', (id, amt, isCritical) ->
+      fn(id, amt, isCritical)
+
   moveMe: (x, y) ->
     @socket.emit('move', [x, y])

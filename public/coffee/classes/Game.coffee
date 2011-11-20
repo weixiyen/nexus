@@ -88,6 +88,10 @@ class @Game
     if !@entitiesExist(id) then return
     @entities[STUB+id].changeName(name)
 
+  damageTaken: (id, amt, isCrit) ->
+    if !@entitiesExist(id) then return
+    @entities[STUB+id].takeDamage(amt, isCrit)
+
   entitiesExist: (ids...) ->
     for id in ids
       if !@entities[STUB+id] then return false
