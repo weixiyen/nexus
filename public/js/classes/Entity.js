@@ -139,6 +139,12 @@
       this.curDir = null;
     }
     MovableEntity.prototype.startMoving = function() {
+      this.sprite = new Sprite({
+        id: this.id,
+        el: this.$elBody,
+        skip: this.animationSkip
+      });
+      this.faceRandomDirection();
       return game.addLoopItem('unit:' + this.id + ':move', this.speed, __bind(function() {
         if (!this.moving) {
           return;
@@ -210,22 +216,15 @@
       return false;
     };
     MovableEntity.prototype.walk = function() {
-      var skip;
+      var prevDir, skip;
+      prevDir = this.curDir;
       if (this.curDir === this.direction) {
         return;
       }
-      if (this.sprite) {
-        this.sprite.stop(this.id);
-      } else {
-        this.sprite = new Sprite({
-          id: this.id,
-          el: this.$elBody,
-          skip: this.animationSkip
-        });
-      }
+      this.sprite.stop(this.id);
       this.curDir = this.direction;
       if (this.curDir === null) {
-        return;
+        return this.standFacing(prevDir);
       }
       skip = this.animationSkip;
       if (this.curDir === 'down' || this.curDir === 'up') {
@@ -237,6 +236,15 @@
       this.moving = true;
       this.endLeft = x * GRID_W - Math.floor(this.width / 2);
       return this.endTop = y * GRID_H - Math.floor(this.height / 2);
+    };
+    MovableEntity.prototype.standFacing = function(direction) {
+      return this.sprite.set(this.anim[direction][0]);
+    };
+    MovableEntity.prototype.faceRandomDirection = function() {
+      var dirList, direction;
+      dirList = ['n', 'e', 's', 'w', 'nw', 'ne', 'sw', 'se'];
+      direction = dirList[random(0, 7)];
+      return this.standFacing(direction);
     };
     return MovableEntity;
   })();

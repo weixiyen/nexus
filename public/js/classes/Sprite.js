@@ -19,6 +19,11 @@
         }
       }, this));
     };
+    Sprite.prototype.set = function(position) {
+      return this.el.css({
+        'background-position': position
+      });
+    };
     Sprite.prototype.stop = function() {
       return game.removeLoopItem(this.id);
     };
