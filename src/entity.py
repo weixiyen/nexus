@@ -67,21 +67,21 @@ class Entity(object):
         else:
             self.emit('target', self.id, target.id)
 
-    def attack(self, target=None):
+    def attack(self):
         if not self.stats['attack']:
             return
 
         if self._attack_limiter is None:
             self._attack_limiter = Limiter(self.stats['attack_speed'] * 100)
 
-        target = target or self.target
+        target = self.target
 
         if not target.is_alive():
             self.set_target(None)
             return
 
-        if self.instance.iteration_counter % 10:
-            leash = self.stats['aggro_range'] if isinstance(self, StationaryMonsterEntity) else self.stats['leash']
+        if self.instance.iteration_counter % 5:
+            leash = self.stats['aggro_radius'] if isinstance(self, StationaryMonsterEntity) else self.stats['leash']
 
             if self.instance.map.get_distance(self, target) > leash:
                 self.set_target(None)
@@ -93,13 +93,13 @@ class Entity(object):
             self.move_to(target)
             self._execute_movement_queue(True)
         elif self._attack_limiter.is_ready():
-            if target and target.take_damage(self, self.stats['attack']):
+            if target and target.damage_taken(self, self.stats['attack']):
                 self.instance.logger.debug('Attacking %r -> %r' % (self, target))
 
                 if not target.is_alive():
                     self.set_target(None)
 
-    def nearby(self, radius=3):
+    def get_nearby_entities(self, radius):
         for entity in self.instance.entities:
             if entity == self:
                 continue
@@ -113,7 +113,7 @@ class Entity(object):
     def is_alive(self):
         return self.hp > 0
 
-    def take_damage(self, from_, damage):
+    def damage_taken(self, from_, damage):
         if self.is_alive():
             if not isinstance(self, PlayerEntity) and self.target is None:
                 self.set_target(from_)
@@ -228,7 +228,7 @@ class MonsterEntity(MovableEntity):
             return
 
         try:
-            self.set_target(self.nearby(self.stats['aggro_radius']).next())
+            self.set_target(self.get_nearby_entities(self.stats['aggro_radius']).next())
             self.move_to(self.target)
             self.instance.logger.debug('Targeting %r' % self.target)
         except StopIteration:
@@ -274,7 +274,7 @@ class StationaryMonsterEntity(Entity):
             return
 
         try:
-            self.set_target(self.nearby(self.stats['aggro_radius']).next())
+            self.set_target(self.get_nearby_entities(self.stats['aggro_radius']).next())
             self.instance.logger.debug('Targeting %r' % self.target)
         except StopIteration:
             self.set_target(None)
