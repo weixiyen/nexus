@@ -58,6 +58,7 @@ class Entity(object):
             'x': self.x,
             'y': self.y,
             'hp': self.hp,
+            'mp': self.mp,
             'movement_speed': self.movement_speed,
             'stats': self.stats,
             'target': self.target.id if self.target else None
