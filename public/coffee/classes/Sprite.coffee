@@ -2,12 +2,11 @@ class @Sprite
   constructor: (opts)->
     @id = 'anim:' + opts.id
     @el = opts.el
-    @skip = opts.skip || 1
     @counter = 0
 
-  start: (queue)->
+  start: (queue, skip)->
     len = queue.length
-    game.addLoopItem @id, @skip, =>
+    game.addLoopItem @id, skip, =>
       @el.css
         'background-position': queue[ @counter ]
       @counter += 1

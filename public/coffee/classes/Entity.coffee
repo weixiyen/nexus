@@ -3,7 +3,7 @@ IMGPATH = '/public/img/'
 GRID_W = 32
 GRID_H = 16
 STEP_X = 5
-STEP_Y = 4
+STEP_Y = 3
 
 class @Entity
   STUB = 'ent-'
@@ -147,7 +147,10 @@ class @MovableEntity extends Entity
     @curDir = @direction
 
     if @curDir == null then return
-    @sprite.start(@anim[@curDir])
+    skip = @animationSkip
+    if @curDir == 'down' || @curDir == 'up'
+      skip = Math.round(skip / 1.5)
+    @sprite.start(@anim[@curDir], skip)
 
 class @Turret extends Entity
   constructor: (entity)->
@@ -199,7 +202,7 @@ class @Player extends MovableEntity
     @width = 40
     @height = 64
     @imgurl = IMGPATH + 'sprite_user.png'
-    @animationSkip = 5
+    @animationSkip = 8
     @anim =
       left: [
         "0 0",
@@ -236,7 +239,7 @@ class @User extends MovableEntity
     @width = 40
     @height = 64
     @imgurl = IMGPATH + 'sprite_user.png'
-    @animationSkip = 5
+    @animationSkip = 8
     @anim =
       left: [
         "0 0",

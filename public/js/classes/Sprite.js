@@ -4,13 +4,12 @@
     function Sprite(opts) {
       this.id = 'anim:' + opts.id;
       this.el = opts.el;
-      this.skip = opts.skip || 1;
       this.counter = 0;
     }
-    Sprite.prototype.start = function(queue) {
+    Sprite.prototype.start = function(queue, skip) {
       var len;
       len = queue.length;
-      return game.addLoopItem(this.id, this.skip, __bind(function() {
+      return game.addLoopItem(this.id, skip, __bind(function() {
         this.el.css({
           'background-position': queue[this.counter]
         });

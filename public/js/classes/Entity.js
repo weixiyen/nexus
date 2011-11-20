@@ -12,7 +12,7 @@
   GRID_W = 32;
   GRID_H = 16;
   STEP_X = 5;
-  STEP_Y = 4;
+  STEP_Y = 3;
   this.Entity = (function() {
     var STUB;
     STUB = 'ent-';
@@ -141,6 +141,7 @@
       return false;
     };
     MovableEntity.prototype.walk = function() {
+      var skip;
       if (this.curDir === this.direction) {
         return;
       }
@@ -157,7 +158,11 @@
       if (this.curDir === null) {
         return;
       }
-      return this.sprite.start(this.anim[this.curDir]);
+      skip = this.animationSkip;
+      if (this.curDir === 'down' || this.curDir === 'up') {
+        skip = Math.round(skip / 1.5);
+      }
+      return this.sprite.start(this.anim[this.curDir], skip);
     };
     return MovableEntity;
   })();
@@ -200,7 +205,7 @@
       this.width = 40;
       this.height = 64;
       this.imgurl = IMGPATH + 'sprite_user.png';
-      this.animationSkip = 5;
+      this.animationSkip = 8;
       this.anim = {
         left: ["0 0", "-50px 0", "-100px 0"],
         up: ["-150px 0", "-200px 0", "-250px 0"],
@@ -224,7 +229,7 @@
       this.width = 40;
       this.height = 64;
       this.imgurl = IMGPATH + 'sprite_user.png';
-      this.animationSkip = 5;
+      this.animationSkip = 8;
       this.anim = {
         left: ["0 0", "-50px 0", "-100px 0"],
         up: ["-150px 0", "-200px 0", "-250px 0"],
