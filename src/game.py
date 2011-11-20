@@ -14,7 +14,7 @@ class Game(object):
 
         self.participants = set()
 
-        self.map = Map(50, 50)
+        self.map = Map(100, 100)
         self._entities = {}
 
         self.iteration_counter = 0

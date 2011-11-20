@@ -27,6 +27,7 @@
       this.top = this.y * GRID_H;
       this.sprite = null;
       this.target = data.target || null;
+      this.type = 'unit';
     }
     Entity.prototype.isAlive = function() {
       return this.hp > 0;
@@ -41,7 +42,7 @@
     Entity.prototype.create = function() {
       this.$el = $('<div/>', {
         id: STUB + this.id,
-        "class": 'entity',
+        "class": 'entity ' + this.type,
         css: {
           left: this.left,
           top: this.top,
@@ -55,7 +56,15 @@
         left: this.width / 2 * -1,
         top: this.height * -1
       });
-      return this.$el.append(this.$elBody);
+      this.$elName = $('<div/>', {
+        "class": 'name',
+        css: {
+          left: this.width / 2 - 50,
+          top: -10
+        }
+      });
+      this.$elName.html(this.name);
+      return this.$el.append(this.$elName, this.$elBody);
     };
     Entity.prototype.remove = function() {
       return this.$el.remove();
@@ -217,8 +226,8 @@
     }
     Player.prototype.moveTo = function(x, y) {
       this.moving = true;
-      this.endLeft = x * GRID_W;
-      return this.endTop = y * GRID_H;
+      this.endLeft = x * GRID_W - Math.floor(this.width / 2);
+      return this.endTop = y * GRID_H - Math.floor(this.height / 2);
     };
     return Player;
   })();
@@ -226,6 +235,7 @@
     __extends(User, MovableEntity);
     function User(entity) {
       User.__super__.constructor.apply(this, arguments);
+      this.type = 'user';
       this.width = 40;
       this.height = 64;
       this.imgurl = IMGPATH + 'sprite_user.png';
@@ -241,8 +251,8 @@
     }
     User.prototype.moveTo = function(x, y) {
       this.moving = true;
-      this.endLeft = x * GRID_W;
-      return this.endTop = y * GRID_H;
+      this.endLeft = x * GRID_W - Math.floor(this.width / 2);
+      return this.endTop = y * GRID_H - Math.floor(this.height / 2);
     };
     return User;
   })();

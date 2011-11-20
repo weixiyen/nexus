@@ -21,6 +21,7 @@ class @Entity
     @sprite = null
 
     @target = data.target or null
+    @type = 'unit'
 
   isAlive: ->
     return @hp > 0
@@ -32,7 +33,7 @@ class @Entity
     # create dom fragment and store it in the object
     @$el = $ '<div/>',
       id: STUB + @id
-      class: 'entity'
+      class: 'entity '+@type
       css:
         left: @left
         top: @top
@@ -46,7 +47,14 @@ class @Entity
         left: @width / 2 * -1
         top: @height * -1
 
-    @$el.append(@$elBody)
+    @$elName = $ '<div/>',
+      class: 'name'
+      css:
+        left: @width / 2 - 50
+        top: -10
+    @$elName.html(@name)
+
+    @$el.append(@$elName, @$elBody)
 
   remove: ->
     @$el.remove()
@@ -230,12 +238,13 @@ class @Player extends MovableEntity
 
   moveTo: (x, y)->
     @moving = true
-    @endLeft = x * GRID_W
-    @endTop = y * GRID_H
+    @endLeft = x * GRID_W - Math.floor(@width / 2)
+    @endTop = y * GRID_H - Math.floor(@height / 2)
 
 class @User extends MovableEntity
   constructor: (entity)->
     super
+    @type = 'user'
     @width = 40
     @height = 64
     @imgurl = IMGPATH + 'sprite_user.png'
@@ -267,5 +276,5 @@ class @User extends MovableEntity
 
   moveTo: (x, y)->
     @moving = true
-    @endLeft = x * GRID_W
-    @endTop = y * GRID_H
+    @endLeft = x * GRID_W - Math.floor(@width / 2)
+    @endTop = y * GRID_H - Math.floor(@height / 2)

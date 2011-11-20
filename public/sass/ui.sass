@@ -6,11 +6,29 @@ body
 
 .ui-map
     position: absolute
-    background: #adff2f
+    background: #693509
     z-index: 100
 
 .ui-game
     position: absolute
     z-index: 1000
+
     .entity
         position: absolute
+
+        &.user
+            .name
+                color: white
+                text-shadow: black 0 0 4px
+                font: bold 11px Arial
+                width: 100px
+                text-align: center
+                position: relative
+        &.unit
+            .name
+                color: yellow
+                text-shadow: black 0 0 4px
+                font: bold 11px Arial
+                width: 100px
+                text-align: center
+                position: relative

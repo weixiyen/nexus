@@ -6,7 +6,7 @@ body {
 
 .ui-map {
   position: absolute;
-  background: #adff2f;
+  background: #693509;
   z-index: 100; }
 
 .ui-game {
@@ -14,3 +14,17 @@ body {
   z-index: 1000; }
   .ui-game .entity {
     position: absolute; }
+    .ui-game .entity.user .name {
+      color: white;
+      text-shadow: black 0 0 4px;
+      font: bold 11px Arial;
+      width: 100px;
+      text-align: center;
+      position: relative; }
+    .ui-game .entity.unit .name {
+      color: yellow;
+      text-shadow: black 0 0 4px;
+      font: bold 11px Arial;
+      width: 100px;
+      text-align: center;
+      position: relative; }
