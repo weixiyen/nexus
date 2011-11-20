@@ -187,6 +187,7 @@ class Entity(object):
     def use_mp(self, amt):
         if self.mp >= amt:
             self.mp -= amt
+            self.emit('mp', self.id, -amt)
             return True
 
         return False
@@ -202,6 +203,7 @@ class Entity(object):
 
         if self.mp < self.stats['mp'] and self._mp_regen_limiter.is_ready():
             self.mp += 5
+            self.emit('mp', self.id, 5)
 
         if self.is_attacking():
             self.attack()
