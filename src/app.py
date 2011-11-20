@@ -12,11 +12,11 @@ STATIC_PATH = os.path.join(ROOT_PATH, '../public')
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
-        uid = self.get_cookie('name')
+        uid = self.get_cookie('uid')
 
         if uid is None:
             uid = uuid.uuid4().hex
-            self.set_cookie('name', uid)
+            self.set_cookie('uid', uid)
 
         return uid
 
@@ -48,9 +48,12 @@ class SocketConnection(tornadio2.conn.SocketConnection):
         self.instance.spawn('Turret', kind=mobs.Turret, hp=100, attack=3)
 
     @tornadio2.event('attack')
-    def attack(self, target_id, action):
-        if action is 0:
+    def attack(self, ability, target_id, coordinates):
+        self.player.set_target(target_id)
+        if not ability:
             self.player.set_target(target_id)
+        else:
+            self.player.ability(ability, target_id, coordinates)
 
     @tornadio2.event('move')
     def move(self, coordinates):

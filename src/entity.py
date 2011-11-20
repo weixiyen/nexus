@@ -14,6 +14,7 @@ class Entity(object):
         self.name = name
         self.x = x
         self.y = y
+        self._home = (x, y)
         self.target = None
 
         self.stats = self.get_base_stats()
@@ -22,6 +23,7 @@ class Entity(object):
         self.hp = self.stats['hp']
 
         self._attack_limiter = None
+
         self.instance.add_entity(self)
 
     def get_base_stats(self):
@@ -30,9 +32,9 @@ class Entity(object):
             'attack': 0,
             'attack_speed': 5,
             'movement_speed': 5,
-            'leash': 15,
             'aggro_radius': 3,
-            'patrol_radius': 8
+            'patrol_radius': 8,
+            'respawn': True
         }
 
     def __str__(self):
@@ -56,6 +58,11 @@ class Entity(object):
     def emit(self, *args):
         self.instance.emit(*args)
 
+    def respawn(self):
+        self.x, self.y = self._home
+        self.hp = self.stats['hp']
+        self.emit('spawn', self.serialize())
+
     def is_attacking(self):
         return self.target is not None
 
@@ -65,42 +72,38 @@ class Entity(object):
 
         self.target = target
 
-        if target is None:
-            self.emit('target', self.id, None)
-        else:
-            self.emit('target', self.id, target.id)
+        if self.is_alive():
+            self.emit('target', self.id, target.id if target else None)
 
     def attack(self):
         if not self.stats['attack']:
             return
 
+        target = self.target
+
         if self._attack_limiter is None:
             self._attack_limiter = Limiter(self.stats['attack_speed'] * 100)
 
-        target = self.target
-
         if not target.is_alive():
             self.set_target(None)
-            return
-
-        if self.instance.iteration_counter % 5 and not isinstance(self, PlayerEntity):
-            leash = self.stats['aggro_radius'] if isinstance(self, StationaryMonsterEntity) else self.stats['leash']
-
-            if self.instance.map.get_distance(self, target) > leash:
+        elif self.instance.iteration_counter % 5 and not isinstance(self, PlayerEntity):
+            if self.instance.map.get_distance(self, target) > self.stats['aggro_radius'] * 4:
                 self.set_target(None)
-                self._movement_queue = []
+
+                if isinstance(self, MovableEntity):
+                    self.stop_movement()
+
                 self.instance.logger.debug('Lost Aggro %r -> %r' % (self, target))
-            return
+        else:
+            if isinstance(self, MovableEntity) and self.instance.map.get_distance(self, target) > 1:
+                self.move_to(target)
+                self._execute_movement_queue(True)
+            elif self._attack_limiter.is_ready():
+                if target and target.damage_taken(self, self.stats['attack']):
+                    self.instance.logger.debug('Attacking %r -> %r' % (self, target))
 
-        if isinstance(self, MovableEntity) and self.instance.map.get_distance(self, target) > 1:
-            self.move_to(target)
-            self._execute_movement_queue(True)
-        elif self._attack_limiter.is_ready():
-            if target and target.damage_taken(self, self.stats['attack']):
-                self.instance.logger.debug('Attacking %r -> %r' % (self, target))
-
-                if not target.is_alive():
-                    self.set_target(None)
+                    if not target.is_alive():
+                        self.set_target(None)
 
     def get_nearby_entities(self, radius):
         for entity in self.instance.entities:
@@ -108,6 +111,9 @@ class Entity(object):
                 continue
 
             if isinstance(entity, self.__class__):
+                continue
+
+            if not entity.is_alive():
                 continue
 
             if self.instance.map.get_distance(self, entity) <= radius:
@@ -133,14 +139,26 @@ class Entity(object):
             self.emit('damage-taken', self.id, damage, critcal)
 
             if not self.is_alive():
-                self.instance.remove_entity(self)
+                if isinstance(self, PlayerEntity):
+                    self.instance.remove_entity(self)
+
+                if isinstance(self, MovableEntity):
+                    self.stop_movement()
+
+                self.set_target(None)
+
                 self.instance.logger.debug('Killed %r' % self)
                 self.emit('death', self.id)
 
             return True
+
         return False
 
     def next_iteration(self):
+        if self.instance.iteration_counter % 1000 == 0 and not self.is_alive() and self.stats['respawn']:
+            self.respawn()
+            raise StopIteration
+
         if self.is_attacking():
             self.attack()
             raise StopIteration
@@ -171,6 +189,9 @@ class MovableEntity(Entity):
 
     def is_moving(self):
         return len(self._movement_queue) != 0
+
+    def stop_movement(self):
+        self._movement_queue = []
 
     def set_movement_speed(self, movement_speed):
         self._movement_limiter = Limiter(movement_speed * 100)
@@ -211,12 +232,34 @@ class PlayerEntity(MovableEntity):
 
         self.emit('name-change', self.id, name)
 
+    def ability(self, ability, target_id, coordinates):
+        entities = []
+
+        for entity in self.instance.entities:
+             if entity == self:
+                 continue
+
+             if isinstance(entity, self.__class__):
+                 continue
+
+             if not entity.is_alive():
+                 continue
+
+             if self.instance.map.get_distance(coordinates, entity) <= 5:
+                 entities.append(entity)
+
+        if entities:
+            damage = 10 / len(entities)
+
+            for entity in entities:
+                entity.damage_taken(self, damage)
+
     def get_base_stats(self):
         base_stats = MovableEntity.get_base_stats(self)
         base_stats.update({
             'hp': 100,
             'movement_speed': 2,
-            'attack': 25,
+            'attack': 5,
         })
         return base_stats
 
@@ -224,7 +267,6 @@ class MonsterEntity(MovableEntity):
     def __init__(self, *args, **kwargs):
         MovableEntity.__init__(self, *args, **kwargs)
 
-        self._home = (self.x, self.y)
         self._patrol_limiter = Limiter(2000, True)
 
     def aggro(self):
@@ -286,7 +328,6 @@ class StationaryMonsterEntity(Entity):
     def next_iteration(self):
         self.aggro()
         Entity.next_iteration(self)
-
 
     def get_base_stats(self):
         base_stats = Entity.get_base_stats(self)

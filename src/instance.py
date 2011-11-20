@@ -5,7 +5,7 @@ import datetime
 
 from map import Map
 from entity import Entity, PlayerEntity
-import monsters
+import mobs
 
 FPS = 60
 
@@ -27,7 +27,7 @@ class Instance(object):
         self.iteration_counter = 0
 
         self.logger = logging.getLogger('instance:%d' % self.id)
-        self.logger.setLevel(logging.DEBUG)
+#        self.logger.setLevel(logging.DEBUG)
 
     @classmethod
     def get(cls, instance_id):
@@ -42,9 +42,9 @@ class Instance(object):
             _instances[instance_id] = instance
 
             for i in xrange(25):
-                instance.spawn('Lizard',  kind=monsters.Lizard, hp=10, attack=1)
+                instance.spawn('Lizard',  kind=mobs.Lizard, hp=10, attack=1)
 
-            instance.spawn('Turret', kind=monsters.Turret, hp=100, attack=3)
+            instance.spawn('Turret', kind=mobs.Turret, hp=100, attack=3)
 
             instance.start()
 
@@ -63,7 +63,7 @@ class Instance(object):
     def serialize(self):
         return {
             'map': self.map.serialize(),
-            'entities': [entity.serialize() for entity in self.entities]
+            'entities': [entity.serialize() for entity in self.entities if entity.is_alive()]
         }
 
     def add_player(self, conn, name, **kwargs):
