@@ -13,5 +13,9 @@ class @Sprite
       if @counter == len
         @counter = 1
 
+  set: (position)->
+    @el.css
+      'background-position': position
+
   stop: ->
     game.removeLoopItem(@id)

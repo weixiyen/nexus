@@ -122,6 +122,11 @@ class @MovableEntity extends Entity
     @curDir = null #current direction
 
   startMoving: ->
+    @sprite = new Sprite
+      id: @id
+      el: @$elBody
+      skip: @animationSkip
+    @faceRandomDirection()
     game.addLoopItem 'unit:'+@id+':move', @speed, =>
       if !@moving then return
       @_moveTowardsGoal()
@@ -195,19 +200,15 @@ class @MovableEntity extends Entity
 
   walk: ->
 
+    prevDir = @curDir
+
     if @curDir == @direction then return
 
-    if @sprite
-      @sprite.stop(@id)
-    else
-      @sprite = new Sprite
-        id: @id
-        el: @$elBody
-        skip: @animationSkip
+    @sprite.stop(@id)
 
     @curDir = @direction
 
-    if @curDir == null then return
+    if @curDir == null then return @standFacing(prevDir)
     skip = @animationSkip
     if @curDir == 'down' || @curDir == 'up'
       skip = Math.round(skip / 1.5)
@@ -218,6 +219,13 @@ class @MovableEntity extends Entity
     @endLeft = x * GRID_W - Math.floor(@width / 2)
     @endTop = y * GRID_H - Math.floor(@height / 2)
 
+  standFacing: (direction)->
+    @sprite.set(@anim[direction][0])
+
+  faceRandomDirection: ->
+    dirList = ['n','e','s','w','nw','ne','sw','se']
+    direction = dirList[random(0,7)]
+    @standFacing(direction)
 
 class @Turret extends Entity
   constructor: (entity)->
