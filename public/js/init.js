@@ -91,6 +91,11 @@
       return e.stopPropagation();
     }
   });
+  game.$canvas.on('click', '.entity', function(e) {
+    var entity;
+    entity = $(this).data('entity');
+    return events.userAttack(entity.id, 0);
+  });
   $window.on('blur', function() {
     return game.panStopAll();
   });

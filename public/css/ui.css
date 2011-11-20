@@ -16,7 +16,9 @@ body {
 
 .ui-game {
   position: absolute;
-  z-index: 1000; }
+  z-index: 1000;
+  height: 0;
+  width: 0; }
   .ui-game .entity {
     position: absolute; }
     .ui-game .entity.user .name {

@@ -48,6 +48,9 @@
           left: this.left,
           top: this.top,
           zIndex: this.top
+        },
+        data: {
+          entity: this
         }
       });
       this.$elBody = $('<div/>').css({

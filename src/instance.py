@@ -128,6 +128,9 @@ class Instance(object):
     def entities(self):
         return self._entities.values()
 
+    def get_entity(self, entity_id):
+        return self._entities.get(entity_id)
+
     def add_entity(self, entity):
         self.emit('spawn', entity.serialize())
         self._entities[entity.id] = entity

@@ -82,7 +82,9 @@ $document.on 'keyup', (e)->
     e.preventDefault()
     e.stopPropagation()
 
-
+game.$canvas.on 'click', '.entity', (e)->
+  entity = $(@).data('entity')
+  events.userAttack(entity.id, 0)
 
 $window.on 'blur', ->
   game.panStopAll()

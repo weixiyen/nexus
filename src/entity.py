@@ -60,6 +60,8 @@ class Entity(object):
         return self.target is not None
 
     def set_target(self, target):
+        if isinstance(target, int):
+            target = self.instance.get_entity(target)
         self.target = target
 
         if target is None:

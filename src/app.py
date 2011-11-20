@@ -48,7 +48,7 @@ class SocketConnection(tornadio2.conn.SocketConnection):
         self.instance.spawn('Turret', kind=mobs.Turret, hp=100, attack=3)
 
     @tornadio2.event('attack')
-    def spawn(self, target_id, action):
+    def attack(self, target_id, action):
         if action is 0:
             self.player.set_target(target_id)
 

@@ -38,6 +38,8 @@ class @Entity
         left: @left
         top: @top
         zIndex: @top
+      data:
+        entity: @
 
     @$elBody = $('<div/>')
       .css
