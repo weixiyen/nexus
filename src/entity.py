@@ -80,7 +80,7 @@ class Entity(object):
             self.set_target(None)
             return
 
-        if self.instance.iteration_counter % 5:
+        if self.instance.iteration_counter % 5 and not isinstance(self, PlayerEntity):
             leash = self.stats['aggro_radius'] if isinstance(self, StationaryMonsterEntity) else self.stats['leash']
 
             if self.instance.map.get_distance(self, target) > leash:
