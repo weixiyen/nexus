@@ -41,9 +41,9 @@ class Node(object):
             if x2 < 0 or y2 < 0:
                 continue
 
-            try:
-                node = self.graph.get_node(x + DX[i], y + DY[i])
-            except IndexError:
+            node = self.graph.get_node(x + DX[i], y + DY[i])
+
+            if node is None:
                 continue
 
             if not node.is_walkable():
@@ -73,7 +73,10 @@ class Graph(object):
         return self.nodes.__iter__()
 
     def get_node(self, x, y):
-        return self.nodes[y][x]
+        try:
+            return self.nodes[y][x]
+        except IndexError:
+            return None
 
     def search(self, start, end, heuristic=manhatton):
         for row in self.nodes:
@@ -87,6 +90,9 @@ class Graph(object):
 
         start = self.get_node(*start)
         end = self.get_node(*end)
+
+        if not start or not end:
+            return []
 
         open_heap = []
         heappush(open_heap, start.get_heap_value())
