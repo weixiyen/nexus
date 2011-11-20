@@ -77,7 +77,7 @@
       });
       this.$elBar.append(this.$elHp);
       this.$el.append(this.$elName, this.$elBar, this.$elBody);
-      return this.setHp(this.stats.hp);
+      return this.setHp(this.hp);
     };
     Entity.prototype.remove = function() {
       return this.$el.remove();

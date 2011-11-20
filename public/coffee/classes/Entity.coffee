@@ -67,7 +67,7 @@ class @Entity
 
     @$el.append(@$elName, @$elBar, @$elBody)
 
-    @setHp(@stats.hp)
+    @setHp(@hp)
 
   remove: ->
     @$el.remove()
