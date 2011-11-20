@@ -66,14 +66,15 @@ class Instance(object):
             'entities': [entity.serialize() for entity in self.entities]
         }
 
-    def add_player(self, conn):
+    def add_player(self, conn, name):
         for e in self.entities:
             if isinstance(e, Player):
                 if e.uid == conn.uid:
+                    e.set_name(name)
                     e.connections.add(conn)
                     return e
 
-        player = self.spawn(conn.uid, uid=conn.uid, type_=Player)
+        player = self.spawn(name, uid=conn.uid, type_=Player)
         player.connections.add(conn)
 
         self.players.add(player)

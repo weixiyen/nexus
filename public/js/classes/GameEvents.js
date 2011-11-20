@@ -5,7 +5,8 @@
       var $document;
       $document = $(document);
       this.socket = io.connect("" + location.protocol + "//" + location.host, {
-        resource: 'socket'
+        resource: 'socket',
+        query: location.search.slice(1)
       });
     }
     GameEvents.prototype.connect = function(fn) {

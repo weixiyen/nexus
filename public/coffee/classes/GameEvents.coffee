@@ -3,6 +3,7 @@ class @GameEvents
     $document = $(document)
     @socket = io.connect "#{location.protocol}//#{location.host}",
       resource: 'socket'
+      query: location.search.slice(1)
 
   connect: (fn)->
     @socket.on 'connect', ->

@@ -13,11 +13,11 @@ STATIC_PATH = os.path.join(ROOT_PATH, '../public')
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
-        uid = self.get_cookie('uid')
+        uid = self.get_cookie('name')
 
         if uid is None:
             uid = uuid.uuid4().hex
-            self.set_cookie('uid', uid)
+            self.set_cookie('name', uid)
 
         return uid
 
@@ -38,7 +38,7 @@ class SocketConnection(tornadio2.conn.SocketConnection):
         self.instance = Instance.get(request.get_argument('instance'))
 
         self.uid = request.get_cookie('uid').value
-        self.player = self.instance.add_player(self)
+        self.player = self.instance.add_player(self, request.get_argument('name'))
 
         state = self.instance.serialize()
         state['me'] = self.player.id

@@ -211,9 +211,23 @@ class Player(MovableEntity):
 
         MovableEntity.__init__(self, *args, **kwargs)
 
+        if not self.name:
+            self.name = 'Player %d' % self.id
+
         self.stats['hp'] = 500
         self.stats['movement_speed'] = 2
         self.set_movement_speed(2)
+
+    def set_name(self, name):
+        if name == self.name:
+            return
+
+        if not name:
+            name = 'Player %d' % self.id
+
+        self.name = name
+
+        self.emit('name-change', self.id, name)
 
 class Monster(MovableEntity):
     def __init__(self, *args, **kwargs):
