@@ -155,7 +155,7 @@ class Entity(object):
         return False
 
     def next_iteration(self):
-        if self.instance.iteration_counter % 1000 == 0 and not self.is_alive() and self.stats['respawn']:
+        if not self.is_alive() and self.instance.iteration_counter % 1000 == 0 and self.stats['respawn']:
             self.respawn()
             raise StopIteration
 
