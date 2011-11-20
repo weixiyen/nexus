@@ -290,7 +290,7 @@ class PlayerEntity(MovableEntity):
             self.apply_buff(buffs.Haste)
         elif ability == 4: # ultimate
             for entity in self.instance.entities:
-                if entity.is_alive():
+                if entity.is_alive() and entity != self:
                     entity.damage_taken(self, entity.hp / 2)
 
     def get_base_stats(self):
