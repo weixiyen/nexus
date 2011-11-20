@@ -5,7 +5,7 @@ import os
 import tornadio2
 import uuid
 import time
-from game import Game
+from instance import Instance
 from entity import Turret
 
 ROOT_PATH = os.path.dirname(__file__)
@@ -34,57 +34,39 @@ class TestCanvasHandler(TestHandler):
         self.render('test-canvas.html')
 
 class SocketConnection(tornadio2.conn.SocketConnection):
-    @classmethod
-    def get_game(cls):
-        if not hasattr(cls, '_game'):
-            cls._game = Game()
-
-            for i in xrange(25):
-                cls._game.spawn('Lizard')
-
-#            cls._game.spawn('Turret', type_=Turret)
-#            cls._game.spawn('Turret', type_=Turret)
-#            cls._game.spawn('Turret', type_=Turret)
-#            cls._game.spawn('Turret', type_=Turret)
-
-        return cls._game
-
     def on_open(self, request):
+        self.instance = Instance.get(request.get_argument('instance'))
+
         self.uid = request.get_cookie('uid').value
+        self.player = self.instance.add_player(self)
 
-        game = self.get_game()
-        self.entity = game.add_participant(self)
-
-        state = game.serialize()
-        state['me'] = self.entity.id
+        state = self.instance.serialize()
+        state['me'] = self.player.id
 
         self.emit('initialize', state)
 
     @tornadio2.event('spawn')
     def spawn(self, message):
-        game = self.get_game()
-
         for i in xrange(100):
-            game.spawn('Lizard')
+            self.instance.spawn('Lizard')
 
-        game.spawn('Turret', type_=Turret)
-        game.spawn('Turret', type_=Turret)
-        game.spawn('Turret', type_=Turret)
-        game.spawn('Turret', type_=Turret)
+        self.instance.spawn('Turret', type_=Turret)
+        self.instance.spawn('Turret', type_=Turret)
+        self.instance.spawn('Turret', type_=Turret)
+        self.instance.spawn('Turret', type_=Turret)
 
     @tornadio2.event('move')
     def move(self, message):
         x, y = message
         st = time.time()
-        self.entity.move(x, y)
-        self.entity.game.logger.debug('Player A*: %.2f' % (time.time() - st))
+        self.player.move(x, y)
+        self.instance.logger.debug('Player A*: %.2f' % (time.time() - st))
 
     def on_message(self, message):
         pass
 
     def on_close(self):
-        game = self.get_game()
-        game.remove_participant(self)
+        self.instance.remove_player(self)
 
 application = tornado.web.Application(
     tornadio2.TornadioRouter(SocketConnection,{

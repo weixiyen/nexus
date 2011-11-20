@@ -99,7 +99,8 @@
     return Map;
   })();
   socket = io.connect("" + location.protocol + "//" + location.host, {
-    resource: 'socket'
+    resource: 'socket',
+    query: location.search.slice(1)
   });
   socket.on('connect', function() {
     return console.log('connected');

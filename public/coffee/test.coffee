@@ -66,6 +66,7 @@ class Map
 
 socket = io.connect "#{location.protocol}//#{location.host}",
   resource: 'socket'
+  query: location.search.slice(1)
 
 socket.on 'connect', ->
   console.log 'connected'
