@@ -39,7 +39,6 @@ class @GameEvents
 
   setMovementSpeed: (fn) ->
     @socket.on 'set-movement-speed', (id, speed) ->
-      console.log(id, speed)
       fn(id, speed)
 
   moveMe: (x, y) ->

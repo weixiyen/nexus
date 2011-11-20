@@ -1,6 +1,7 @@
 import random
 from limiter import Limiter
 from map import Map
+import buffs
 
 class Entity(object):
     id = 0
@@ -22,6 +23,8 @@ class Entity(object):
 
         self.hp = self.stats['hp']
         self.movement_speed = self.stats['movement_speed']
+
+        self.buffs = []
 
         self._attack_limiter = None
 
@@ -77,6 +80,12 @@ class Entity(object):
 
         if self.is_alive():
             self.emit('target', self.id, target.id if target else None)
+
+    def apply_buff(self, buff_type, duration=5000):
+        buff = buff_type(self, duration)
+
+        if buff.applied:
+            self.buffs.append(buff)
 
     def attack(self):
         if not self.stats['attack']:
@@ -159,6 +168,9 @@ class Entity(object):
             if self.instance.iteration_counter % 1000 == 0 and self.stats['respawn']:
                 self.respawn()
             raise StopIteration
+
+        if self.buffs:
+            self.buffs = [buff for buff in self.buffs if not (buff.elapsed and buff.complete())]
 
         if self.is_attacking():
             self.attack()
@@ -258,10 +270,7 @@ class PlayerEntity(MovableEntity):
             damage = 10 / len(entities)
 
             for entity in entities:
-                try:
-                    entity.set_movement_speed(20)
-                except:
-                    pass
+                entity.apply_buff(buffs.Slow)
                 entity.damage_taken(self, damage)
 
     def get_base_stats(self):
