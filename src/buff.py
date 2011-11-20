@@ -55,6 +55,6 @@ class Haste(Slow):
     def apply(self):
         self.entity.set_movement_speed(self.entity.movement_speed / 4)
 
-class Poison(Slow):
+class Poison(Buff):
     def tick(self):
         self.entity.damage_taken(self.source, 2)
