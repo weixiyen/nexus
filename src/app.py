@@ -4,7 +4,6 @@ import tornado.options
 import os
 import tornadio2
 import uuid
-import time
 from instance import Instance
 from entity import Turret
 
@@ -23,15 +22,11 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class IndexHandler(BaseHandler):
     def get(self):
-        self.render('index.html', hello_world='Hello, world!')
+        self.render('index.html')
 
-class TestHandler(BaseHandler):
+class DebugHandler(BaseHandler):
     def get(self):
-        self.render('test.html')
-
-class TestCanvasHandler(TestHandler):
-    def get(self):
-        self.render('test-canvas.html')
+        self.render('debug.html')
 
 class SocketConnection(tornadio2.conn.SocketConnection):
     def on_open(self, request):
@@ -46,7 +41,7 @@ class SocketConnection(tornadio2.conn.SocketConnection):
         self.emit('initialize', state)
 
     @tornadio2.event('spawn')
-    def spawn(self, message):
+    def spawn(self):
         for i in xrange(100):
             self.instance.spawn('Lizard')
 
@@ -56,11 +51,8 @@ class SocketConnection(tornadio2.conn.SocketConnection):
         self.instance.spawn('Turret', type_=Turret)
 
     @tornadio2.event('move')
-    def move(self, message):
-        x, y = message
-        st = time.time()
-        self.player.move(x, y)
-        self.instance.logger.debug('Player A*: %.2f' % (time.time() - st))
+    def move(self, coordinates):
+        self.player.move(*coordinates)
 
     def on_message(self, message):
         pass
@@ -73,8 +65,7 @@ application = tornado.web.Application(
         'enabled_protocols': ['websocket', 'xhr-polling', 'jsonp-polling', 'htmlfile'],
     }, namespace='socket').apply_routes([
         (r'/', IndexHandler),
-        (r'/test', TestHandler),
-        (r'/test-canvas', TestCanvasHandler),
+        (r'/debug', DebugHandler),
         (r'/public/(.*)', tornado.web.StaticFileHandler, {'path': STATIC_PATH})
     ]),
     template_path=os.path.join(ROOT_PATH, '../templates'),

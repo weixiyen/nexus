@@ -5,38 +5,19 @@ class Map(object):
     def __init__(self, width, height):
         self.width = width
         self.height = height
+
         self._data = []
 
         for i in range(height):
             self._data.append([0] * width)
 
-        moo = width / 10
-
-        for x in range(5, self.height * 3 / 4):
-            self._data[width / 10][moo + x] = 1
-
-        moo = 0
-
-        for x in range(5, self.height * 3 / 4):
-            self._data[-(width / 10 + 1)][moo + x] = 1
-
-        moo = width / 10
-
-        for y in range(5, self.height * 3 / 4):
-            self._data[moo + y][width / 10] = 1
-
-        moo = 0
-
-        for y in range(5, self.height * 3 / 4):
-            self._data[moo + y][-(width / 10 + 1)] = 1
-
-        self.graph = Graph(self)
+        self._graph = Graph(self)
 
     def is_walkable(self, x, y):
         return self[y][x] == 0
 
     def find_path(self, from_, to):
-        return self.graph.search(from_, to)
+        return self._graph.search(from_, to)
 
     @staticmethod
     def get_distance(from_, to):

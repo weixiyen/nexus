@@ -1,9 +1,10 @@
-from map import Map
-from entity import Player, Monster, Turret
 import random
 import logging
 import tornado.ioloop
-from datetime import timedelta
+import datetime
+
+from map import Map
+from entity import Player, Monster, Turret
 
 FPS = 60
 
@@ -12,8 +13,9 @@ _instances = {}
 class Instance(object):
     def __init__(self, id):
         self.id = id
-        self.ioloop =  tornado.ioloop.IOLoop.instance()
-        self.deadline = timedelta(milliseconds=1000 / FPS)
+
+        self._ioloop =  tornado.ioloop.IOLoop.instance()
+        self._delay = datetime.timedelta(milliseconds=1000 / FPS)
         self.running = False
 
         self.players = set()
@@ -41,10 +43,7 @@ class Instance(object):
             for i in xrange(25):
                 instance.spawn('Lizard')
 
-#            instance.spawn('Turret', type_=Turret)
-#            instance.spawn('Turret', type_=Turret)
-#            instance.spawn('Turret', type_=Turret)
-#            instance.spawn('Turret', type_=Turret)
+            instance.spawn('Turret', type_=Turret)
 
             instance.start()
 
@@ -105,7 +104,7 @@ class Instance(object):
                 pass
 
         if self.players:
-            self.ioloop.add_timeout(self.deadline, self.next_iteration)
+            self._ioloop.add_timeout(self._delay, self.next_iteration)
         else:
             self.stop()
 
@@ -129,11 +128,8 @@ class Instance(object):
         return self._entities.values()
 
     def add_entity(self, entity):
-        self._entities[entity.id] = entity
         self.emit('spawn', entity.serialize())
+        self._entities[entity.id] = entity
 
     def remove_entity(self, entity):
-        try:
-            del self._entities[entity.id]
-        except KeyError:
-            pass
+        del self._entities[entity.id]
