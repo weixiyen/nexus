@@ -73,7 +73,7 @@ class Instance(object):
                     e.connections.add(conn)
                     return e
 
-        player = self.spawn(name, uid=conn.uid, type_=Player, **kwargs)
+        player = self.spawn(name, uid=conn.uid, kind=Player, **kwargs)
         player.connections.add(conn)
 
         self.players.add(player)
