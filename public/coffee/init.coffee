@@ -11,6 +11,9 @@
   game: game
   map: map
 
+@interface = new Interface
+  $canvas: $('#interface')
+
 # initialize the game canvas
 events.init (data)->
   game.reset()
@@ -66,6 +69,8 @@ $document.on 'keydown', (e)->
 $document.on 'keyup', (e)->
   captured = false
   code = e.which
+
+  # panning stop
   if code == 65
     captured = true
     game.panStop('right')
@@ -78,13 +83,29 @@ $document.on 'keyup', (e)->
   if code == 83
     captured = true
     game.panStop('up')
+
+  # user abilities
+  if code == 81 # Q
+    captured = true
+    game.userAttack(1)
+  if code == 69 # E
+    captured = true
+    game.userAttack(2)
+  if code == 82 # R
+    captured = true
+    game.userAttack(3)
+  if code == 70 # F
+    captured = true
+    game.userAttack(4)
+
   if captured == true
     e.preventDefault()
     e.stopPropagation()
 
 game.$canvas.on 'click', '.entity', (e)->
   entity = $(@).data('entity')
-  events.userAttack(entity.id, 0)
+  game.setUserTarget(entity.id)
+  events.userAttack(0, entity.id, [map.getMouseCoords()])
 
 $window.on 'blur', ->
   game.panStopAll()

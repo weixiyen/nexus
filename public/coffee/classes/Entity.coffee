@@ -71,6 +71,12 @@ class @Entity
 
     @setHp(@hp)
 
+  setTarget: (targetId)->
+    @target = targetId
+
+  getTarget: ->
+    return @target
+
   remove: ->
     @$el.remove()
 

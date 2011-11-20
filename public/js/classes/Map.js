@@ -1,10 +1,13 @@
 (function() {
   var GRID_H, GRID_W;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   GRID_W = 32;
   GRID_H = 16;
   this.Map = (function() {
     function Map(options) {
       this.$canvas = options.$canvas;
+      this.mouseOffsetX = 0;
+      this.mouseOffsetY = 0;
     }
     Map.prototype.reset = function() {
       return this.$canvas.empty();
@@ -20,12 +23,22 @@
       });
     };
     Map.prototype.listenToEvents = function() {
-      return this.$canvas.on('click', function(e) {
-        var x, y;
-        x = Math.round(e.offsetX / GRID_W);
-        y = Math.round(e.offsetY / GRID_H);
-        return events.moveMe(x, y);
-      });
+      this.$canvas.on('click', __bind(function(e) {
+        return events.moveMe(this.getMouseX(), this.getMouseY());
+      }, this));
+      return this.$canvas.on('mousemove', __bind(function(e) {
+        this.mouseOffsetX = e.offsetX;
+        return this.mouseOffsetY = e.offsetY;
+      }, this));
+    };
+    Map.prototype.getMouseX = function() {
+      return Math.round(this.mouseOffsetX / GRID_W);
+    };
+    Map.prototype.getMouseY = function() {
+      return Math.round(this.mouseOffsetY / GRID_H);
+    };
+    Map.prototype.getMouseCoords = function() {
+      return [this.getMouseX(), this.getMouseY()];
     };
     return Map;
   })();

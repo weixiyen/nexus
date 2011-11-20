@@ -8,6 +8,14 @@
 
 <div id="game" class="ui-game"></div>
 <div id="map" class="ui-map"></div>
+<div id="interface" class="ui-interface">
+    <div class="abilities">
+        <div class="ability"><div class="wrap">Q(1)</div></div>
+        <div class="ability"><div class="wrap">E(2)</div></div>
+        <div class="ability"><div class="wrap">R(3)</div></div>
+        <div class="ability"><div class="wrap">F(4)</div></div>
+    </div>
+</div>
 
 <script src="{{ static_url('js/socket.io.js') }}"></script>
 
@@ -18,6 +26,7 @@
 <script src="{{ static_url('js/utils.js') }}"></script>
 
 <script src="{{ static_url('js/classes/Sprite.js') }}"></script>
+<script src="{{ static_url('js/classes/Interface.js') }}"></script>
 <script src="{{ static_url('js/classes/Game.js') }}"></script>
 <script src="{{ static_url('js/classes/GameEvents.js') }}"></script>
 <script src="{{ static_url('js/classes/Map.js') }}"></script>

@@ -54,8 +54,8 @@
     GameEvents.prototype.moveMe = function(x, y) {
       return this.socket.emit('move', [x, y]);
     };
-    GameEvents.prototype.userAttack = function(targetId, attackType) {
-      return this.socket.emit('attack', targetId, attackType);
+    GameEvents.prototype.userAttack = function(attackType, targetId, mousePosition) {
+      return this.socket.emit('attack', attackType, targetId, mousePosition);
     };
     return GameEvents;
   })();

@@ -82,6 +82,12 @@
       this.$el.append(this.$elName, this.$elBar, this.$elBody);
       return this.setHp(this.hp);
     };
+    Entity.prototype.setTarget = function(targetId) {
+      return this.target = targetId;
+    };
+    Entity.prototype.getTarget = function() {
+      return this.target;
+    };
     Entity.prototype.remove = function() {
       return this.$el.remove();
     };

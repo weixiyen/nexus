@@ -5,6 +5,8 @@ class @Map
 
   constructor: (options) ->
     @$canvas = options.$canvas
+    @mouseOffsetX = 0
+    @mouseOffsetY = 0
 
   reset: ->
     @$canvas.empty()
@@ -19,7 +21,18 @@ class @Map
       height: GRID_H * y
 
   listenToEvents: ->
-    @$canvas.on 'click', (e)->
-      x = Math.round(e.offsetX / GRID_W)
-      y = Math.round(e.offsetY / GRID_H)
-      events.moveMe(x, y)
+    @$canvas.on 'click', (e)=>
+      events.moveMe(@getMouseX(), @getMouseY())
+
+    @$canvas.on 'mousemove', (e)=>
+      @mouseOffsetX = e.offsetX
+      @mouseOffsetY = e.offsetY
+
+  getMouseX: ->
+    return Math.round(@mouseOffsetX / GRID_W)
+
+  getMouseY: ->
+    return Math.round(@mouseOffsetY / GRID_H)
+
+  getMouseCoords: ->
+    return [@getMouseX(), @getMouseY()]

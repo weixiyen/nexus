@@ -112,10 +112,10 @@
       }
       entity = this.entities[STUB + aggressorId];
       if (targetId === null) {
-        entity.deaggro(targetId);
+        entity.deaggro();
         return;
       }
-      return entity.aggro();
+      return entity.aggro(targetId);
     };
     Game.prototype.changeName = function(id, name) {
       if (!this.entitiesExist(id)) {
@@ -139,6 +139,21 @@
         }
       }
       return true;
+    };
+    Game.prototype.userAttack = function(attackType) {
+      var mouseCoords, targetId;
+      if (!this.entitiesExist(this.userId)) {
+        return;
+      }
+      targetId = this.entities[STUB + this.userId].getTarget();
+      mouseCoords = map.getMouseCoords();
+      return events.userAttack(attackType, targetId, mouseCoords);
+    };
+    Game.prototype.setUserTarget = function(targetId) {
+      if (!this.entitiesExist(this.userId)) {
+        return;
+      }
+      return this.entities[STUB + this.userId].setTarget(targetId);
     };
     Game.prototype.addToCanvas = function($element) {
       return this.$canvas.append($element);

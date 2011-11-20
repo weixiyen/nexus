@@ -11,6 +11,9 @@
     game: game,
     map: map
   });
+  this.interface = new Interface({
+    $canvas: $('#interface')
+  });
   events.init(function(data) {
     game.reset();
     map.reset();
@@ -86,6 +89,22 @@
       captured = true;
       game.panStop('up');
     }
+    if (code === 81) {
+      captured = true;
+      game.userAttack(1);
+    }
+    if (code === 69) {
+      captured = true;
+      game.userAttack(2);
+    }
+    if (code === 82) {
+      captured = true;
+      game.userAttack(3);
+    }
+    if (code === 70) {
+      captured = true;
+      game.userAttack(4);
+    }
     if (captured === true) {
       e.preventDefault();
       return e.stopPropagation();
@@ -94,7 +113,8 @@
   game.$canvas.on('click', '.entity', function(e) {
     var entity;
     entity = $(this).data('entity');
-    return events.userAttack(entity.id, 0);
+    game.setUserTarget(entity.id);
+    return events.userAttack(0, entity.id, [map.getMouseCoords()]);
   });
   $window.on('blur', function() {
     return game.panStopAll();

@@ -40,5 +40,6 @@ class @GameEvents
   moveMe: (x, y) ->
     @socket.emit('move', [x, y])
 
-  userAttack: (targetId, attackType) ->
-    @socket.emit('attack', targetId, attackType)
+  userAttack: (attackType, targetId, mousePosition) ->
+    @socket.emit('attack', attackType, targetId, mousePosition)
+    #@socket.emit('attack', targetId, attackType)

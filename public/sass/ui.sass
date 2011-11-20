@@ -3,6 +3,7 @@ body
     padding: 0
     margin: 0
     background: #efefef
+    font-family: Arial
 
 .br2
     -webkit-border-radius: 2px
@@ -61,3 +62,30 @@ body
                 background: #adff2f
                 max-width: 100%
                 width: 100%
+
+.ui-interface
+    position: absolute
+    bottom: 0
+    left: 0
+    width: 0
+    height: 0
+    z-index: 10000
+
+    .abilities
+        position: absolute
+        top: -50px
+        height: 50px
+        background: #333
+
+        .ability
+            float: left
+            position: relative
+            margin: 5px
+            color: #999
+            font-size: 14px
+
+            .wrap
+                height: 40px
+                width: 40px
+                text-align: center
+                line-height: 40px

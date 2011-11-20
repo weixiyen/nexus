@@ -80,9 +80,9 @@ class @Game
     if !@entitiesExist(aggressorId) then return
     entity = @entities[STUB+aggressorId]
     if targetId == null
-      entity.deaggro(targetId)
+      entity.deaggro()
       return
-    entity.aggro()
+    entity.aggro(targetId)
 
   changeName: (id, name) ->
     if !@entitiesExist(id) then return
@@ -96,6 +96,16 @@ class @Game
     for id in ids
       if !@entities[STUB+id] then return false
     return true
+
+  userAttack: (attackType)->
+    if !@entitiesExist(@userId) then return
+    targetId = @entities[STUB+@userId].getTarget()
+    mouseCoords = map.getMouseCoords()
+    events.userAttack(attackType, targetId, mouseCoords)
+
+  setUserTarget: (targetId)->
+    if !@entitiesExist(@userId) then return
+    @entities[STUB+@userId].setTarget(targetId)
 
   addToCanvas: ($element)->
     @$canvas.append($element)
