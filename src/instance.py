@@ -1,5 +1,5 @@
 from map import Map
-import entity
+from entity import Player, Monster, Turret
 import random
 import logging
 import tornado.ioloop
@@ -14,17 +14,17 @@ class Instance(object):
         self.id = id
         self.ioloop =  tornado.ioloop.IOLoop.instance()
         self.deadline = timedelta(milliseconds=1000 / FPS)
+        self.running = False
 
-        self.participants = set()
+        self.players = set()
 
         self.map = Map(50, 50)
         self._entities = {}
 
         self.iteration_counter = 0
-        self.next_iteration()
 
         self.logger = logging.getLogger('instance:%d' % self.id)
-#        self.logger.setLevel(logging.DEBUG)
+        self.logger.setLevel(logging.DEBUG)
 
     @classmethod
     def get(cls, instance_id):
@@ -46,7 +46,19 @@ class Instance(object):
 #            instance.spawn('Turret', type_=Turret)
 #            instance.spawn('Turret', type_=Turret)
 
+            instance.start()
+
             return instance
+
+    def start(self):
+        if not self.running:
+            self.running = True
+            self.logger.debug('Starting')
+            self.next_iteration()
+
+    def stop(self):
+        self.running = False
+        self.logger.debug('Stopping')
 
     def serialize(self):
         return {
@@ -54,30 +66,33 @@ class Instance(object):
             'entities': [entity.serialize() for entity in self.entities]
         }
 
-    def add_participant(self, p):
-        self.participants.add(p)
-
+    def add_player(self, conn):
         for e in self.entities:
-            if isinstance(e, entity.Player):
-                if e.uid == p.uid:
-                    e.connections.add(p)
+            if isinstance(e, Player):
+                if e.uid == conn.uid:
+                    e.connections.add(conn)
                     return e
 
-        e = self.spawn(p.uid, uid=p.uid, type_=entity.Player)
-        e.connections.add(p)
-        return e
+        player = self.spawn(conn.uid, uid=conn.uid, type_=Player)
+        player.connections.add(conn)
 
-    def remove_participant(self, p):
-        self.participants.remove(p)
+        self.players.add(player)
 
-        p.entity.connections.remove(p)
+        self.start() # start if not running...
 
-        if not p.entity.connections:
-            self.remove_entity(p.entity)
+        return player
+
+    def remove_player(self, conn):
+        conn.player.connections.remove(conn)
+
+        if not conn.player.connections:
+            self.players.remove(conn.player)
+            self.remove_entity(conn.player)
 
     def emit(self, event, *args):
-        for p in self.participants:
-            p.emit(event, *args)
+        for player in self.players:
+            for conn in player.connections:
+                conn.emit(event, *args)
 
     def next_iteration(self):
         self.iteration_counter += 1
@@ -88,9 +103,12 @@ class Instance(object):
             except StopIteration:
                 pass
 
-        self.ioloop.add_timeout(self.deadline, self.next_iteration)
+        if self.players:
+            self.ioloop.add_timeout(self.deadline, self.next_iteration)
+        else:
+            self.stop()
 
-    def spawn(self, name, x=None, y=None, type_=entity.Monster, **kwargs):
+    def spawn(self, name, x=None, y=None, type_=Monster, **kwargs):
         if x is None or y is None:
             while True:
                 x = random.randint(0, self.map.width - 1)

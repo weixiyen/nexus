@@ -38,10 +38,10 @@ class SocketConnection(tornadio2.conn.SocketConnection):
         self.instance = Instance.get(request.get_argument('instance'))
 
         self.uid = request.get_cookie('uid').value
-        self.entity = self.instance.add_participant(self)
+        self.player = self.instance.add_player(self)
 
         state = self.instance.serialize()
-        state['me'] = self.entity.id
+        state['me'] = self.player.id
 
         self.emit('initialize', state)
 
@@ -59,14 +59,14 @@ class SocketConnection(tornadio2.conn.SocketConnection):
     def move(self, message):
         x, y = message
         st = time.time()
-        self.entity.move(x, y)
+        self.player.move(x, y)
         self.instance.logger.debug('Player A*: %.2f' % (time.time() - st))
 
     def on_message(self, message):
         pass
 
     def on_close(self):
-        self.instance.remove_participant(self)
+        self.instance.remove_player(self)
 
 application = tornado.web.Application(
     tornadio2.TornadioRouter(SocketConnection,{
