@@ -176,7 +176,10 @@ class Entity(object):
                 if isinstance(self, MovableEntity):
                     self.stop_movement()
 
-                self.set_target(None)
+                if not self.stats['respawn']:
+                    self.instance.remove_entity(self)
+                else:
+                    self.set_target(None)
 
                 self.instance.logger.debug('Killed %r' % self)
                 self.emit('death', self.id)
