@@ -51,6 +51,12 @@
         return fn(id, amt, isCritical);
       });
     };
+    GameEvents.prototype.setMovementSpeed = function(fn) {
+      return this.socket.on('set-movement-speed', function(id, speed) {
+        console.log(id, speed);
+        return fn(id, speed);
+      });
+    };
     GameEvents.prototype.moveMe = function(x, y) {
       return this.socket.emit('move', [x, y]);
     };

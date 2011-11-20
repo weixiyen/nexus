@@ -110,6 +110,11 @@
     Entity.prototype.takeDamage = function(amt, isCrit) {
       return this.setHp(this.hp - amt);
     };
+    Entity.prototype.setMovementSpeed = function(speed) {
+      game.removeLoopItem('unit:' + this.id + ':move');
+      this.speed = speed;
+      return this.startMoving();
+    };
     Entity.prototype.setHp = function(hp) {
       var perc;
       this.hp = hp;
@@ -124,7 +129,7 @@
     __extends(MovableEntity, Entity);
     function MovableEntity(entity) {
       MovableEntity.__super__.constructor.apply(this, arguments);
-      this.speed = entity.stats.movement_speed || 1;
+      this.speed = entity.movement_speed || 1;
       this.moving = false;
       this.endLeft = this.left;
       this.endTop = this.top;

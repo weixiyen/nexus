@@ -99,6 +99,11 @@ class @Entity
   takeDamage: (amt, isCrit)->
     @setHp(@hp - amt)
 
+  setMovementSpeed: (speed)->
+    game.removeLoopItem 'unit:'+@id+':move'
+    @speed = speed
+    @startMoving()
+
   setHp: (hp)->
     @hp = hp
     perc = Math.ceil(@hp / @stats.hp * 100) + '%'
@@ -109,7 +114,7 @@ class @Entity
 class @MovableEntity extends Entity
   constructor: (entity)->
     super
-    @speed = entity.stats.movement_speed || 1
+    @speed = entity.movement_speed || 1
     @moving = false
     @endLeft = @left
     @endTop = @top

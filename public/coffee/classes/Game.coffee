@@ -93,6 +93,10 @@ class @Game
     if !@entitiesExist(id) then return
     @entities[STUB+id].takeDamage(amt, isCrit)
 
+  setMovementSpeed: (id, speed) ->
+    if !@entitiesExist(id) then return
+    @entities[STUB+id].setMovementSpeed(speed)
+
   entitiesExist: (ids...) ->
     for id in ids
       if !@entities[STUB+id] then return false

@@ -40,6 +40,9 @@
   events.damageTaken(function(id, amt, isCrit) {
     return game.damageTaken(id, amt, isCrit);
   });
+  events.setMovementSpeed(function(id, speed) {
+    return game.setMovementSpeed(id, speed);
+  });
   $document.on('keydown', function(e) {
     var captured, code;
     captured = false;

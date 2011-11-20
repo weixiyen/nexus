@@ -57,8 +57,9 @@ class SocketConnection(tornadio2.conn.SocketConnection):
 
     @tornadio2.event('move')
     def move(self, coordinates):
-        self.player.set_target(None)
-        self.player.move(*coordinates)
+        if self.player.is_alive():
+            self.player.set_target(None)
+            self.player.move(*coordinates)
 
     def on_message(self, message):
         pass

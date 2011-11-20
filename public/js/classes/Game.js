@@ -132,6 +132,12 @@
       }
       return this.entities[STUB + id].takeDamage(amt, isCrit);
     };
+    Game.prototype.setMovementSpeed = function(id, speed) {
+      if (!this.entitiesExist(id)) {
+        return;
+      }
+      return this.entities[STUB + id].setMovementSpeed(speed);
+    };
     Game.prototype.entitiesExist = function() {
       var id, ids, _i, _len;
       ids = 1 <= arguments.length ? __slice.call(arguments, 0) : [];

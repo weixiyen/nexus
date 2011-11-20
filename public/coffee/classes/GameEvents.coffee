@@ -37,6 +37,11 @@ class @GameEvents
     @socket.on 'damage-taken', (id, amt, isCritical) ->
       fn(id, amt, isCritical)
 
+  setMovementSpeed: (fn) ->
+    @socket.on 'set-movement-speed', (id, speed) ->
+      console.log(id, speed)
+      fn(id, speed)
+
   moveMe: (x, y) ->
     @socket.emit('move', [x, y])
 

@@ -21,6 +21,7 @@ class Entity(object):
         self.stats.update(stats)
 
         self.hp = self.stats['hp']
+        self.movement_speed = self.stats['movement_speed']
 
         self._attack_limiter = None
 
@@ -51,6 +52,7 @@ class Entity(object):
             'x': self.x,
             'y': self.y,
             'hp': self.hp,
+            'movement_speed': self.movement_speed,
             'stats': self.stats,
             'target': self.target.id if self.target else None
         }
@@ -61,6 +63,7 @@ class Entity(object):
     def respawn(self):
         self.x, self.y = self._home
         self.hp = self.stats['hp']
+        self.movement_speed = self.stats['movement_speed']
         self.emit('spawn', self.serialize())
 
     def is_attacking(self):
@@ -139,9 +142,6 @@ class Entity(object):
             self.emit('damage-taken', self.id, damage, critcal)
 
             if not self.is_alive():
-                if isinstance(self, PlayerEntity):
-                    self.instance.remove_entity(self)
-
                 if isinstance(self, MovableEntity):
                     self.stop_movement()
 
@@ -195,6 +195,11 @@ class MovableEntity(Entity):
         self._movement_queue = []
 
     def set_movement_speed(self, movement_speed):
+        self.movement_speed = movement_speed
+
+        if hasattr(self, '_movement_limiter'):
+            self.emit('set-movement-speed', self.id, movement_speed)
+
         self._movement_limiter = Limiter(movement_speed * 100)
 
     def _execute_movement_queue(self, ignore_atk=False):
@@ -253,6 +258,10 @@ class PlayerEntity(MovableEntity):
             damage = 10 / len(entities)
 
             for entity in entities:
+                try:
+                    entity.set_movement_speed(20)
+                except:
+                    pass
                 entity.damage_taken(self, damage)
 
     def get_base_stats(self):

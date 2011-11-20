@@ -44,6 +44,9 @@ events.nameChange (id, name)->
 events.damageTaken (id, amt, isCrit) ->
   game.damageTaken(id, amt, isCrit)
 
+events.setMovementSpeed (id, speed) ->
+  game.setMovementSpeed(id, speed)
+
 $document.on 'keydown', (e)->
   captured = false
   code = e.which
