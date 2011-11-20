@@ -250,7 +250,7 @@ class @Minion extends MovableEntity
         "-207px 0"
         "-1766px 0",
         "-1824px 0",
-        "-1833px 0",
+        "-1883px 0",
         "-1941px 0",
         "-1999px 0",
         "-2058px 0"
