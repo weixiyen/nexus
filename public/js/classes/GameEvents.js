@@ -36,6 +36,11 @@
         return fn(data);
       });
     };
+    GameEvents.prototype.target = function(fn) {
+      return this.socket.on('target', function(aggressorId, targetId) {
+        return fn(aggressorId, targetId);
+      });
+    };
     GameEvents.prototype.moveMe = function(x, y) {
       return this.socket.emit('move', [x, y]);
     };

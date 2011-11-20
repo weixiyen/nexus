@@ -73,6 +73,14 @@
       this.x = Math.floor(this.left / GRID_W);
       return this.y = Math.floor(this.top / GRID_H);
     };
+    Entity.prototype.aggro = function(id) {
+      this.target = id;
+      return this.$elName.addClass('red');
+    };
+    Entity.prototype.deaggro = function() {
+      this.target = null;
+      return this.$elName.removeClass('red');
+    };
     return Entity;
   })();
   this.MovableEntity = (function() {
@@ -211,6 +219,7 @@
     __extends(Player, MovableEntity);
     function Player(entity) {
       Player.__super__.constructor.apply(this, arguments);
+      this.type = 'player';
       this.width = 40;
       this.height = 64;
       this.imgurl = IMGPATH + 'sprite_user.png';

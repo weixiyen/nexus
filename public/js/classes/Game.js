@@ -1,5 +1,5 @@
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __slice = Array.prototype.slice;
   this.Game = (function() {
     var INTERVAL, PAN_DIST, PAN_SPEED, STUB, UI_HEIGHT;
     STUB = 'ent-';
@@ -92,6 +92,9 @@
       if (entity === null) {
         return;
       }
+      if (entity.hasTarget()) {
+        entity.aggro(entity.target);
+      }
       this.entities[STUB + entity.id] = entity;
       return this.addToCanvas(entity.$el);
     };
@@ -101,6 +104,29 @@
     };
     Game.prototype.moveEntity = function(id, x, y) {
       return this.entities[STUB + id].moveTo(x, y);
+    };
+    Game.prototype.target = function(aggressorId, targetId) {
+      var entity;
+      if (!this.entitiesExist(aggressorId)) {
+        return;
+      }
+      entity = this.entities[STUB + aggressorId];
+      if (targetId === null) {
+        entity.deaggro(targetId);
+        return;
+      }
+      return entity.aggro();
+    };
+    Game.prototype.entitiesExist = function() {
+      var id, ids, _i, _len;
+      ids = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      for (_i = 0, _len = ids.length; _i < _len; _i++) {
+        id = ids[_i];
+        if (!this.entities[STUB + id]) {
+          return false;
+        }
+      }
+      return true;
     };
     Game.prototype.addToCanvas = function($element) {
       return this.$canvas.append($element);

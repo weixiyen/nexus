@@ -64,7 +64,9 @@ class @Game
     else if window.hasOwnProperty(entityData.kind)
       entity = new window[entityData.kind](entityData)
     if entity == null then return
+    if entity.hasTarget() then entity.aggro(entity.target)
     @entities[STUB+entity.id] = entity
+
     @addToCanvas(entity.$el)
 
   removeEntity: (entityId)->
@@ -73,6 +75,19 @@ class @Game
 
   moveEntity: (id, x, y)->
     @entities[STUB+id].moveTo(x,y)
+
+  target: (aggressorId, targetId)->
+    if !@entitiesExist(aggressorId) then return
+    entity = @entities[STUB+aggressorId]
+    if targetId == null
+      entity.deaggro(targetId)
+      return
+    entity.aggro()
+
+  entitiesExist: (ids...) ->
+    for id in ids
+      if !@entities[STUB+id] then return false
+    return true
 
   addToCanvas: ($element)->
     @$canvas.append($element)

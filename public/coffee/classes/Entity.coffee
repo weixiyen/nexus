@@ -63,6 +63,14 @@ class @Entity
     @x = Math.floor(@left / GRID_W)
     @y = Math.floor(@top / GRID_H)
 
+  aggro: (id)->
+    @target = id
+    @$elName.addClass('red')
+
+  deaggro: ->
+    @target = null
+    @$elName.removeClass('red')
+
 class @MovableEntity extends Entity
   constructor: (entity)->
     super
@@ -207,6 +215,7 @@ class @Monster extends MovableEntity
 class @Player extends MovableEntity
   constructor: (entity)->
     super
+    @type = 'player'
     @width = 40
     @height = 64
     @imgurl = IMGPATH + 'sprite_user.png'

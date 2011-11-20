@@ -32,6 +32,9 @@ events.move (id, x, y)->
 events.death (entityId)->
   game.removeEntity(entityId)
 
+events.target (aggressorId, targetId) ->
+  game.target(aggressorId, targetId)
+
 $document.on 'keydown', (e)->
   captured = false
   code = e.which

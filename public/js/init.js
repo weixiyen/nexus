@@ -28,6 +28,9 @@
   events.death(function(entityId) {
     return game.removeEntity(entityId);
   });
+  events.target(function(aggressorId, targetId) {
+    return game.target(aggressorId, targetId);
+  });
   $document.on('keydown', function(e) {
     var captured, code;
     captured = false;

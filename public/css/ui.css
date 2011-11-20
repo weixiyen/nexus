@@ -21,6 +21,13 @@ body {
       width: 100px;
       text-align: center;
       position: relative; }
+    .ui-game .entity.player .name {
+      color: #aecfff;
+      text-shadow: black 0 0 4px;
+      font: bold 11px Arial;
+      width: 100px;
+      text-align: center;
+      position: relative; }
     .ui-game .entity.unit .name {
       color: yellow;
       text-shadow: black 0 0 4px;
@@ -28,3 +35,5 @@ body {
       width: 100px;
       text-align: center;
       position: relative; }
+    .ui-game .entity.unit .name.red {
+      color: #ff9a8a; }
