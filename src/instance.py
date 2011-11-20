@@ -5,7 +5,7 @@ import datetime
 
 from map import Map
 from entity import Entity, PlayerEntity
-import mobs
+import mob
 
 FPS = 60
 
@@ -42,9 +42,9 @@ class Instance(object):
             _instances[instance_id] = instance
 
             for i in xrange(25):
-                instance.spawn('Lizard',  kind=mobs.Lizard, hp=10, attack=1)
+                instance.spawn('Lizard',  kind=mob.Lizard, hp=10, attack=1)
 
-            instance.spawn('Turret', kind=mobs.Turret, hp=100, attack=3)
+            instance.spawn('Turret', kind=mob.Turret, hp=100, attack=3)
 
             instance.start()
 

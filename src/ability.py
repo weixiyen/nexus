@@ -1,4 +1,4 @@
-import buffs
+import buff
 
 def aoe(self, coordinates):
     targets = []
@@ -15,10 +15,10 @@ def aoe(self, coordinates):
 
 def slow(target):
     if target:
-        target.apply_buff(buffs.Slow)
+        target.apply_buff(buff.Slow)
 
 def haste(target):
-    target.apply_buff(buffs.Haste)
+    target.apply_buff(buff.Haste)
 
 def ultimate(self):
     for entity in self.instance.entities:

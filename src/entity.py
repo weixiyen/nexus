@@ -1,7 +1,8 @@
+from operator import itemgetter
 import random
 from limiter import Limiter
 from map import Map
-import abilities
+import ability
 
 class Entity(object):
     id = 0
@@ -126,6 +127,8 @@ class Entity(object):
                         self.set_target(None)
 
     def get_nearby_entities(self, radius):
+        entities = []
+
         for entity in self.instance.entities:
             if entity == self:
                 continue
@@ -136,8 +139,15 @@ class Entity(object):
             if not entity.is_alive():
                 continue
 
-            if self.instance.map.get_distance(self, entity) <= radius:
-                yield entity
+            distance = self.instance.map.get_distance(self, entity)
+
+            if distance <= radius:
+                entities.append((distance, entity))
+
+        entities.sort(key=itemgetter(0))
+
+        for _, entity in entities:
+            yield entity
 
     def get_entities_at(self, coordinates, radius):
         for entity in self.instance.entities:
@@ -287,17 +297,17 @@ class PlayerEntity(MovableEntity):
 
         self.emit('name-change', self.id, name)
 
-    def ability(self, ability, target_id, coordinates):
+    def ability(self, action, target_id, coordinates):
         target = self.instance.get_entity(target_id)
 
-        if ability == 1 and self.use_mp(10): # aoe
-            abilities.aoe(self, coordinates)
-        elif ability == 2 and self.use_mp(5): # slow
-            abilities.slow(target)
-        elif ability == 3 and self.use_mp(15): # haste myself
-            abilities.haste(self)
-        elif ability == 4 and self.use_mp(50): # ultimate
-            abilities.ultimate(self)
+        if action == 1 and self.use_mp(10): # aoe
+            ability.aoe(self, coordinates)
+        elif action == 2 and self.use_mp(5): # slow
+            ability.slow(target)
+        elif action == 3 and self.use_mp(15): # haste myself
+            ability.haste(self)
+        elif action == 4 and self.use_mp(50): # ultimate
+            ability.ultimate(self)
 
     def get_base_stats(self):
         base_stats = MovableEntity.get_base_stats(self)
@@ -313,7 +323,7 @@ class MonsterEntity(MovableEntity):
     def __init__(self, *args, **kwargs):
         MovableEntity.__init__(self, *args, **kwargs)
 
-        self._patrol_limiter = Limiter(2000, True)
+        self._patrol_limiter = Limiter(10000, True)
 
     def aggro(self):
         if self.is_attacking():

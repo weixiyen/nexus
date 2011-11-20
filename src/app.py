@@ -5,7 +5,7 @@ import os
 import tornadio2
 import uuid
 from instance import Instance
-import mobs
+import mob
 
 ROOT_PATH = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(ROOT_PATH, '../public')
@@ -43,9 +43,9 @@ class SocketConnection(tornadio2.conn.SocketConnection):
     @tornadio2.event('spawn')
     def spawn(self):
         for i in xrange(100):
-            self.instance.spawn('Lizard', kind=mobs.Lizard, hp=10, attack=1)
+            self.instance.spawn('Lizard', kind=mob.Lizard, hp=10, attack=1)
 
-        self.instance.spawn('Turret', kind=mobs.Turret, hp=100, attack=3)
+        self.instance.spawn('Turret', kind=mob.Turret, hp=100, attack=3)
 
     @tornadio2.event('attack')
     def attack(self, ability, target_id, coordinates):
