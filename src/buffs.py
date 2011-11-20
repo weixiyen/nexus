@@ -17,7 +17,11 @@ class Buff(object):
 
     @property
     def elapsed(self):
-        return self.limiter.is_ready()
+        if self.limiter.is_ready():
+            self.complete()
+            return True
+
+        return False
 
     def apply(self):
         pass

@@ -82,6 +82,10 @@ class Entity(object):
             self.emit('target', self.id, target.id if target else None)
 
     def apply_buff(self, buff_type, duration=5000):
+        for buff in self.buffs:
+            if isinstance(buff, buff_type):
+                return
+
         buff = buff_type(self, duration)
 
         if buff.applied:
@@ -184,7 +188,7 @@ class Entity(object):
             raise StopIteration
 
         if self.buffs:
-            self.buffs = [buff for buff in self.buffs if not (buff.elapsed and buff.complete())]
+            self.buffs = [buff for buff in self.buffs if not buff.elapsed]
 
         if self.is_attacking():
             self.attack()
