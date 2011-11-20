@@ -29,5 +29,9 @@ class @GameEvents
     @socket.on 'target', (aggressorId, targetId) ->
       fn(aggressorId, targetId)
 
+  nameChange: (fn) ->
+    @socket.on 'name-change', (id, name) ->
+      fn(id, name)
+
   moveMe: (x, y) ->
     @socket.emit('move', [x, y])

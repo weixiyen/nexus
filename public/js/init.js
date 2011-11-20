@@ -31,6 +31,9 @@
   events.target(function(aggressorId, targetId) {
     return game.target(aggressorId, targetId);
   });
+  events.nameChange(function(id, name) {
+    return game.changeName(id, name);
+  });
   $document.on('keydown', function(e) {
     var captured, code;
     captured = false;

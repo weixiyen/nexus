@@ -84,6 +84,10 @@ class @Game
       return
     entity.aggro()
 
+  changeName: (id, name) ->
+    if !@entitiesExist(id) then return
+    @entities[STUB+id].changeName(name)
+
   entitiesExist: (ids...) ->
     for id in ids
       if !@entities[STUB+id] then return false

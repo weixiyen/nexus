@@ -35,6 +35,9 @@ events.death (entityId)->
 events.target (aggressorId, targetId) ->
   game.target(aggressorId, targetId)
 
+events.nameChange (id, name)->
+  game.changeName(id, name)
+
 $document.on 'keydown', (e)->
   captured = false
   code = e.which

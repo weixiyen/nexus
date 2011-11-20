@@ -11,7 +11,6 @@
     };
     Map.prototype.setup = function(graph) {
       this.setDimensions(graph[0].length, graph.length);
-      this.graph = $.astar.graph(graph);
       return this.listenToEvents();
     };
     Map.prototype.setDimensions = function(x, y) {

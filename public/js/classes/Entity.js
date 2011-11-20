@@ -81,6 +81,10 @@
       this.target = null;
       return this.$elName.removeClass('red');
     };
+    Entity.prototype.changeName = function(name) {
+      this.name = name;
+      return this.$elName.html(name);
+    };
     return Entity;
   })();
   this.MovableEntity = (function() {

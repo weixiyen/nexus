@@ -11,7 +11,6 @@ class @Map
 
   setup: (graph) ->
     @setDimensions(graph[0].length, graph.length)
-    @graph = $.astar.graph graph
     @listenToEvents()
 
   setDimensions: (x, y) ->

@@ -41,6 +41,11 @@
         return fn(aggressorId, targetId);
       });
     };
+    GameEvents.prototype.nameChange = function(fn) {
+      return this.socket.on('name-change', function(id, name) {
+        return fn(id, name);
+      });
+    };
     GameEvents.prototype.moveMe = function(x, y) {
       return this.socket.emit('move', [x, y]);
     };

@@ -71,6 +71,10 @@ class @Entity
     @target = null
     @$elName.removeClass('red')
 
+  changeName: (name)->
+    @name = name
+    @$elName.html(name)
+
 class @MovableEntity extends Entity
   constructor: (entity)->
     super
