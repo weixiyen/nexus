@@ -20,7 +20,7 @@ BASE_STATS = {
     'mp': 0,
     'attack': 0,
     'range_attack': 0,
-    'movement_speed': 500,
+    'movement_speed': 5,
     'aggro_range': 3,
     'leash': 15,
     'patrol': 10
@@ -90,7 +90,7 @@ class Entity(object):
         if self.game.iteration_counter % 10:
             if self.game.map.get_distance(self, target) > self.stats['leash']:
                 self.set_target(None)
-                self._movement_queue = None
+                self._movement_queue = []
                 self.game.logger.debug('Lost Aggro %r -> %r' % (self, target))
             return
 
@@ -157,7 +157,7 @@ class MovableEntity(Entity):
         Entity.__init__(self, *args, **kwargs)
 
         self._movement_queue = []
-        self._delayer = Delayer(self.stats['movement_speed'])
+        self._delayer = Delayer(self.stats['movement_speed'] * 100)
 
     def _move(self, x, y):
         self.x = x
@@ -209,7 +209,6 @@ class Monster(MovableEntity):
 
         self.stats['hp'] = 10
         self.stats['attack'] = 1
-        self.stats['movement_speed'] = 80
 
         self._last_patrol = datetime.now()
 
@@ -234,7 +233,8 @@ class Monster(MovableEntity):
         finally:
             self.aggro()
 
-        if not self.is_moving() and self._last_patrol <= now - timedelta(seconds=random.randint(5, 10)):
+        #if not self.is_moving() and self._last_patrol <= now - timedelta(seconds=random.randint(1, 5)):
+        if not self.is_moving() and self._last_patrol <= now - timedelta(seconds=2):
             x = self.x
             y = self.y
 

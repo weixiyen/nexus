@@ -15,6 +15,7 @@
   events.init(function(data) {
     game.reset();
     map.reset();
+    map.setCollisionGraph(data.map);
     game.setUserId(data.me);
     game.addEntities(data.entities);
     return game.centerOnUser();

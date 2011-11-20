@@ -9,9 +9,9 @@
     return child;
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   IMGPATH = '/public/img/';
-  GRID_W = 64;
-  GRID_H = 32;
-  STEP_X = 4;
+  GRID_W = 32;
+  GRID_H = 16;
+  STEP_X = 5;
   STEP_Y = 5;
   this.Entity = (function() {
     var STUB;
@@ -60,14 +60,17 @@
     Entity.prototype.remove = function() {
       return this.$el.remove();
     };
+    Entity.prototype.setCoords = function() {
+      this.x = Math.floor(this.left / GRID_W);
+      return this.y = Math.floor(this.top / GRID_H);
+    };
     return Entity;
   })();
   this.MovableEntity = (function() {
     __extends(MovableEntity, Entity);
     function MovableEntity(entity) {
-      var _ref;
       MovableEntity.__super__.constructor.apply(this, arguments);
-      this.speed = ((_ref = entity.stats) != null ? _ref.speed : void 0) ? Math.ceil(1 / entity.stats.speed * 3) : 0;
+      this.speed = entity.stats.movement_speed || 1;
       this.moving = false;
       this.endLeft = this.left;
       this.endTop = this.top;
@@ -87,10 +90,11 @@
       this.direction = null;
       changeX = STEP_X;
       changeY = STEP_Y;
-      if (this._movingDiagonally()) {
-        changeX -= 2;
-        changeY -= 1;
-      }
+      /*
+          if @_movingDiagonally()
+            changeX -= 2
+            changeY -= 1
+          */
       nextLeft = this.left;
       nextTop = this.top;
       if (this.top > this.endTop) {
@@ -172,8 +176,8 @@
       Monster.__super__.constructor.apply(this, arguments);
       this.width = 65;
       this.height = 60;
+      this.animationSkip = 10;
       this.imgurl = IMGPATH + 'sprite_monster.png';
-      this.animationSkip = 3;
       this.anim = {
         down: ["0 0", "-65px 0", "-130px 0"],
         up: ["-195px 0", "-260px 0", "-325px 0"],

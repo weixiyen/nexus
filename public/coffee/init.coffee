@@ -15,9 +15,11 @@ events = new GameEvents
 events.init (data)->
   game.reset()
   map.reset()
+  map.setCollisionGraph(data.map)
   game.setUserId(data.me)
   game.addEntities(data.entities)
   game.centerOnUser()
+
 
 # spawn an entity
 events.spawn (entity)->

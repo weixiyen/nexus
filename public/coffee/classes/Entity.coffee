@@ -1,8 +1,8 @@
 IMGPATH = '/public/img/'
 
-GRID_W = 64
-GRID_H = 32
-STEP_X = 4
+GRID_W = 32
+GRID_H = 16
+STEP_X = 5
 STEP_Y = 5
 
 class @Entity
@@ -51,10 +51,14 @@ class @Entity
   remove: ->
     @$el.remove()
 
+  setCoords: ->
+    @x = Math.floor(@left / GRID_W)
+    @y = Math.floor(@top / GRID_H)
+
 class @MovableEntity extends Entity
   constructor: (entity)->
     super
-    @speed = if entity.stats?.speed then Math.ceil(1 / entity.stats.speed * 3) else 0
+    @speed = entity.stats.movement_speed || 1
     @moving = false
     @endLeft = @left
     @endTop = @top
@@ -73,10 +77,11 @@ class @MovableEntity extends Entity
     changeX = STEP_X
     changeY = STEP_Y
 
-    # if moving diagonally, reduce mob speed
+    ###
     if @_movingDiagonally()
       changeX -= 2
       changeY -= 1
+    ###
 
     # default nextLeft and nextTop values
     nextLeft = @left
@@ -156,9 +161,9 @@ class @Monster extends MovableEntity
     super
     @width = 65
     @height = 60
+    @animationSkip = 10
     @imgurl = IMGPATH + 'sprite_monster.png'
 
-    @animationSkip = 3
     @anim =
       down: [
         "0 0",
