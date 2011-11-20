@@ -74,6 +74,7 @@ class @Game
     delete @entities[ STUB + entityId ]
 
   moveEntity: (id, x, y)->
+    if !@entitiesExist(id) then return
     @entities[STUB+id].moveTo(x,y)
 
   target: (aggressorId, targetId)->

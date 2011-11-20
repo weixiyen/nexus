@@ -103,6 +103,9 @@
       return delete this.entities[STUB + entityId];
     };
     Game.prototype.moveEntity = function(id, x, y) {
+      if (!this.entitiesExist(id)) {
+        return;
+      }
       return this.entities[STUB + id].moveTo(x, y);
     };
     Game.prototype.target = function(aggressorId, targetId) {
