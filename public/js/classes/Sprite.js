@@ -4,7 +4,7 @@
     function Sprite(opts) {
       this.id = 'anim:' + opts.id;
       this.el = opts.el;
-      this.counter = 0;
+      this.counter = 1;
     }
     Sprite.prototype.start = function(queue, skip) {
       var len;
@@ -15,7 +15,7 @@
         });
         this.counter += 1;
         if (this.counter === len) {
-          return this.counter = 0;
+          return this.counter = 1;
         }
       }, this));
     };

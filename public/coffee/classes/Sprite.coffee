@@ -2,7 +2,7 @@ class @Sprite
   constructor: (opts)->
     @id = 'anim:' + opts.id
     @el = opts.el
-    @counter = 0
+    @counter = 1
 
   start: (queue, skip)->
     len = queue.length
@@ -11,7 +11,7 @@ class @Sprite
         'background-position': queue[ @counter ]
       @counter += 1
       if @counter == len
-        @counter = 0
+        @counter = 1
 
   stop: ->
     game.removeLoopItem(@id)
