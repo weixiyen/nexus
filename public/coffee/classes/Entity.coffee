@@ -97,6 +97,7 @@ class @Entity
     @$elHp.css
       width: perc
 
+
 class @MovableEntity extends Entity
   constructor: (entity)->
     super
@@ -194,13 +195,14 @@ class @MovableEntity extends Entity
       skip = Math.round(skip / 1.5)
     @sprite.start(@anim[@curDir], skip)
 
-class @Turret extends Entity
-  constructor: (entity)->
-    super
-    console.log 'turr'
+  moveTo: (x, y)->
+    @moving = true
+    @endLeft = x * GRID_W - Math.floor(@width / 2)
+    @endTop = y * GRID_H - Math.floor(@height / 2)
 
-class @Monster extends MovableEntity
 
+
+class @Lizard extends MovableEntity
   constructor: (entity)->
     super
     @width = 65
@@ -233,12 +235,8 @@ class @Monster extends MovableEntity
     @create()
     @startMoving()
 
-  moveTo: (x, y)->
-    @moving = true
-    @endLeft = x * GRID_W - Math.floor(@width / 2)
-    @endTop = y * GRID_H - Math.floor(@height / 2)
 
-class @Player extends MovableEntity
+class @PlayerEntity extends MovableEntity
   constructor: (entity)->
     super
     @type = 'player'
@@ -271,10 +269,9 @@ class @Player extends MovableEntity
     @create()
     @startMoving()
 
-  moveTo: (x, y)->
-    @moving = true
-    @endLeft = x * GRID_W - Math.floor(@width / 2)
-    @endTop = y * GRID_H - Math.floor(@height / 2)
+
+
+
 
 class @User extends MovableEntity
   constructor: (entity)->
@@ -309,7 +306,3 @@ class @User extends MovableEntity
     @create()
     @startMoving()
 
-  moveTo: (x, y)->
-    @moving = true
-    @endLeft = x * GRID_W - Math.floor(@width / 2)
-    @endTop = y * GRID_H - Math.floor(@height / 2)

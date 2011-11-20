@@ -209,20 +209,17 @@
       }
       return this.sprite.start(this.anim[this.curDir], skip);
     };
+    MovableEntity.prototype.moveTo = function(x, y) {
+      this.moving = true;
+      this.endLeft = x * GRID_W - Math.floor(this.width / 2);
+      return this.endTop = y * GRID_H - Math.floor(this.height / 2);
+    };
     return MovableEntity;
   })();
-  this.Turret = (function() {
-    __extends(Turret, Entity);
-    function Turret(entity) {
-      Turret.__super__.constructor.apply(this, arguments);
-      console.log('turr');
-    }
-    return Turret;
-  })();
-  this.Monster = (function() {
-    __extends(Monster, MovableEntity);
-    function Monster(entity) {
-      Monster.__super__.constructor.apply(this, arguments);
+  this.Lizard = (function() {
+    __extends(Lizard, MovableEntity);
+    function Lizard(entity) {
+      Lizard.__super__.constructor.apply(this, arguments);
       this.width = 65;
       this.height = 60;
       this.animationSkip = 10;
@@ -236,17 +233,12 @@
       this.create();
       this.startMoving();
     }
-    Monster.prototype.moveTo = function(x, y) {
-      this.moving = true;
-      this.endLeft = x * GRID_W - Math.floor(this.width / 2);
-      return this.endTop = y * GRID_H - Math.floor(this.height / 2);
-    };
-    return Monster;
+    return Lizard;
   })();
-  this.Player = (function() {
-    __extends(Player, MovableEntity);
-    function Player(entity) {
-      Player.__super__.constructor.apply(this, arguments);
+  this.PlayerEntity = (function() {
+    __extends(PlayerEntity, MovableEntity);
+    function PlayerEntity(entity) {
+      PlayerEntity.__super__.constructor.apply(this, arguments);
       this.type = 'player';
       this.width = 40;
       this.height = 64;
@@ -261,12 +253,7 @@
       this.create();
       this.startMoving();
     }
-    Player.prototype.moveTo = function(x, y) {
-      this.moving = true;
-      this.endLeft = x * GRID_W - Math.floor(this.width / 2);
-      return this.endTop = y * GRID_H - Math.floor(this.height / 2);
-    };
-    return Player;
+    return PlayerEntity;
   })();
   this.User = (function() {
     __extends(User, MovableEntity);
@@ -286,11 +273,6 @@
       this.create();
       this.startMoving();
     }
-    User.prototype.moveTo = function(x, y) {
-      this.moving = true;
-      this.endLeft = x * GRID_W - Math.floor(this.width / 2);
-      return this.endTop = y * GRID_H - Math.floor(this.height / 2);
-    };
     return User;
   })();
 }).call(this);
