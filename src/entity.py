@@ -39,7 +39,7 @@ class Entity(object):
             'mp': 0,
             'attack': 0,
             'attack_speed': 5,
-            'movement_speed': 5,
+            'movement_speed': 4,
             'aggro_radius': 3,
             'patrol_radius': 8,
             'respawn': True
@@ -86,12 +86,12 @@ class Entity(object):
         if self.is_alive():
             self.emit('target', self.id, target.id if target else None)
 
-    def apply_buff(self, buff_type, duration=5000):
+    def apply_buff(self, buff_type, source=None, duration=5000):
         for buff in self.buffs:
             if isinstance(buff, buff_type):
                 return
 
-        buff = buff_type(self, duration)
+        buff = buff_type(self, source, duration)
 
         if buff.applied:
             self.buffs.append(buff)
@@ -108,7 +108,7 @@ class Entity(object):
         if not target.is_alive():
             self.set_target(None)
         elif self.instance.iteration_counter % 5 and not isinstance(self, PlayerEntity):
-            if self.instance.map.get_distance(self, target) > self.stats['aggro_radius'] * 4:
+            if self.instance.map.get_distance(self, target) > self.stats['aggro_radius'] * 8:
                 self.set_target(None)
 
                 if isinstance(self, MovableEntity):
@@ -168,7 +168,7 @@ class Entity(object):
 
     def damage_taken(self, from_, damage):
         if self.is_alive():
-            if not isinstance(self, PlayerEntity) and self.target is None:
+            if not isinstance(self, PlayerEntity) and self.target is None and from_:
                 self.set_target(from_)
 
             critcal = False
@@ -306,7 +306,9 @@ class PlayerEntity(MovableEntity):
             ability.slow(target)
         elif action == 3 and self.use_mp(15): # haste myself
             ability.haste(self)
-        elif action == 4 and self.use_mp(50): # ultimate
+        elif action == 4 and self.use_mp(5): # poison
+            ability.poison(self, target)
+        elif action == 5 and self.use_mp(50): # ultimate
             ability.ultimate(self)
 
     def get_base_stats(self):

@@ -13,12 +13,17 @@ def aoe(self, coordinates):
         for target in targets:
             target.damage_taken(self, damage)
 
+def poison(self, target):
+    if target:
+        target.apply_buff(buff.Poison, source=self)
+
 def slow(target):
     if target:
         target.apply_buff(buff.Slow)
 
 def haste(target):
-    target.apply_buff(buff.Haste)
+    if target:
+        target.apply_buff(buff.Haste)
 
 def ultimate(self):
     for entity in self.instance.entities:

@@ -2,20 +2,16 @@ from datetime import datetime, timedelta
 from random import randint
 
 class Limiter(object):
-    def __init__(self, ms=100, randomize=False, skip_first=False):
+    def __init__(self, ms=100, randomize=False):
         self.randomize = randomize
-        self.set_delta(ms, skip_first)
+        self.set_delta(ms)
 
-    def set_delta(self, ms, skip_first=False):
+    def set_delta(self, ms):
         if self.randomize:
             ms = randint(ms * 0.5, ms * 2)
 
         self.delta = timedelta(milliseconds=ms)
-
-        if skip_first:
-            self.last_time = datetime.now()
-        else:
-            self.last_time = None
+        self.last_time = None
 
     def is_ready(self):
         now = datetime.now()
