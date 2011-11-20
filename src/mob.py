@@ -1,6 +1,6 @@
 from entity import MonsterEntity, StationaryMonsterEntity
 
-class Lizard(MonsterEntity):
+class Minion(MonsterEntity):
     pass
 
 class Turret(StationaryMonsterEntity):

@@ -41,8 +41,8 @@ class Instance(object):
             instance = Instance(instance_id)
             _instances[instance_id] = instance
 
-            for i in xrange(25):
-                instance.spawn('Lizard',  kind=mob.Lizard, hp=10, attack=1)
+            for i in xrange(1):
+                instance.spawn('Minion',  kind=mob.Minion, hp=10, attack=1)
 
             instance.spawn('Turret', kind=mob.Turret, hp=100, attack=3)
 

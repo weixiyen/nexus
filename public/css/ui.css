@@ -22,6 +22,8 @@ body {
   width: 0; }
   .ui-game .entity {
     position: absolute; }
+    .ui-game .entity .body {
+      position: absolute; }
     .ui-game .entity.user .name {
       color: white;
       text-shadow: black 0 0 4px;
