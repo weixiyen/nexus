@@ -131,6 +131,20 @@ class Entity(object):
             if self.instance.map.get_distance(self, entity) <= radius:
                 yield entity
 
+    def get_entities_at(self, coordinates, radius):
+        for entity in self.instance.entities:
+            if entity == self:
+                continue
+
+            if isinstance(entity, self.__class__):
+                continue
+
+            if not entity.is_alive():
+                continue
+
+            if self.instance.map.get_distance(coordinates, entity) <= radius:
+                yield entity
+
     def is_alive(self):
         return self.hp > 0
 
@@ -251,27 +265,25 @@ class PlayerEntity(MovableEntity):
         self.emit('name-change', self.id, name)
 
     def ability(self, ability, target_id, coordinates):
-        entities = []
+        if ability == 1: # aoe
+            targets = []
 
-        for entity in self.instance.entities:
-             if entity == self:
-                 continue
+            for entity in self.get_entities_at(coordinates, 5):
+                 if self.instance.map.get_distance(self, entity) <= 15:
+                     targets.append(entity)
 
-             if isinstance(entity, self.__class__):
-                 continue
+            if targets:
+                damage = 10 / len(targets)
 
-             if not entity.is_alive():
-                 continue
+                for target in targets:
+                    target.damage_taken(self, damage)
+        elif ability == 2: # slow
+            target = self.instance.get_entity(target_id)
 
-             if self.instance.map.get_distance(coordinates, entity) <= 5:
-                 entities.append(entity)
-
-        if entities:
-            damage = 10 / len(entities)
-
-            for entity in entities:
-                entity.apply_buff(buffs.Slow)
-                entity.damage_taken(self, damage)
+            if target:
+                target.apply_buff(buffs.Slow)
+        elif ability == 3: # haste myself
+            self.apply_buff(buffs.Haste)
 
     def get_base_stats(self):
         base_stats = MovableEntity.get_base_stats(self)
