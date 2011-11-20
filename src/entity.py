@@ -288,6 +288,10 @@ class PlayerEntity(MovableEntity):
                 target.apply_buff(buffs.Slow)
         elif ability == 3: # haste myself
             self.apply_buff(buffs.Haste)
+        elif ability == 4: # ultimate
+            for entity in self.instance.entities:
+                if entity.is_alive():
+                    entity.damage_taken(self, entity.hp / 2)
 
     def get_base_stats(self):
         base_stats = MovableEntity.get_base_stats(self)
