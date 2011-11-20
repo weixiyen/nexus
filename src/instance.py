@@ -4,7 +4,7 @@ import tornado.ioloop
 import datetime
 
 from map import Map
-from entity import Player, Monster, Turret
+from entity import Player, Monster, StationaryMonster
 
 FPS = 60
 
@@ -41,9 +41,9 @@ class Instance(object):
             _instances[instance_id] = instance
 
             for i in xrange(25):
-                instance.spawn('Lizard')
+                instance.spawn('Lizard', hp=10, attack=1)
 
-            instance.spawn('Turret', type_=Turret)
+            instance.spawn('Turret', kind=StationaryMonster, hp=100, attack=3)
 
             instance.start()
 
@@ -65,7 +65,7 @@ class Instance(object):
             'entities': [entity.serialize() for entity in self.entities]
         }
 
-    def add_player(self, conn, name):
+    def add_player(self, conn, name, **kwargs):
         for e in self.entities:
             if isinstance(e, Player):
                 if e.uid == conn.uid:
@@ -73,7 +73,7 @@ class Instance(object):
                     e.connections.add(conn)
                     return e
 
-        player = self.spawn(name, uid=conn.uid, type_=Player)
+        player = self.spawn(name, uid=conn.uid, type_=Player, **kwargs)
         player.connections.add(conn)
 
         self.players.add(player)
@@ -108,7 +108,7 @@ class Instance(object):
         else:
             self.stop()
 
-    def spawn(self, name, x=None, y=None, type_=Monster, **kwargs):
+    def spawn(self, name, x=None, y=None, kind=Monster, **kwargs):
         if x is None or y is None:
             while True:
                 x = random.randint(0, self.map.width - 1)
@@ -117,7 +117,7 @@ class Instance(object):
                 if self.map.is_walkable(x, y):
                     break
 
-        mob = type_(self, name, x, y, **kwargs)
+        mob = kind(self, name, x, y, **kwargs)
 
         self.logger.debug('Spawning %r' % mob)
 

@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 import random
 from limiter import Limiter
+from map import Map
 
 BASE_STATS = {
     'hp': 0,
@@ -10,13 +11,13 @@ BASE_STATS = {
     'movement_speed': 5,
     'aggro_range': 3,
     'leash': 15,
-    'patrol': 10
+    'patrol_radius': 8
 }
 
 class Entity(object):
     id = 0
 
-    def __init__(self, instance, name, x=0, y=0):
+    def __init__(self, instance, name, x=0, y=0, **stats):
         Entity.id += 1
 
         self.id = Entity.id
@@ -27,8 +28,10 @@ class Entity(object):
         self.y = y
         self.target = None
 
-        self.base_stats = BASE_STATS.copy()
-        self.stats = self.base_stats.copy()
+        self.stats = BASE_STATS.copy()
+        self.stats.update(stats)
+
+        self.hp = self.stats['hp']
 
         self._last_attack = datetime.now()
         self.instance.add_entity(self)
@@ -46,6 +49,7 @@ class Entity(object):
             'name': self.name,
             'x': self.x,
             'y': self.y,
+            'hp': self.hp,
             'stats': self.stats,
             'target': self.target.id if self.target else None
         }
@@ -107,29 +111,28 @@ class Entity(object):
                 yield entity
 
     def is_alive(self):
-        return self.stats['hp'] > 0
+        return self.hp > 0
 
     def take_damage(self, from_, damage):
         if self.is_alive():
             if not isinstance(self, Player) and self.target is None:
                 self.set_target(from_)
 
+            critcal = False
+
             if random.randint(1, 10) == 5:
                 damage *= 2
                 self.instance.logger.debug('Critical!')
+                critcal = True
 
-            self.stats['hp'] -= damage
+            self.hp -= damage
 
-            if isinstance(self, Player):
-                self.emit('hp', self.stats['hp'])
+            self.emit('damage-taken', self.id, damage, critcal)
 
             if not self.is_alive():
                 self.instance.remove_entity(self)
                 self.instance.logger.debug('Killed %r' % self)
                 self.emit('death', self.id)
-
-#                if isinstance(self, Monster):
-#                    self.instance.spawn(self.name)
 
             return True
         return False
@@ -194,10 +197,6 @@ class Player(MovableEntity):
         if not self.name:
             self.name = 'Player %d' % self.id
 
-        self.stats['hp'] = 500
-        self.stats['movement_speed'] = 2
-        self.set_movement_speed(2)
-
     def set_name(self, name):
         if name == self.name:
             return
@@ -213,11 +212,7 @@ class Monster(MovableEntity):
     def __init__(self, *args, **kwargs):
         MovableEntity.__init__(self, *args, **kwargs)
 
-        self.stats['hp'] = 10
-        self.stats['attack'] = 1
-
-        self.set_movement_speed(self.stats['movement_speed'])
-
+        self._home = (self.x, self.y)
         self._patrol_limiter = Limiter(2000, True)
 
     def aggro(self):
@@ -240,35 +235,32 @@ class Monster(MovableEntity):
             self.aggro()
 
         if not self.is_moving() and self._patrol_limiter.is_ready():
-            x = self.x
-            y = self.y
-
-            if random.randint(0, 1):
-                x += random.randint(-self.stats['patrol'], self.stats['patrol'])
+            if Map.get_distance((self.x, self.y), self._home) > self.stats['patrol_radius']:
+                x, y = self._home
             else:
-                y += random.randint(-self.stats['patrol'], self.stats['patrol'])
+                x = self.x
+                y = self.y
 
-            if x < 0:
-                x = self.instance.map.width - 1
-            elif x > self.instance.map.width - 1:
-                x = 0
+                if random.randint(0, 1):
+                    x += random.randint(-self.stats['patrol_radius'], self.stats['patrol_radius'])
+                else:
+                    y += random.randint(-self.stats['patrol_radius'], self.stats['patrol_radius'])
 
-            if y < 0:
-                y = self.instance.map.height - 1
-            elif y > self.instance.map.height - 1:
-                y = 0
+                if x < 0:
+                    x = self.instance.map.width - 1
+                elif x > self.instance.map.width - 1:
+                    x = 0
+
+                if y < 0:
+                    y = self.instance.map.height - 1
+                elif y > self.instance.map.height - 1:
+                    y = 0
 
             self.move(x, y)
 
             self.instance.logger.debug('Moving %r' % self)
 
-class Turret(Entity):
-    def __init__(self, *args, **kwargs):
-        Entity.__init__(self, *args, **kwargs)
-
-        self.stats['hp'] = 100
-        self.stats['attack'] = 10
-
+class StationaryMonster(Entity):
     def aggro(self):
         if self.is_attacking():
             return

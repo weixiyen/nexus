@@ -5,7 +5,7 @@ import os
 import tornadio2
 import uuid
 from instance import Instance
-from entity import Turret
+from entity import StationaryMonster
 
 ROOT_PATH = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(ROOT_PATH, '../public')
@@ -33,7 +33,7 @@ class SocketConnection(tornadio2.conn.SocketConnection):
         self.instance = Instance.get(request.get_argument('instance'))
 
         self.uid = request.get_cookie('uid').value
-        self.player = self.instance.add_player(self, request.get_argument('name'))
+        self.player = self.instance.add_player(self, request.get_argument('name'), hp=100, movement_speed=2)
 
         state = self.instance.serialize()
         state['me'] = self.player.id
@@ -43,12 +43,9 @@ class SocketConnection(tornadio2.conn.SocketConnection):
     @tornadio2.event('spawn')
     def spawn(self):
         for i in xrange(100):
-            self.instance.spawn('Lizard')
+            self.instance.spawn('Lizard', hp=10, attack=1)
 
-        self.instance.spawn('Turret', type_=Turret)
-        self.instance.spawn('Turret', type_=Turret)
-        self.instance.spawn('Turret', type_=Turret)
-        self.instance.spawn('Turret', type_=Turret)
+        self.instance.spawn('Turret', kind=StationaryMonster, hp=100, attack=3)
 
     @tornadio2.event('move')
     def move(self, coordinates):
