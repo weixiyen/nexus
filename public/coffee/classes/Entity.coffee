@@ -201,6 +201,13 @@ class @MovableEntity extends Entity
     @endTop = y * GRID_H - Math.floor(@height / 2)
 
 
+class @Turret extends Entity
+  constructor: (entity)->
+    super
+    @width = 96
+    @height = 96
+    @imgurl = IMGPATH + 'turret.png'
+    @create()
 
 class @Lizard extends MovableEntity
   constructor: (entity)->

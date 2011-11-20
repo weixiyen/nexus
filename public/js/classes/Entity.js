@@ -216,6 +216,17 @@
     };
     return MovableEntity;
   })();
+  this.Turret = (function() {
+    __extends(Turret, Entity);
+    function Turret(entity) {
+      Turret.__super__.constructor.apply(this, arguments);
+      this.width = 96;
+      this.height = 96;
+      this.imgurl = IMGPATH + 'turret.png';
+      this.create();
+    }
+    return Turret;
+  })();
   this.Lizard = (function() {
     __extends(Lizard, MovableEntity);
     function Lizard(entity) {
