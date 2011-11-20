@@ -27,8 +27,8 @@
         return events.moveMe(this.getMouseX(), this.getMouseY());
       }, this));
       return this.$canvas.on('mousemove', __bind(function(e) {
-        this.mouseOffsetX = e.offsetX;
-        return this.mouseOffsetY = e.offsetY;
+        this.mouseOffsetX = e.pageX - this.left;
+        return this.mouseOffsetY = e.pageY - this.top;
       }, this));
     };
     Map.prototype.getMouseX = function() {
@@ -39,6 +39,11 @@
     };
     Map.prototype.getMouseCoords = function() {
       return [this.getMouseX(), this.getMouseY()];
+    };
+    Map.prototype.renderOffset = function(style) {
+      this.left = style.left;
+      this.top = style.top;
+      return this.$canvas.css(style);
     };
     return Map;
   })();

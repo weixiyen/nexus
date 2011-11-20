@@ -39,8 +39,8 @@ class @Game
     style =
       left: @left
       top: @top
-    @$canvas.css style
-    map.$canvas.css style
+    @$canvas.css(style)
+    map.renderOffset(style)
 
   setUserId: (entityId)->
     @userId = entityId

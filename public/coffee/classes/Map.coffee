@@ -25,8 +25,8 @@ class @Map
       events.moveMe(@getMouseX(), @getMouseY())
 
     @$canvas.on 'mousemove', (e)=>
-      @mouseOffsetX = e.offsetX
-      @mouseOffsetY = e.offsetY
+      @mouseOffsetX = e.pageX - @left
+      @mouseOffsetY = e.pageY - @top
 
   getMouseX: ->
     return Math.round(@mouseOffsetX / GRID_W)
@@ -36,3 +36,8 @@ class @Map
 
   getMouseCoords: ->
     return [@getMouseX(), @getMouseY()]
+
+  renderOffset: (style) ->
+    @left = style.left
+    @top = style.top
+    @$canvas.css(style)

@@ -54,7 +54,7 @@
         top: this.top
       };
       this.$canvas.css(style);
-      return map.$canvas.css(style);
+      return map.renderOffset(style);
     };
     Game.prototype.setUserId = function(entityId) {
       return this.userId = entityId;
