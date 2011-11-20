@@ -62,6 +62,7 @@ class Entity(object):
     def set_target(self, target):
         if isinstance(target, int):
             target = self.instance.get_entity(target)
+
         self.target = target
 
         if target is None:
@@ -215,6 +216,7 @@ class PlayerEntity(MovableEntity):
         base_stats.update({
             'hp': 100,
             'movement_speed': 2,
+            'attack': 25,
         })
         return base_stats
 
