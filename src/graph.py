@@ -61,10 +61,10 @@ class Graph(object):
         self.elements = grid
         self.nodes = []
 
-        for x, row in enumerate(grid):
+        for y, row in enumerate(grid):
             nodes = []
 
-            for y, type_ in enumerate(row):
+            for x, type_ in enumerate(row):
                 nodes.append(Node(self, x, y, type_))
 
             self.nodes.append(nodes)
@@ -73,7 +73,7 @@ class Graph(object):
         return self.nodes.__iter__()
 
     def get_node(self, x, y):
-        return self.nodes[x][y]
+        return self.nodes[y][x]
 
     def search(self, start, end, heuristic=manhatton):
         for row in self.nodes:
