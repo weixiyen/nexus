@@ -7,8 +7,11 @@ from datetime import timedelta
 
 FPS = 60
 
-class Game(object):
-    def __init__(self):
+_instances = {}
+
+class Instance(object):
+    def __init__(self, id):
+        self.id = id
         self.ioloop =  tornado.ioloop.IOLoop.instance()
         self.deadline = timedelta(milliseconds=1000 / FPS)
 
@@ -19,10 +22,31 @@ class Game(object):
 
         self.iteration_counter = 0
         self.next_iteration()
-#        tornado.ioloop.PeriodicCallback(self.next_iteration, 1000 / FPS).start()
 
-        self.logger = logging.getLogger('game')
-        self.logger.setLevel(logging.DEBUG)
+        self.logger = logging.getLogger('instance:%d' % self.id)
+#        self.logger.setLevel(logging.DEBUG)
+
+    @classmethod
+    def get(cls, instance_id):
+        global _instances
+
+        instance_id = int(instance_id or 1)
+
+        try:
+            return _instances[instance_id]
+        except KeyError:
+            instance = Instance(instance_id)
+            _instances[instance_id] = instance
+
+            for i in xrange(25):
+                instance.spawn('Lizard')
+
+#            instance.spawn('Turret', type_=Turret)
+#            instance.spawn('Turret', type_=Turret)
+#            instance.spawn('Turret', type_=Turret)
+#            instance.spawn('Turret', type_=Turret)
+
+            return instance
 
     def serialize(self):
         return {

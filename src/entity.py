@@ -36,11 +36,11 @@ BASE_STATS = {
 class Entity(object):
     id = 0
 
-    def __init__(self, game, name, x=0, y=0):
+    def __init__(self, instance, name, x=0, y=0):
         Entity.id += 1
 
         self.id = Entity.id
-        self.game = game
+        self.instance = instance
 
         self.name = name
         self.x = x
@@ -51,7 +51,7 @@ class Entity(object):
         self.stats = self.base_stats.copy()
 
         self._last_attack = datetime.now()
-        self.game.add_entity(self)
+        self.instance.add_entity(self)
 
     def __str__(self):
         return self.name
@@ -71,7 +71,7 @@ class Entity(object):
         }
 
     def emit(self, *args):
-        self.game.emit(*args)
+        self.instance.emit(*args)
 
     def is_attacking(self):
         return self.target is not None
@@ -94,21 +94,21 @@ class Entity(object):
             self.set_target(None)
             return
 
-        if self.game.iteration_counter % 10:
-            if self.game.map.get_distance(self, target) > self.stats['leash']:
+        if self.instance.iteration_counter % 10:
+            if self.instance.map.get_distance(self, target) > self.stats['leash']:
                 self.set_target(None)
                 self._movement_queue = []
-                self.game.logger.debug('Lost Aggro %r -> %r' % (self, target))
+                self.instance.logger.debug('Lost Aggro %r -> %r' % (self, target))
             return
 
         now = datetime.now()
 
-        if isinstance(self, MovableEntity) and self.game.map.get_distance(self, target) > 1:
+        if isinstance(self, MovableEntity) and self.instance.map.get_distance(self, target) > 1:
             self.move_to(target)
             self._execute_movement_queue(True)
         elif self._last_attack <= now - timedelta(seconds=1):
             if target and target.take_damage(self, self.stats['attack']):
-                self.game.logger.debug('Attacking %r -> %r' % (self, target))
+                self.instance.logger.debug('Attacking %r -> %r' % (self, target))
 
                 if not target.is_alive():
                     self.set_target(None)
@@ -116,14 +116,14 @@ class Entity(object):
             self._last_attack = now
 
     def nearby(self, radius=3):
-        for entity in self.game.entities:
+        for entity in self.instance.entities:
             if entity == self:
                 continue
 
             if isinstance(entity, self.__class__):
                 continue
 
-            if self.game.map.get_distance(self, entity) <= radius:
+            if self.instance.map.get_distance(self, entity) <= radius:
                 yield entity
 
     def is_alive(self):
@@ -136,7 +136,7 @@ class Entity(object):
 
             if random.randint(1, 10) == 5:
                 damage *= 2
-                self.game.logger.debug('Critical!')
+                self.instance.logger.debug('Critical!')
 
             self.stats['hp'] -= damage
 
@@ -144,12 +144,12 @@ class Entity(object):
                 self.emit('hp', self.stats['hp'])
 
             if not self.is_alive():
-                self.game.remove_entity(self)
-                self.game.logger.debug('Killed %r' % self)
+                self.instance.remove_entity(self)
+                self.instance.logger.debug('Killed %r' % self)
                 self.emit('death', self.id)
 
 #                if isinstance(self, Monster):
-#                    self.game.spawn(self.name)
+#                    self.instance.spawn(self.name)
 
             return True
         return False
@@ -175,12 +175,12 @@ class MovableEntity(Entity):
         self._move(entity.x, entity.y)
 
     def move(self, x, y):
-        self._movement_queue = self.game.map.find_path([self.x, self.y], [x, y])
+        self._movement_queue = self.instance.map.find_path([self.x, self.y], [x, y])
 
     def move_to(self, entity):
         self.move(entity.x, entity.y)
 
-    def next_move(self):
+    def _next_move(self):
         return self._movement_queue.pop()
 
     def is_moving(self):
@@ -191,10 +191,10 @@ class MovableEntity(Entity):
 
     def _execute_movement_queue(self, ignore_atk=False):
         if self.is_moving() and self._movement_limiter.is_ready():
-            if not ignore_atk and self.is_attacking() and self.game.map.get_distance(self, self.target) > 2:
+            if not ignore_atk and self.is_attacking() and self.instance.map.get_distance(self, self.target) > 2:
                 self.move_to(self.target)
 
-            x, y = self.next_move()
+            x, y = self._next_move()
 
             self._move(x, y)
 
@@ -233,7 +233,7 @@ class Monster(MovableEntity):
         try:
             self.set_target(self.nearby(self.stats['aggro_range']).next())
             self.move_to(self.target)
-            self.game.logger.debug('Targeting %r' % self.target)
+            self.instance.logger.debug('Targeting %r' % self.target)
         except StopIteration:
             pass
 
@@ -255,18 +255,18 @@ class Monster(MovableEntity):
                 y += random.randint(-self.stats['patrol'], self.stats['patrol'])
 
             if x < 0:
-                x = self.game.map.width - 1
-            elif x > self.game.map.width - 1:
+                x = self.instance.map.width - 1
+            elif x > self.instance.map.width - 1:
                 x = 0
 
             if y < 0:
-                y = self.game.map.height - 1
-            elif y > self.game.map.height - 1:
+                y = self.instance.map.height - 1
+            elif y > self.instance.map.height - 1:
                 y = 0
 
             self.move(x, y)
 
-            self.game.logger.debug('Moving %r' % self)
+            self.instance.logger.debug('Moving %r' % self)
 
 class Turret(Entity):
     def __init__(self, *args, **kwargs):
@@ -281,7 +281,7 @@ class Turret(Entity):
 
         try:
             self.set_target(self.nearby(self.stats['aggro_range']).next())
-            self.game.logger.debug('Targeting %r' % self.target)
+            self.instance.logger.debug('Targeting %r' % self.target)
         except StopIteration:
             self.set_target(None)
 
