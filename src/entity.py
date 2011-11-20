@@ -1,8 +1,15 @@
 from datetime import datetime, timedelta
 import random
 
-class Delayer(object):
-    def __init__(self, ms=100):
+class Limiter(object):
+    def __init__(self, ms=100, randomize=False):
+        self.randomize = randomize
+        self.set_delta(ms)
+
+    def set_delta(self, ms):
+        if self.randomize:
+            ms = random.randint(ms * 0.5, ms * 2)
+
         self.delta = timedelta(milliseconds=ms)
         self.last_time = None
 
@@ -157,7 +164,7 @@ class MovableEntity(Entity):
         Entity.__init__(self, *args, **kwargs)
 
         self._movement_queue = []
-        self._delayer = Delayer(self.stats['movement_speed'] * 100)
+        self.set_movement_speed(self.stats['movement_speed'])
 
     def _move(self, x, y):
         self.x = x
@@ -179,8 +186,11 @@ class MovableEntity(Entity):
     def is_moving(self):
         return len(self._movement_queue) != 0
 
+    def set_movement_speed(self, movement_speed):
+        self._movement_limiter = Limiter(movement_speed * 100)
+
     def _execute_movement_queue(self, ignore_atk=False):
-        if self.is_moving() and self._delayer.is_ready():
+        if self.is_moving() and self._movement_limiter.is_ready():
             if not ignore_atk and self.is_attacking() and self.game.map.get_distance(self, self.target) > 2:
                 self.move_to(self.target)
 
@@ -210,7 +220,9 @@ class Monster(MovableEntity):
         self.stats['hp'] = 10
         self.stats['attack'] = 1
 
-        self._last_patrol = datetime.now()
+        self.set_movement_speed(self.stats['movement_speed'])
+
+        self._patrol_limiter = Limiter(2000, True)
 
     def aggro(self):
         if self.is_attacking():
@@ -224,8 +236,6 @@ class Monster(MovableEntity):
             pass
 
     def next_iteration(self):
-        now = datetime.now()
-
         try:
             MovableEntity.next_iteration(self)
         except StopIteration as e:
@@ -233,8 +243,7 @@ class Monster(MovableEntity):
         finally:
             self.aggro()
 
-        #if not self.is_moving() and self._last_patrol <= now - timedelta(seconds=random.randint(1, 5)):
-        if not self.is_moving() and self._last_patrol <= now - timedelta(seconds=2):
+        if not self.is_moving() and self._patrol_limiter.is_ready():
             x = self.x
             y = self.y
 
@@ -254,8 +263,6 @@ class Monster(MovableEntity):
                 y = 0
 
             self.move(x, y)
-
-            self._last_patrol = now
 
             self.game.logger.debug('Moving %r' % self)
 
