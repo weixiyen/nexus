@@ -286,5 +286,6 @@ class StationaryMonsterEntity(Entity):
         base_stats = Entity.get_base_stats(self)
         base_stats.update({
             'aggro_radius': 20,
+            'leash': 20,
         })
         return base_stats
