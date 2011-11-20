@@ -9,10 +9,25 @@
     Map.prototype.reset = function() {
       return this.$canvas.empty();
     };
-    Map.prototype.setCollisionGraph = function(graph) {
-      return this.graph = $.astar.graph(graph);
+    Map.prototype.setup = function(graph) {
+      this.setDimensions(graph[0].length, graph.length);
+      this.graph = $.astar.graph(graph);
+      return this.listenToEvents();
     };
-    Map.prototype.canWalk = function() {};
+    Map.prototype.setDimensions = function(x, y) {
+      return this.$canvas.css({
+        width: GRID_W * x,
+        height: GRID_H * y
+      });
+    };
+    Map.prototype.listenToEvents = function() {
+      return this.$canvas.on('click', function(e) {
+        var x, y;
+        x = Math.round(e.offsetX / GRID_W);
+        y = Math.round(e.offsetY / GRID_H);
+        return events.moveMe(x, y);
+      });
+    };
     return Map;
   })();
 }).call(this);

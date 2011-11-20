@@ -7,7 +7,7 @@
 @map = new Map
   $canvas: $('#map')
 
-events = new GameEvents
+@events = new GameEvents
   game: game
   map: map
 
@@ -15,7 +15,7 @@ events = new GameEvents
 events.init (data)->
   game.reset()
   map.reset()
-  map.setCollisionGraph(data.map)
+  map.setup(data.map)
   game.setUserId(data.me)
   game.addEntities(data.entities)
   game.centerOnUser()
@@ -32,7 +32,7 @@ events.move (id, x, y)->
 events.death (entityId)->
   game.removeEntity(entityId)
 
-$document.keydown (e)->
+$document.on 'keydown', (e)->
   captured = false
   code = e.which
   if code == 65
@@ -54,7 +54,7 @@ $document.keydown (e)->
     e.preventDefault()
     e.stopPropagation()
 
-$document.keyup (e)->
+$document.on 'keyup', (e)->
   captured = false
   code = e.which
   if code == 65
@@ -73,6 +73,8 @@ $document.keyup (e)->
     e.preventDefault()
     e.stopPropagation()
 
-$window.blur ->
+
+
+$window.on 'blur', ->
   game.panStopAll()
 

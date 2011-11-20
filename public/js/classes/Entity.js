@@ -12,7 +12,7 @@
   GRID_W = 32;
   GRID_H = 16;
   STEP_X = 5;
-  STEP_Y = 5;
+  STEP_Y = 4;
   this.Entity = (function() {
     var STUB;
     STUB = 'ent-';
@@ -146,19 +146,18 @@
       }
       if (this.sprite) {
         this.sprite.stop(this.id);
-        this.sprite = null;
+      } else {
+        this.sprite = new Sprite({
+          id: this.id,
+          el: this.$elBody,
+          skip: this.animationSkip
+        });
       }
       this.curDir = this.direction;
       if (this.curDir === null) {
         return;
       }
-      this.sprite = new Sprite({
-        id: this.id,
-        el: this.$elBody,
-        queue: this.anim[this.curDir],
-        skip: this.animationSkip
-      });
-      return this.sprite.start();
+      return this.sprite.start(this.anim[this.curDir]);
     };
     return MovableEntity;
   })();
@@ -189,8 +188,8 @@
     }
     Monster.prototype.moveTo = function(x, y) {
       this.moving = true;
-      this.endLeft = x * GRID_W;
-      return this.endTop = y * GRID_H;
+      this.endLeft = x * GRID_W - Math.floor(this.width / 2);
+      return this.endTop = y * GRID_H - Math.floor(this.height / 2);
     };
     return Monster;
   })();
@@ -198,10 +197,16 @@
     __extends(Player, MovableEntity);
     function Player(entity) {
       Player.__super__.constructor.apply(this, arguments);
-      this.speed = 3;
       this.width = 40;
       this.height = 64;
       this.imgurl = IMGPATH + 'sprite_user.png';
+      this.animationSkip = 5;
+      this.anim = {
+        left: ["0 0", "-50px 0", "-100px 0"],
+        up: ["-150px 0", "-200px 0", "-250px 0"],
+        down: ["-300px 0", "-350px 0", "-400px 0"],
+        right: ["-450px 0", "-500px 0", "-550px 0"]
+      };
       this.create();
       this.startMoving();
     }
@@ -216,12 +221,24 @@
     __extends(User, MovableEntity);
     function User(entity) {
       User.__super__.constructor.apply(this, arguments);
-      this.speed = 3;
       this.width = 40;
       this.height = 64;
       this.imgurl = IMGPATH + 'sprite_user.png';
+      this.animationSkip = 5;
+      this.anim = {
+        left: ["0 0", "-50px 0", "-100px 0"],
+        up: ["-150px 0", "-200px 0", "-250px 0"],
+        down: ["-300px 0", "-350px 0", "-400px 0"],
+        right: ["-450px 0", "-500px 0", "-550px 0"]
+      };
       this.create();
+      this.startMoving();
     }
+    User.prototype.moveTo = function(x, y) {
+      this.moving = true;
+      this.endLeft = x * GRID_W;
+      return this.endTop = y * GRID_H;
+    };
     return User;
   })();
 }).call(this);

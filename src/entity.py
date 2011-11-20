@@ -212,6 +212,8 @@ class Player(MovableEntity):
         MovableEntity.__init__(self, *args, **kwargs)
 
         self.stats['hp'] = 500
+        self.stats['movement_speed'] = 2
+        self.set_movement_speed(2)
 
 class Monster(MovableEntity):
     def __init__(self, *args, **kwargs):

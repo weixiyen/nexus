@@ -3,7 +3,7 @@ IMGPATH = '/public/img/'
 GRID_W = 32
 GRID_H = 16
 STEP_X = 5
-STEP_Y = 5
+STEP_Y = 4
 
 class @Entity
   STUB = 'ent-'
@@ -138,17 +138,16 @@ class @MovableEntity extends Entity
 
     if @sprite
       @sprite.stop(@id)
-      @sprite = null
+    else
+      @sprite = new Sprite
+        id: @id
+        el: @$elBody
+        skip: @animationSkip
+
     @curDir = @direction
 
     if @curDir == null then return
-
-    @sprite = new Sprite
-      id: @id
-      el: @$elBody
-      queue: @anim[@curDir]
-      skip: @animationSkip
-    @sprite.start()
+    @sprite.start(@anim[@curDir])
 
 class @Turret extends Entity
   constructor: (entity)->
@@ -191,16 +190,37 @@ class @Monster extends MovableEntity
 
   moveTo: (x, y)->
     @moving = true
-    @endLeft = x * GRID_W
-    @endTop = y * GRID_H
+    @endLeft = x * GRID_W - Math.floor(@width / 2)
+    @endTop = y * GRID_H - Math.floor(@height / 2)
 
 class @Player extends MovableEntity
   constructor: (entity)->
     super
-    @speed = 3
     @width = 40
     @height = 64
     @imgurl = IMGPATH + 'sprite_user.png'
+    @animationSkip = 5
+    @anim =
+      left: [
+        "0 0",
+        "-50px 0",
+        "-100px 0"
+        ]
+      up: [
+        "-150px 0",
+        "-200px 0",
+        "-250px 0"
+        ]
+      down: [
+        "-300px 0",
+        "-350px 0",
+        "-400px 0"
+        ]
+      right: [
+        "-450px 0",
+        "-500px 0",
+        "-550px 0"
+        ]
 
     @create()
     @startMoving()
@@ -213,9 +233,36 @@ class @Player extends MovableEntity
 class @User extends MovableEntity
   constructor: (entity)->
     super
-    @speed = 3
     @width = 40
     @height = 64
     @imgurl = IMGPATH + 'sprite_user.png'
+    @animationSkip = 5
+    @anim =
+      left: [
+        "0 0",
+        "-50px 0",
+        "-100px 0"
+        ]
+      up: [
+        "-150px 0",
+        "-200px 0",
+        "-250px 0"
+        ]
+      down: [
+        "-300px 0",
+        "-350px 0",
+        "-400px 0"
+        ]
+      right: [
+        "-450px 0",
+        "-500px 0",
+        "-550px 0"
+        ]
 
     @create()
+    @startMoving()
+
+  moveTo: (x, y)->
+    @moving = true
+    @endLeft = x * GRID_W
+    @endTop = y * GRID_H

@@ -1,5 +1,4 @@
 (function() {
-  var events;
   this.$document = $(document);
   this.$window = $(window);
   this.game = new Game({
@@ -8,14 +7,14 @@
   this.map = new Map({
     $canvas: $('#map')
   });
-  events = new GameEvents({
+  this.events = new GameEvents({
     game: game,
     map: map
   });
   events.init(function(data) {
     game.reset();
     map.reset();
-    map.setCollisionGraph(data.map);
+    map.setup(data.map);
     game.setUserId(data.me);
     game.addEntities(data.entities);
     return game.centerOnUser();
@@ -29,7 +28,7 @@
   events.death(function(entityId) {
     return game.removeEntity(entityId);
   });
-  $document.keydown(function(e) {
+  $document.on('keydown', function(e) {
     var captured, code;
     captured = false;
     code = e.which;
@@ -58,7 +57,7 @@
       return e.stopPropagation();
     }
   });
-  $document.keyup(function(e) {
+  $document.on('keyup', function(e) {
     var captured, code;
     captured = false;
     code = e.which;
@@ -83,7 +82,7 @@
       return e.stopPropagation();
     }
   });
-  $window.blur(function() {
+  $window.on('blur', function() {
     return game.panStopAll();
   });
 }).call(this);

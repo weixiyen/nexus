@@ -4,20 +4,20 @@
     function Sprite(opts) {
       this.id = 'anim:' + opts.id;
       this.el = opts.el;
-      this.queue = opts.queue;
       this.skip = opts.skip || 1;
-      this.len = this.queue.length;
       this.counter = 0;
     }
-    Sprite.prototype.start = function() {
+    Sprite.prototype.start = function(queue) {
+      var len;
+      len = queue.length;
       return game.addLoopItem(this.id, this.skip, __bind(function() {
         this.el.css({
-          'background-position': this.queue[this.counter]
+          'background-position': queue[this.counter]
         });
-        if (this.counter === this.len) {
+        this.counter += 1;
+        if (this.counter === len) {
           return this.counter = 0;
         }
-        return this.counter += 1;
       }, this));
     };
     Sprite.prototype.stop = function() {

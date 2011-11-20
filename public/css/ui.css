@@ -6,9 +6,11 @@ body {
 
 .ui-map {
   position: absolute;
-  background: #adff2f; }
+  background: #adff2f;
+  z-index: 100; }
 
 .ui-game {
-  position: absolute; }
+  position: absolute;
+  z-index: 1000; }
   .ui-game .entity {
     position: absolute; }

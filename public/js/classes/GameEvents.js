@@ -35,6 +35,9 @@
         return fn(data);
       });
     };
+    GameEvents.prototype.moveMe = function(x, y) {
+      return this.socket.emit('move', [x, y]);
+    };
     return GameEvents;
   })();
 }).call(this);

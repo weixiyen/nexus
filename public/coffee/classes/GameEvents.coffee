@@ -23,3 +23,6 @@ class @GameEvents
   death: (fn) ->
     @socket.on 'death', (data) ->
       fn(data)
+
+  moveMe: (x, y) ->
+    @socket.emit('move', [x, y])
