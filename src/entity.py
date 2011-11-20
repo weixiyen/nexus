@@ -81,7 +81,9 @@ class Entity(object):
             return
 
         if self.instance.iteration_counter % 10:
-            if self.instance.map.get_distance(self, target) > self.stats['leash']:
+            leash = self.stats['aggro_range'] if isinstance(self, StationaryMonsterEntity) else self.stats['leash']
+
+            if self.instance.map.get_distance(self, target) > leash:
                 self.set_target(None)
                 self._movement_queue = []
                 self.instance.logger.debug('Lost Aggro %r -> %r' % (self, target))
@@ -285,7 +287,6 @@ class StationaryMonsterEntity(Entity):
     def get_base_stats(self):
         base_stats = Entity.get_base_stats(self)
         base_stats.update({
-            'aggro_radius': 20,
-            'leash': 20,
+            'aggro_radius': 20
         })
         return base_stats
