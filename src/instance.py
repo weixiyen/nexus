@@ -4,7 +4,8 @@ import tornado.ioloop
 import datetime
 
 from map import Map
-from entity import Player, Monster, StationaryMonster
+from entity import Entity, PlayerEntity
+import monsters
 
 FPS = 60
 
@@ -41,9 +42,9 @@ class Instance(object):
             _instances[instance_id] = instance
 
             for i in xrange(25):
-                instance.spawn('Lizard', hp=10, attack=1)
+                instance.spawn('Lizard',  kind=monsters.Lizard, hp=10, attack=1)
 
-            #instance.spawn('Turret', kind=StationaryMonster, hp=100, attack=3)
+            instance.spawn('Turret', kind=monsters.Turret, hp=100, attack=3)
 
             instance.start()
 
@@ -67,13 +68,13 @@ class Instance(object):
 
     def add_player(self, conn, name, **kwargs):
         for e in self.entities:
-            if isinstance(e, Player):
+            if isinstance(e, PlayerEntity):
                 if e.uid == conn.uid:
                     e.set_name(name)
                     e.connections.add(conn)
                     return e
 
-        player = self.spawn(name, uid=conn.uid, kind=Player, **kwargs)
+        player = self.spawn(name, uid=conn.uid, kind=PlayerEntity, **kwargs)
         player.connections.add(conn)
 
         self.players.add(player)
@@ -108,7 +109,7 @@ class Instance(object):
         else:
             self.stop()
 
-    def spawn(self, name, x=None, y=None, kind=Monster, **kwargs):
+    def spawn(self, name, x=None, y=None, kind=Entity, **kwargs):
         if x is None or y is None:
             while True:
                 x = random.randint(0, self.map.width - 1)

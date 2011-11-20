@@ -3,17 +3,6 @@ import random
 from limiter import Limiter
 from map import Map
 
-BASE_STATS = {
-    'hp': 0,
-    'mp': 0,
-    'attack': 0,
-    'range_attack': 0,
-    'movement_speed': 5,
-    'aggro_range': 3,
-    'leash': 15,
-    'patrol_radius': 8
-}
-
 class Entity(object):
     id = 0
 
@@ -28,13 +17,24 @@ class Entity(object):
         self.y = y
         self.target = None
 
-        self.stats = BASE_STATS.copy()
+        self.stats = self.get_base_stats()
         self.stats.update(stats)
 
         self.hp = self.stats['hp']
 
         self._last_attack = datetime.now()
         self.instance.add_entity(self)
+
+    def get_base_stats(self):
+        return {
+            'hp': 0,
+            'attack': 0,
+            'range_attack': 0,
+            'movement_speed': 5,
+            'aggro_range': 3,
+            'leash': 15,
+            'patrol_radius': 8
+        }
 
     def __str__(self):
         return self.name
@@ -115,7 +115,7 @@ class Entity(object):
 
     def take_damage(self, from_, damage):
         if self.is_alive():
-            if not isinstance(self, Player) and self.target is None:
+            if not isinstance(self, PlayerEntity) and self.target is None:
                 self.set_target(from_)
 
             critcal = False
@@ -187,7 +187,7 @@ class MovableEntity(Entity):
         self._execute_movement_queue()
         Entity.next_iteration(self)
 
-class Player(MovableEntity):
+class PlayerEntity(MovableEntity):
     def __init__(self, *args, **kwargs):
         self.uid = kwargs.pop('uid')
         self.connections = set()
@@ -208,7 +208,15 @@ class Player(MovableEntity):
 
         self.emit('name-change', self.id, name)
 
-class Monster(MovableEntity):
+    def get_base_stats(self):
+        base_stats = MovableEntity.get_base_stats(self)
+        base_stats.update({
+            'hp': 100,
+            'movement_speed': 2,
+        })
+        return base_stats
+
+class MonsterEntity(MovableEntity):
     def __init__(self, *args, **kwargs):
         MovableEntity.__init__(self, *args, **kwargs)
 
@@ -260,7 +268,7 @@ class Monster(MovableEntity):
 
             self.instance.logger.debug('Moving %r' % self)
 
-class StationaryMonster(Entity):
+class StationaryMonsterEntity(Entity):
     def aggro(self):
         if self.is_attacking():
             return
