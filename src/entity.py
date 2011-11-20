@@ -1,7 +1,7 @@
 import random
 from limiter import Limiter
 from map import Map
-import buffs
+import abilities
 
 class Entity(object):
     id = 0
@@ -22,17 +22,20 @@ class Entity(object):
         self.stats.update(stats)
 
         self.hp = self.stats['hp']
+        self.mp = self.stats['mp']
         self.movement_speed = self.stats['movement_speed']
 
         self.buffs = []
 
         self._attack_limiter = None
+        self._mp_regen_limiter = Limiter(500)
 
         self.instance.add_entity(self)
 
     def get_base_stats(self):
         return {
             'hp': 0,
+            'mp': 0,
             'attack': 0,
             'attack_speed': 5,
             'movement_speed': 5,
@@ -181,6 +184,13 @@ class Entity(object):
 
         return False
 
+    def use_mp(self, amt):
+        if self.mp >= amt:
+            self.mp -= amt
+            return True
+
+        return False
+
     def next_iteration(self):
         if not self.is_alive():
             if self.instance.iteration_counter % 1000 == 0 and self.stats['respawn']:
@@ -189,6 +199,9 @@ class Entity(object):
 
         if self.buffs:
             self.buffs = [buff for buff in self.buffs if not buff.elapsed]
+
+        if self.mp < self.stats['mp'] and self._mp_regen_limiter.is_ready():
+            self.mp += 5
 
         if self.is_attacking():
             self.attack()
@@ -269,34 +282,22 @@ class PlayerEntity(MovableEntity):
         self.emit('name-change', self.id, name)
 
     def ability(self, ability, target_id, coordinates):
-        if ability == 1: # aoe
-            targets = []
+        target = self.instance.get_entity(target_id)
 
-            for entity in self.get_entities_at(coordinates, 5):
-                 if self.instance.map.get_distance(self, entity) <= 15:
-                     targets.append(entity)
-
-            if targets:
-                damage = 10 / len(targets)
-
-                for target in targets:
-                    target.damage_taken(self, damage)
-        elif ability == 2: # slow
-            target = self.instance.get_entity(target_id)
-
-            if target:
-                target.apply_buff(buffs.Slow)
-        elif ability == 3: # haste myself
-            self.apply_buff(buffs.Haste)
-        elif ability == 4: # ultimate
-            for entity in self.instance.entities:
-                if entity.is_alive() and entity != self:
-                    entity.damage_taken(self, entity.hp / 2)
+        if ability == 1 and self.use_mp(10): # aoe
+            abilities.aoe(self, coordinates)
+        elif ability == 2 and self.use_mp(5): # slow
+            abilities.slow(target)
+        elif ability == 3 and self.use_mp(15): # haste myself
+            abilities.haste(self)
+        elif ability == 4 and self.use_mp(50): # ultimate
+            abilities.ultimate(self)
 
     def get_base_stats(self):
         base_stats = MovableEntity.get_base_stats(self)
         base_stats.update({
             'hp': 100,
+            'mp': 100,
             'movement_speed': 2,
             'attack': 5,
         })
