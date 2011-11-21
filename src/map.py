@@ -11,6 +11,20 @@ class Map(object):
         for i in range(height):
             self._data.append([0] * width)
 
+        v = int(math.ceil(width / 2.0))
+
+        for y in xrange(v):
+            for x in xrange(v):
+                x = v - y - x
+
+                if x < 0:
+                    break
+
+                self._data[y][x] = 1
+                self._data[-y][x] = 1
+                self._data[y][-x] = 1
+                self._data[-y][-x] = 1
+
         self._graph = Graph(self)
 
     def is_walkable(self, x, y):

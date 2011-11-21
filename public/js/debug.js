@@ -15,18 +15,7 @@
       this.data = data;
       this.zIndex = this.data.id;
     }
-    Entity.prototype.render = function() {
-      this.$ = $('<div />', {
-        id: 'entity' + this.data.id,
-        "class": 'entity ' + this.data.kind.toLowerCase(),
-        css: {
-          left: this.data.x * 12,
-          top: this.data.y * 12,
-          zIndex: this.zIndex
-        }
-      });
-      return this.$.prependTo('#map');
-    };
+    Entity.prototype.render = function() {};
     Entity.prototype.kill = function() {
       this.$.remove();
       return delete entities[this.data.id];
@@ -73,8 +62,8 @@
       map = $('<div />', {
         id: 'map',
         css: {
-          width: 600,
-          height: 600
+          width: 5 * 188,
+          height: 5 * 219
         }
       });
       for (y = 0, _ref = this.state.length; 0 <= _ref ? y < _ref : y > _ref; 0 <= _ref ? y++ : y--) {

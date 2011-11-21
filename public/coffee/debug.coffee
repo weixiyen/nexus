@@ -7,15 +7,15 @@ class Entity
     @zIndex = @data.id
 
   render: ->
-    @$ = $ '<div />',
-      id: 'entity' + @data.id
-      class: 'entity ' + @data.kind.toLowerCase()
-      css:
-        left: @data.x * 12
-        top: @data.y * 12
-        zIndex: @zIndex
+#    @$ = $ '<div />',
+#      id: 'entity' + @data.id
+#      class: 'entity ' + @data.kind.toLowerCase()
+#      css:
+#        left: @data.x * 12
+#        top: @data.y * 12
+#        zIndex: @zIndex
 
-    @$.prependTo('#map')
+#    @$.prependTo('#map')
 
   kill: ->
     @$.remove()
@@ -44,8 +44,8 @@ class Map
     map = $ '<div />',
       id: 'map'
       css:
-        width: 600
-        height: 600
+        width: 5 * 188
+        height: 5 * 219
 
     for y in [0...@state.length]
       row = @state[y]

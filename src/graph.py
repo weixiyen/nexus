@@ -91,7 +91,7 @@ class Graph(object):
         start = self.get_node(*start)
         end = self.get_node(*end)
 
-        if not start or not end:
+        if not start or not end or not end.is_walkable():
             return []
 
         open_heap = []
