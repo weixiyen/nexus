@@ -103,7 +103,7 @@
         entity.aggro(entity.target);
       }
       this.entities[STUB + entity.id] = entity;
-      map.addToCanvas(entity.$el);
+      this.addToCanvas(entity.$el);
       if (isUser) {
         return this.centerOnUser();
       }
@@ -130,7 +130,7 @@
         return;
       }
       this.props[PROP + propData.id] = prop;
-      return map.addToCanvas(prop.$el);
+      return this.addToCanvas(prop.$el);
     };
     Game.prototype.removeEntity = function(entityId) {
       this.entities[STUB + entityId].remove();
