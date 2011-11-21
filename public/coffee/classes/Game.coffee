@@ -142,6 +142,7 @@ class @Game
     targetId = @entities[STUB+@userId].getTarget()
     mouseCoords = map.getMouseCoords()
     events.userAttack(attackType, targetId, mouseCoords)
+    interface.releaseAbilityIcon(attackType)
 
   setUserTarget: (targetId)->
     if !@entitiesExist(@userId) then return

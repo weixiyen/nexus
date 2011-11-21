@@ -76,6 +76,12 @@ $document.on 'keydown', (e)->
   if code == 32
     captured = true
     game.centerOnUser()
+
+  # user abilities
+  if code >= 49 && code <= 54
+    captured = true
+    interface.pressAbilityIcon(code - 48)
+
   if captured == true
     e.preventDefault()
     e.stopPropagation()
@@ -99,6 +105,7 @@ $document.on 'keyup', (e)->
     game.panStop('up')
   # user abilities
   if code >= 49 && code <= 54
+    captured = true
     game.userAttack(code - 48)
 
   if captured == true

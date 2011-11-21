@@ -168,6 +168,10 @@ img {
       font: bold 11px Arial;
       top: 4px;
       left: 3px; }
+      .ui-interface .abilities .ability.on .frame {
+        background-position: -92px 0; }
+      .ui-interface .abilities .ability.off .frame {
+        background-position: 0 0; }
       .ui-interface .abilities .ability .key {
         position: absolute;
         z-index: 3; }
@@ -175,7 +179,7 @@ img {
         height: 46px;
         width: 46px;
         position: absolute;
-        background: url("/public/img/ability_icon_frames.png") no-repeat;
+        background: url("/public/img/ability_icon_frames.png") no-repeat -46px 0;
         z-index: 2; }
       .ui-interface .abilities .ability .icon {
         height: 36px;

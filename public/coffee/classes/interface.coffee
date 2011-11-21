@@ -4,14 +4,16 @@ abilities = [
     bgIndex: 1,
     name: "AoE",
     keyCode: 49,
-    key: 1
+    key: 1,
+    mp: 10
   }
   {
     attack: 2,
     bgIndex: 2,
     name: "Slow",
     keyCode: 50,
-    key: 2
+    key: 2,
+    mp: 5
   }
   {
     attack: 3,
@@ -19,6 +21,7 @@ abilities = [
     name: "Flee",
     keyCode: 51,
     key: 3
+    mp: 15
   }
   {
     attack: 4,
@@ -26,13 +29,15 @@ abilities = [
     name: "Slow",
     keyCode: 52,
     key: 4
+    mp: 5
   }
   {
     attack: 5,
     bgIndex: 0,
-    name: "Slow",
+    name: "Ultimate",
     keyCode: 53,
     key: 5
+    mp: 50
   }
 ]
 class @Interface
@@ -59,6 +64,7 @@ class @Interface
     @$myXp = @$canvas.find('.xp').first()
     @$myLevel = @$unitframes.find('.level').first()
     @$myName = @$unitframes.find('.name').first()
+    @$ability = {}
     @addAbilityIcons()
     @reload()
 
@@ -115,15 +121,26 @@ class @Interface
   addAbilityIcons: ->
     for abilityData in abilities
       @$abilities.append(@getAbilityIconFragment(abilityData))
+      id = abilityData.attack
+      @$ability['abil-'+id] = $('#abil-'+id)
 
   getAbilityIconFragment: (data)->
+    id = data.attack
     bgPos = (-data.bgIndex * 36) + 'px ' + 0
     key = data.key
+    name = data.name
+    mp = data.mp
     html = """
-    <div class="ability">
+    <div class="ability" id="abil-#{id}" title="#{name} - #{mp}MP">
       <div class="key">#{key}</div>
       <div class="frame"></div>
       <div class="icon" style="background-position:#{bgPos}"></div>
     </div>
     """
     return $(html)
+
+  pressAbilityIcon: (id)->
+    @$ability['abil-'+id].addClass('on')
+
+  releaseAbilityIcon: (id)->
+    @$ability['abil-'+id].removeClass('on')

@@ -79,6 +79,10 @@
       captured = true;
       game.centerOnUser();
     }
+    if (code >= 49 && code <= 54) {
+      captured = true;
+      interface.pressAbilityIcon(code - 48);
+    }
     if (captured === true) {
       e.preventDefault();
       return e.stopPropagation();
@@ -105,6 +109,7 @@
       game.panStop('up');
     }
     if (code >= 49 && code <= 54) {
+      captured = true;
       game.userAttack(code - 48);
     }
     if (captured === true) {

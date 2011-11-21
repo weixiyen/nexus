@@ -196,6 +196,14 @@ img
             top: 4px
             left: 3px
 
+            &.on
+                .frame
+                    background-position: -92px 0
+
+            &.off
+                .frame
+                    background-position: 0 0
+
             .key
                 position: absolute
                 z-index: 3
@@ -204,7 +212,7 @@ img
                 height: 46px
                 width: 46px
                 position: absolute
-                background: url('/public/img/ability_icon_frames.png') no-repeat
+                background: url('/public/img/ability_icon_frames.png') no-repeat -46px 0
                 z-index: 2
 
             .icon

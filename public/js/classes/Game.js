@@ -213,7 +213,8 @@
       }
       targetId = this.entities[STUB + this.userId].getTarget();
       mouseCoords = map.getMouseCoords();
-      return events.userAttack(attackType, targetId, mouseCoords);
+      events.userAttack(attackType, targetId, mouseCoords);
+      return interface.releaseAbilityIcon(attackType);
     };
     Game.prototype.setUserTarget = function(targetId) {
       if (!this.entitiesExist(this.userId)) {

@@ -6,31 +6,36 @@
       bgIndex: 1,
       name: "AoE",
       keyCode: 49,
-      key: 1
+      key: 1,
+      mp: 10
     }, {
       attack: 2,
       bgIndex: 2,
       name: "Slow",
       keyCode: 50,
-      key: 2
+      key: 2,
+      mp: 5
     }, {
       attack: 3,
       bgIndex: 4,
       name: "Flee",
       keyCode: 51,
-      key: 3
+      key: 3,
+      mp: 15
     }, {
       attack: 4,
       bgIndex: 5,
       name: "Slow",
       keyCode: 52,
-      key: 4
+      key: 4,
+      mp: 5
     }, {
       attack: 5,
       bgIndex: 0,
-      name: "Slow",
+      name: "Ultimate",
       keyCode: 53,
-      key: 5
+      key: 5,
+      mp: 50
     }
   ];
   this.Interface = (function() {
@@ -53,6 +58,7 @@
       this.$myXp = this.$canvas.find('.xp').first();
       this.$myLevel = this.$unitframes.find('.level').first();
       this.$myName = this.$unitframes.find('.name').first();
+      this.$ability = {};
       this.addAbilityIcons();
       this.reload();
     }
@@ -111,20 +117,31 @@
       return this.$myLevel.html(level);
     };
     Interface.prototype.addAbilityIcons = function() {
-      var abilityData, _i, _len, _results;
+      var abilityData, id, _i, _len, _results;
       _results = [];
       for (_i = 0, _len = abilities.length; _i < _len; _i++) {
         abilityData = abilities[_i];
-        _results.push(this.$abilities.append(this.getAbilityIconFragment(abilityData)));
+        this.$abilities.append(this.getAbilityIconFragment(abilityData));
+        id = abilityData.attack;
+        _results.push(this.$ability['abil-' + id] = $('#abil-' + id));
       }
       return _results;
     };
     Interface.prototype.getAbilityIconFragment = function(data) {
-      var bgPos, html, key;
+      var bgPos, html, id, key, mp, name;
+      id = data.attack;
       bgPos = (-data.bgIndex * 36) + 'px ' + 0;
       key = data.key;
-      html = "<div class=\"ability\">\n  <div class=\"key\">" + key + "</div>\n  <div class=\"frame\"></div>\n  <div class=\"icon\" style=\"background-position:" + bgPos + "\"></div>\n</div>";
+      name = data.name;
+      mp = data.mp;
+      html = "<div class=\"ability\" id=\"abil-" + id + "\" title=\"" + name + " - " + mp + "MP\">\n  <div class=\"key\">" + key + "</div>\n  <div class=\"frame\"></div>\n  <div class=\"icon\" style=\"background-position:" + bgPos + "\"></div>\n</div>";
       return $(html);
+    };
+    Interface.prototype.pressAbilityIcon = function(id) {
+      return this.$ability['abil-' + id].addClass('on');
+    };
+    Interface.prototype.releaseAbilityIcon = function(id) {
+      return this.$ability['abil-' + id].removeClass('on');
     };
     return Interface;
   })();
