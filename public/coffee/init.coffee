@@ -112,9 +112,7 @@ $document.on 'keyup', (e)->
     e.preventDefault()
     e.stopPropagation()
 
-map.$canvas.on 'click', '.entity', (e)->
-  e.stopPropagation()
-  e.preventDefault()
+game.$canvas.on 'click', '.entity', (e)->
   entity = $(@).data('entity')
   game.setUserTarget(entity.id)
   events.userAttack(0, entity.id, [map.getMouseCoords()])

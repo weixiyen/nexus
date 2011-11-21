@@ -117,10 +117,8 @@
       return e.stopPropagation();
     }
   });
-  map.$canvas.on('click', '.entity', function(e) {
+  game.$canvas.on('click', '.entity', function(e) {
     var entity;
-    e.stopPropagation();
-    e.preventDefault();
     entity = $(this).data('entity');
     game.setUserTarget(entity.id);
     return events.userAttack(0, entity.id, [map.getMouseCoords()]);
