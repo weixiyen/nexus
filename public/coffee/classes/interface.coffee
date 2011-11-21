@@ -1,3 +1,12 @@
+#'<div class="ability attack"><div class="frame"></div><div class="icon">1</div></div>'
+abilities = [
+  {
+    attack: 1,
+    background: 108, # horizontal offset on sprite
+    name: "Attack",
+    keyCode: 1
+  }
+]
 class @Interface
 
   CHAT_WIDTH = 400
@@ -9,6 +18,7 @@ class @Interface
   ABILITY_BAR_HEIGHT = 60
 
   XPBAR_HEIGHT = 5
+
 
   constructor: (options)->
     @$canvas = options.$canvas
@@ -22,6 +32,7 @@ class @Interface
     @$myXp = @$canvas.find('.xp').first()
     @$myLevel = @$unitframes.find('.level').first()
     @$myName = @$unitframes.find('.name').first()
+    @addAbilityIcons()
     @reload()
 
   reload: ->
@@ -74,3 +85,14 @@ class @Interface
   setLevel: (level)->
     @$myLevel.html(level)
 
+  addAbilityIcons: ->
+    for abilityData in abilities
+      console.log abilityData
+      #@getAbilityIconFragment(abilityData)
+
+  getAbilityIconFragment: (data)->
+    console.log data
+    html = """
+    <div>lol</div>
+    """
+    return @(html)

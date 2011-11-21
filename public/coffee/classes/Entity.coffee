@@ -267,6 +267,14 @@ class @Turret extends Entity
     @imgurl = IMGPATH + 'turret.png'
     @create()
 
+class @Nexus extends Entity
+  constructor: (entity)->
+    super
+    @width = 371
+    @height = 270
+    @imgurl = IMGPATH + 'sprite_base.png'
+    @create()
+
 class @Minion extends MovableEntity
   constructor: (entity)->
     super

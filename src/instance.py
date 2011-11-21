@@ -52,6 +52,9 @@ class Instance(object):
             for i in xrange(2):
                 instance.spawn('Turret', kind=mob.Turret, hp=100, attack=3)
 
+            for i in xrange(2):
+                instance.spawn('Nexus', kind=mob.Nexus, hp=1000)
+
             for i in xrange(50):
                 instance.place(kind=prop.Tree)
 

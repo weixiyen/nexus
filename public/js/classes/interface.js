@@ -1,4 +1,13 @@
 (function() {
+  var abilities;
+  abilities = [
+    {
+      attack: 1,
+      background: 108,
+      name: "Attack",
+      keyCode: 1
+    }
+  ];
   this.Interface = (function() {
     var ABILITY_BAR_HEIGHT, CHAT_HEIGHT, CHAT_WIDTH, MINIMAP_HEIGHT, MINIMAP_WIDTH, XPBAR_HEIGHT;
     CHAT_WIDTH = 400;
@@ -19,6 +28,7 @@
       this.$myXp = this.$canvas.find('.xp').first();
       this.$myLevel = this.$unitframes.find('.level').first();
       this.$myName = this.$unitframes.find('.name').first();
+      this.addAbilityIcons();
       this.reload();
     }
     Interface.prototype.reload = function() {
@@ -74,6 +84,21 @@
     };
     Interface.prototype.setLevel = function(level) {
       return this.$myLevel.html(level);
+    };
+    Interface.prototype.addAbilityIcons = function() {
+      var abilityData, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = abilities.length; _i < _len; _i++) {
+        abilityData = abilities[_i];
+        _results.push(console.log(abilityData));
+      }
+      return _results;
+    };
+    Interface.prototype.getAbilityIconFragment = function(data) {
+      var html;
+      console.log(data);
+      html = "<div>lol</div>";
+      return this(html);
     };
     return Interface;
   })();

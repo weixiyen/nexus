@@ -183,12 +183,28 @@ img
         .ability
             float: left
             position: relative
-            margin: 5px
-            color: #999
-            font-size: 14px
+            width: 50px
+            height: 50px
+            color: yellow
+            text-shadow: black 0 0 4px
+            font: bold 11px Arial
+            top: 4px
+            left: 3px
 
-            .wrap
-                height: 40px
-                width: 40px
+            .frame
+                height: 46px
+                width: 46px
+                position: absolute
+                background: url('/public/img/ability_icon_frames.png') no-repeat
+                z-index: 2
+
+            .icon
+                height: 36px
+                width: 36px
                 text-align: center
                 line-height: 40px
+                background: url('/public/img/ability_icons.jpg') no-repeat
+                position: absolute
+                z-index: 1
+                left: 6px
+                top: 5px

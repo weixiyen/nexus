@@ -5,3 +5,6 @@ class Minion(MonsterEntity):
 
 class Turret(StationaryMonsterEntity):
     pass
+
+class Nexus(StationaryMonsterEntity):
+    pass

@@ -303,6 +303,17 @@
     }
     return Turret;
   })();
+  this.Nexus = (function() {
+    __extends(Nexus, Entity);
+    function Nexus(entity) {
+      Nexus.__super__.constructor.apply(this, arguments);
+      this.width = 371;
+      this.height = 270;
+      this.imgurl = IMGPATH + 'sprite_base.png';
+      this.create();
+    }
+    return Nexus;
+  })();
   this.Minion = (function() {
     __extends(Minion, MovableEntity);
     function Minion(entity) {
