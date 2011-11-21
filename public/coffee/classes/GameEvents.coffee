@@ -18,44 +18,40 @@ class @GameEvents
           console.log(event, data)
 
   connect: (fn)->
-    @events['connect'] = ->
-      fn()
+    @events['connect'] = fn
 
   init: (fn)->
-    @socket.on 'initialize', (data) ->
-      fn(data)
+    @socket.on 'initialize', fn
 
   spawn: (fn) ->
-    @events['spawn'] = (data) ->
-      fn(data)
+    @events['spawn'] = fn
 
   move: (fn) ->
-    @events['move'] = (data...) ->
-      fn(data[0], data[1], data[2])
+    @events['move'] = fn
 
   death: (fn) ->
-    @events['death'] = (data) ->
-      fn(data)
+    @events['death'] = fn
 
   target: (fn) ->
-    @events['target'] = (aggressorId, targetId) ->
-      fn(aggressorId, targetId)
+    @events['target'] = fn
 
   mpChange: (fn)->
-    @events['mp'] = (id, mp)->
-      fn(id, mp)
+    @events['mp'] = fn
+
+  xpChange: (fn)->
+    @events['experience'] = fn
+
+  levelUp: (fn)->
+    @events['level-up'] = fn
 
   nameChange: (fn) ->
-    @events['name-change'] = (id, name) ->
-      fn(id, name)
+    @events['name-change'] = fn
 
   damageTaken: (fn) ->
-    @events['damage-taken'] = (id, amt, isCritical) ->
-      fn(id, amt, isCritical)
+    @events['damage-taken'] = fn
 
   setMovementSpeed: (fn) ->
-    @events['set-movement-speed'] = (id, speed) ->
-      fn(id, speed)
+    @events['set-movement-speed'] = fn
 
   moveMe: (x, y) ->
     @socket.emit('move', [x, y])

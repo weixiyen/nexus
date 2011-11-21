@@ -1,5 +1,5 @@
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __slice = Array.prototype.slice;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   this.GameEvents = (function() {
     function GameEvents(options) {
       var $document;
@@ -28,56 +28,40 @@
       }, this));
     }
     GameEvents.prototype.connect = function(fn) {
-      return this.events['connect'] = function() {
-        return fn();
-      };
+      return this.events['connect'] = fn;
     };
     GameEvents.prototype.init = function(fn) {
-      return this.socket.on('initialize', function(data) {
-        return fn(data);
-      });
+      return this.socket.on('initialize', fn);
     };
     GameEvents.prototype.spawn = function(fn) {
-      return this.events['spawn'] = function(data) {
-        return fn(data);
-      };
+      return this.events['spawn'] = fn;
     };
     GameEvents.prototype.move = function(fn) {
-      return this.events['move'] = function() {
-        var data;
-        data = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        return fn(data[0], data[1], data[2]);
-      };
+      return this.events['move'] = fn;
     };
     GameEvents.prototype.death = function(fn) {
-      return this.events['death'] = function(data) {
-        return fn(data);
-      };
+      return this.events['death'] = fn;
     };
     GameEvents.prototype.target = function(fn) {
-      return this.events['target'] = function(aggressorId, targetId) {
-        return fn(aggressorId, targetId);
-      };
+      return this.events['target'] = fn;
     };
     GameEvents.prototype.mpChange = function(fn) {
-      return this.events['mp'] = function(id, mp) {
-        return fn(id, mp);
-      };
+      return this.events['mp'] = fn;
+    };
+    GameEvents.prototype.xpChange = function(fn) {
+      return this.events['experience'] = fn;
+    };
+    GameEvents.prototype.levelUp = function(fn) {
+      return this.events['level-up'] = fn;
     };
     GameEvents.prototype.nameChange = function(fn) {
-      return this.events['name-change'] = function(id, name) {
-        return fn(id, name);
-      };
+      return this.events['name-change'] = fn;
     };
     GameEvents.prototype.damageTaken = function(fn) {
-      return this.events['damage-taken'] = function(id, amt, isCritical) {
-        return fn(id, amt, isCritical);
-      };
+      return this.events['damage-taken'] = fn;
     };
     GameEvents.prototype.setMovementSpeed = function(fn) {
-      return this.events['set-movement-speed'] = function(id, speed) {
-        return fn(id, speed);
-      };
+      return this.events['set-movement-speed'] = fn;
     };
     GameEvents.prototype.moveMe = function(x, y) {
       return this.socket.emit('move', [x, y]);

@@ -45,6 +45,12 @@
   events.mpChange(function(id, mp) {
     return game.changeMp(id, mp);
   });
+  events.xpChange(function(id, xp) {
+    return game.increaseExperience(id, xp);
+  });
+  events.levelUp(function(id, data) {
+    return game.levelUp(id, data);
+  });
   $document.on('keydown', function(e) {
     var captured, code;
     captured = false;

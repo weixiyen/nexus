@@ -16,7 +16,7 @@
       this.$unitframes = this.$canvas.find('.unitframes').first();
       this.$myHp = this.$unitframes.find('.hp').first();
       this.$myMp = this.$unitframes.find('.mp').first();
-      this.$myXp = this.$unitframes.find('.xp').first();
+      this.$myXp = this.$canvas.find('.xp').first();
       this.reload();
     }
     Interface.prototype.reload = function() {

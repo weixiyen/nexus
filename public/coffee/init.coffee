@@ -48,6 +48,12 @@ events.setMovementSpeed (id, speed) ->
 events.mpChange (id, mp)->
   game.changeMp(id, mp)
 
+events.xpChange (id, xp)->
+  game.increaseExperience(id, xp)
+
+events.levelUp (id, data)->
+  game.levelUp(id, data)
+
 $document.on 'keydown', (e)->
   captured = false
   code = e.which

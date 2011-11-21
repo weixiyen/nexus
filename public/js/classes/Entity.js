@@ -23,6 +23,7 @@
       this.kind = data.kind;
       this.name = data.name;
       this.stats = data.stats;
+      this.experience = data.experience;
       this.x = data.x;
       this.y = data.y;
       this.left = this.x * GRID_W;
@@ -141,6 +142,22 @@
       this.mp = mp;
       perc = Math.ceil(this.mp / this.stats.mp * 100);
       return interface.setMp(perc);
+    };
+    Entity.prototype.increaseExperience = function(amt) {
+      var perc;
+      this.experience.have += amt;
+      perc = Math.ceil(this.experience.have / this.experience.need * 100);
+      if (!game.isUserId(this.id)) {
+        return;
+      }
+      return interface.setXp(perc);
+    };
+    Entity.prototype.levelUp = function(data) {
+      this.stats = this.stats;
+      this.experience = data.experience;
+      this.increaseExperience(0);
+      this.setHp(data.hp);
+      return this.setMp(data.mp);
     };
     return Entity;
   })();
@@ -346,7 +363,11 @@
       };
       this.create();
       this.startMoving();
+      this.setupInterface();
     }
+    User.prototype.setupInterface = function() {
+      return this.increaseExperience(0);
+    };
     return User;
   })();
   /*

@@ -1,9 +1,8 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __slice = Array.prototype.slice;
   this.Game = (function() {
-    var INTERVAL, PAN_DIST, PAN_SPEED, STUB, UI_HEIGHT;
+    var PAN_DIST, PAN_SPEED, STUB, UI_HEIGHT;
     STUB = 'ent-';
-    INTERVAL = 30;
     PAN_SPEED = 1;
     PAN_DIST = 15;
     UI_HEIGHT = 50;
@@ -189,6 +188,18 @@
     };
     Game.prototype.removeLoopItem = function(loopId) {
       return delete this.loopItems[loopId];
+    };
+    Game.prototype.increaseExperience = function(id, amt) {
+      if (!this.entitiesExist(id)) {
+        return;
+      }
+      return this.entities[STUB + id].increaseExperience(amt);
+    };
+    Game.prototype.levelUp = function(id, data) {
+      if (!this.entitiesExist(id)) {
+        return;
+      }
+      return this.entities[STUB + id].levelUp(data);
     };
     Game.prototype.panStart = function(dir) {
       if (this.panning[dir]) {

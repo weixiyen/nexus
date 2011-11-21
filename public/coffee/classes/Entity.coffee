@@ -15,6 +15,7 @@ class @Entity
     @kind = data.kind
     @name = data.name
     @stats = data.stats
+    @experience = data.experience
     @x = data.x
     @y = data.y
     @left = @x * GRID_W
@@ -123,6 +124,18 @@ class @Entity
     perc = Math.ceil(@mp / @stats.mp * 100)
     interface.setMp(perc)
 
+  increaseExperience: (amt)->
+    @experience.have += amt
+    perc = Math.ceil(@experience.have / @experience.need * 100)
+    if !game.isUserId(@id) then return
+    interface.setXp(perc)
+
+  levelUp: (data)->
+    @stats = @stats
+    @experience = data.experience
+    @increaseExperience(0)
+    @setHp(data.hp)
+    @setMp(data.mp)
 
 class @MovableEntity extends Entity
   constructor: (entity)->
@@ -507,6 +520,10 @@ class @User extends MovableEntity
 
     @create()
     @startMoving()
+    @setupInterface()
+
+  setupInterface: ->
+    @increaseExperience(0)
 
 ###
 class @User extends MovableEntity

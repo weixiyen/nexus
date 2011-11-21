@@ -19,7 +19,7 @@ class @Interface
     @$unitframes = @$canvas.find('.unitframes').first()
     @$myHp = @$unitframes.find('.hp').first()
     @$myMp = @$unitframes.find('.mp').first()
-    @$myXp = @$unitframes.find('.xp').first()
+    @$myXp = @$canvas.find('.xp').first()
     @reload()
 
   reload: ->

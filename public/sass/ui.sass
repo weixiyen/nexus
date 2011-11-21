@@ -131,10 +131,10 @@ body
                         left: 3px
 
                 .hpbar
-                    background: #333
-                    border: 1px solid #333
+                    top: 1px
+                    left: 2px
                     width: 95px
-
+                    position: relative
                     .hp
                         height: 5px
                         background: #adff2f
@@ -142,11 +142,10 @@ body
                         width: 100%
 
                 .mpbar
-                    background: #333
-                    border: 1px solid #333
+                    top: 3px
+                    left: 2px
                     width: 95px
                     position: relative
-
                     .mp
                         height: 5px
                         background: #8dd0ff
@@ -163,8 +162,16 @@ body
         position: absolute
 
     .xpbar
-        background: red
         position: absolute
+
+        .bar
+            width: 100%
+            position: relative
+            .xp
+                height: 5px
+                background: #ce6af2
+                max-width: 100%
+                width: 0
 
     .abilities
         position: absolute
