@@ -74,7 +74,8 @@ body {
   left: 0;
   width: 0;
   height: 0;
-  z-index: 10000; }
+  z-index: 10000;
+  display: none; }
   .ui-interface .unitframes {
     position: absolute;
     top: 10px;

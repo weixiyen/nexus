@@ -44,11 +44,14 @@
         height: MINIMAP_HEIGHT,
         top: winHeight - MINIMAP_HEIGHT - 5
       });
-      return this.$xpbar.css({
+      this.$xpbar.css({
         left: CHAT_WIDTH + 10,
         width: midBarWidth,
         height: XPBAR_HEIGHT,
         top: winHeight - XPBAR_HEIGHT - 5
+      });
+      return this.$canvas.css({
+        display: 'block'
       });
     };
     Interface.prototype.setHp = function(percent) {

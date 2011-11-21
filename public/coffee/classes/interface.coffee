@@ -53,6 +53,9 @@ class @Interface
       height: XPBAR_HEIGHT
       top: winHeight - XPBAR_HEIGHT - 5
 
+    @$canvas.css
+      display: 'block'
+
   setHp: (percent)->
     @$myHp.css
       width: percent+'%'
