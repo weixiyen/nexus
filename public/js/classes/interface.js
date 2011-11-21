@@ -130,7 +130,7 @@
     Interface.prototype.getAbilityIconFragment = function(data) {
       var bgPos, html, id, key, mp, name;
       id = data.attack;
-      bgPos = (-data.bgIndex * 36) + 'px ' + 0;
+      bgPos = (-data.bgIndex * 36) + 'px 0';
       key = data.key;
       name = data.name;
       mp = data.mp;
@@ -142,6 +142,20 @@
     };
     Interface.prototype.releaseAbilityIcon = function(id) {
       return this.$ability['abil-' + id].removeClass('on');
+    };
+    Interface.prototype.renderAbilityIconsByMp = function(mp) {
+      var ability, bgPos, id, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = abilities.length; _i < _len; _i++) {
+        ability = abilities[_i];
+        id = ability.attack;
+        _results.push(ability.mp > mp ? (bgPos = (-ability.bgIndex * 36) + 'px -36px', this.$ability['abil-' + id].addClass('off').find('.icon').first().css({
+          backgroundPosition: bgPos
+        })) : (bgPos = (-ability.bgIndex * 36) + 'px 0', this.$ability['abil-' + id].removeClass('off').find('.icon').first().css({
+          backgroundPosition: bgPos
+        })));
+      }
+      return _results;
     };
     return Interface;
   })();

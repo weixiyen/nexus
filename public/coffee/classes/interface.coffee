@@ -126,7 +126,7 @@ class @Interface
 
   getAbilityIconFragment: (data)->
     id = data.attack
-    bgPos = (-data.bgIndex * 36) + 'px ' + 0
+    bgPos = (-data.bgIndex * 36) + 'px 0'
     key = data.key
     name = data.name
     mp = data.mp
@@ -144,3 +144,15 @@ class @Interface
 
   releaseAbilityIcon: (id)->
     @$ability['abil-'+id].removeClass('on')
+
+  renderAbilityIconsByMp: (mp)->
+    for ability in abilities
+      id = ability.attack
+      if ability.mp > mp
+        bgPos = (-ability.bgIndex * 36) + 'px -36px'
+        @$ability['abil-'+id].addClass('off').find('.icon').first().css
+          backgroundPosition: bgPos
+      else
+        bgPos = (-ability.bgIndex * 36) + 'px 0'
+        @$ability['abil-'+id].removeClass('off').find('.icon').first().css
+          backgroundPosition: bgPos
