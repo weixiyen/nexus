@@ -57,4 +57,4 @@ class Haste(Slow):
 
 class Poison(Buff):
     def tick(self):
-        self.entity.damage_taken(self.source, 2)
+        self.entity.damage_taken(self.source, self.source.level * 2)
