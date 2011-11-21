@@ -10,6 +10,7 @@ class Prop(object):
         self.x = x
         self.y = y
 
+        self.instance.map.block(x, y)
         self.instance.add_prop(self)
 
     def __str__(self):

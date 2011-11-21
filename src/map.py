@@ -27,6 +27,16 @@ class Map(object):
 
         self._graph = Graph(self)
 
+    def block(self, x, y):
+        node = self._graph.get_node(x, y)
+
+        node.type = 1
+        self._data[y][x] = 1
+
+        for neighbor in node.get_neigbhors():
+            neighbor.type = 1
+            self._data[neighbor.y][neighbor.x] = 1
+
     def is_walkable(self, x, y):
         return self[y][x] == 0
 
