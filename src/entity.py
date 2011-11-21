@@ -24,17 +24,14 @@ class Entity(object):
         self._home = (x, y)
         self.target = None
 
-        self.stats = self.get_base_stats()
-        self.stats.update(stats)
+        self.base_stats = self.get_base_stats()
+        self.base_stats.update(stats)
 
-        self.hp = self.stats['hp']
-        self.mp = self.stats['mp']
+        self.stats = self.base_stats.copy()
+
         self.movement_speed = self.stats['movement_speed']
-        self.level = 1
-        self.experience = {
-            'have': 0,
-            'need': LEVEL[self.level]
-        }
+
+        self.set_level(stats.pop('level', 1))
 
         self.buffs = []
 
@@ -42,6 +39,21 @@ class Entity(object):
         self._mp_regen_limiter = Limiter(500)
 
         self.instance.add_entity(self)
+
+    def set_level(self, level=1):
+        self.level = level
+
+        self.experience = {
+            'have': 0,
+            'need': LEVEL[level]
+        }
+
+        self.stats['hp'] = self.base_stats['hp'] * level
+        self.stats['mp'] = self.base_stats['mp'] * level
+        self.stats['attack'] = self.base_stats['attack'] * level
+
+        self.hp = self.stats['hp']
+        self.mp = self.stats['mp']
 
     def get_base_stats(self):
         return {
@@ -224,19 +236,8 @@ class Entity(object):
             self.emit('experience', self.id, amt)
 
     def level_up(self, have=0):
-        self.level += 1
-
-        self.experience = {
-            'have': have,
-            'need': LEVEL[self.level]
-        }
-
-        self.stats['hp'] *= 2
-        self.stats['mp'] *= 2
-        self.stats['attack'] *= 2
-
-        self.hp = self.stats['hp']
-        self.mp = self.stats['mp']
+        self.set_level(self.level + 1)
+        self.experience['have'] = have
 
         self.emit('level-up', self.id, {
             'stats': self.stats,
@@ -245,6 +246,7 @@ class Entity(object):
             'experience': self.experience,
         })
 
+        # incase we earned more then we need
         self.increase_experience(0)
 
     def use_mp(self, amt):
