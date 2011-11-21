@@ -216,7 +216,6 @@ class Entity(object):
                     self.instance.remove_entity(self)
                 else:
                     self.set_target(None)
-                    self.stop_movement()
 
                 if from_:
                     from_.increase_experience(self.level * 50)
