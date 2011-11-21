@@ -4,6 +4,11 @@ from limiter import Limiter
 from map import Map
 import ability
 
+LEVEL = {}
+
+for level in range(1, 20):
+    LEVEL[level] = 100 * level
+
 class Entity(object):
     id = 0
 
@@ -25,6 +30,11 @@ class Entity(object):
         self.hp = self.stats['hp']
         self.mp = self.stats['mp']
         self.movement_speed = self.stats['movement_speed']
+        self.level = 1
+        self.experience = {
+            'have': 0,
+            'need': LEVEL[self.level]
+        }
 
         self.buffs = []
 
@@ -60,6 +70,8 @@ class Entity(object):
             'y': self.y,
             'hp': self.hp,
             'mp': self.mp,
+            'level': self.level,
+            'experience': self.experience,
             'movement_speed': self.movement_speed,
             'stats': self.stats,
             'target': self.target.id if self.target else None
@@ -191,12 +203,49 @@ class Entity(object):
                 else:
                     self.set_target(None)
 
+                if from_:
+                    from_.increase_experience(self.level * 50)
+
                 self.instance.logger.debug('Killed %r' % self)
                 self.emit('death', self.id)
 
             return True
 
         return False
+
+    def increase_experience(self, amt):
+        self.experience['have'] += amt
+
+        overflow = self.experience['have'] - self.experience['need']
+
+        if overflow >= 0:
+            self.level_up(overflow)
+        else:
+            self.emit('experience', self.id, amt)
+
+    def level_up(self, have=0):
+        self.level += 1
+
+        self.experience = {
+            'have': have,
+            'need': LEVEL[self.level]
+        }
+
+        self.stats['hp'] *= 2
+        self.stats['mp'] *= 2
+        self.stats['attack'] *= 2
+
+        self.hp = self.stats['hp']
+        self.mp = self.stats['mp']
+
+        self.emit('level-up', self.id, {
+            'stats': self.stats,
+            'hp': self.hp,
+            'mp': self.mp,
+            'experience': self.experience,
+        })
+
+        self.increase_experience(0)
 
     def use_mp(self, amt):
         if self.mp >= amt:
