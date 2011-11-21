@@ -7,6 +7,7 @@ import simplejson
 from map import Map
 from entity import Entity, PlayerEntity
 import mob
+import prop
 
 FPS = 60
 
@@ -24,6 +25,8 @@ class Instance(object):
 
         self.map = Map(188, 219)
         self._entities = {}
+        self._props = {}
+
         self._emit_buffer = []
 
         self.iteration_counter = 0
@@ -49,6 +52,9 @@ class Instance(object):
             for i in xrange(2):
                 instance.spawn('Turret', kind=mob.Turret, hp=100, attack=3)
 
+            for i in xrange(50):
+                instance.place(kind=prop.Tree)
+
             instance.start()
 
             return instance
@@ -66,7 +72,8 @@ class Instance(object):
     def serialize(self):
         return {
             'map': self.map.serialize(),
-            'entities': [entity.serialize() for entity in self.entities if entity.is_alive()]
+            'entities': [entity.serialize() for entity in self.entities if entity.is_alive()],
+            'props': [prop.serialize() for prop in self.props]
         }
 
     def add_player(self, conn, name, **kwargs):
@@ -153,3 +160,32 @@ class Instance(object):
             del self._entities[entity.id]
         except KeyError:
             pass
+
+    def place(self, x=None, y=None, kind=prop.Prop, **kwargs):
+        if x is None or y is None:
+            while True:
+                x = random.randint(0, self.map.width - 1)
+                y = random.randint(0, self.map.height - 1)
+
+                if self.map.is_walkable(x, y):
+                    break
+
+        prop_ = kind(self, x, y, **kwargs)
+
+        self.logger.debug('Placing %r' % prop_)
+
+        return prop_
+
+    @property
+    def props(self):
+        return self._props.values()
+
+    def get_prop(self, prop_id):
+        return self._props.get(prop_id)
+
+    def add_prop(self, prop):
+        self.emit('place', prop.serialize())
+        self._props[prop.id] = prop
+
+    def remove_prop(self, prop):
+        del self._props[prop.id]
