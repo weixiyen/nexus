@@ -140,8 +140,8 @@ class @Entity
     @stats = @stats
     @experience = data.experience
     @increaseExperience(0)
-    @setHp(data.hp)
-    @setMp(data.mp)
+    @setHp(data.stats.hp)
+    @setMp(data.stats.mp)
     @setLevel(data.level)
 
   setLevel: (level)->

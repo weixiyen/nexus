@@ -115,8 +115,21 @@
       this.entities[STUB + entity.id] = entity;
       this.addToCanvas(entity.$el);
       if (isUser) {
-        return this.centerOnUser();
+        return this.userLoaded();
       }
+    };
+    Game.prototype.getEntity = function(id) {
+      if (!this.entitiesExist(id)) {
+        return;
+      }
+      return this.entities[STUB + id];
+    };
+    Game.prototype.getUser = function() {
+      return this.getEntity(this.userId);
+    };
+    Game.prototype.userLoaded = function() {
+      this.centerOnUser();
+      return interface.reloadUser();
     };
     Game.prototype.addProps = function(props) {
       var prop, _i, _len, _results;

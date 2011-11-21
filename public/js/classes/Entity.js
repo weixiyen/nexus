@@ -164,8 +164,8 @@
       this.stats = this.stats;
       this.experience = data.experience;
       this.increaseExperience(0);
-      this.setHp(data.hp);
-      this.setMp(data.mp);
+      this.setHp(data.stats.hp);
+      this.setMp(data.stats.mp);
       return this.setLevel(data.level);
     };
     Entity.prototype.setLevel = function(level) {

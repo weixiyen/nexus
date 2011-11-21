@@ -85,7 +85,18 @@ class @Game
     @entities[STUB+entity.id] = entity
 
     @addToCanvas(entity.$el)
-    if isUser then @centerOnUser()
+    if isUser then @userLoaded()
+
+  getEntity: (id)->
+    if !@entitiesExist(id) then return
+    return @entities[STUB + id]
+
+  getUser: ->
+    return @getEntity(@userId)
+
+  userLoaded: ->
+    @centerOnUser()
+    interface.reloadUser()
 
   addProps: (props)->
     for prop in props

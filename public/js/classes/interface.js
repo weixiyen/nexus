@@ -29,15 +29,18 @@
       keyCode: 52,
       key: 4,
       mp: 5
-    }, {
-      attack: 5,
-      bgIndex: 0,
-      name: "Ultimate",
-      keyCode: 53,
-      key: 5,
-      mp: 50
     }
   ];
+  /*
+  {
+    attack: 5,
+    bgIndex: 0,
+    name: "Ultimate",
+    keyCode: 53,
+    key: 5
+    mp: 50
+  }
+  */
   this.Interface = (function() {
     var ABILITY_BAR_HEIGHT, CHAT_HEIGHT, CHAT_WIDTH, MINIMAP_HEIGHT, MINIMAP_WIDTH, XPBAR_HEIGHT;
     CHAT_WIDTH = 400;
@@ -94,6 +97,13 @@
       return this.$canvas.css({
         display: 'block'
       });
+    };
+    Interface.prototype.reloadUser = function() {
+      var u;
+      u = game.getUser();
+      u.setHp(u.hp);
+      u.changeMp(0);
+      return u.increaseExperience(0);
     };
     Interface.prototype.setHp = function(percent) {
       return this.$myHp.css({

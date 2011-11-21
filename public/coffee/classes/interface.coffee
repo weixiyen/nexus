@@ -31,15 +31,18 @@ abilities = [
     key: 4
     mp: 5
   }
-  {
-    attack: 5,
-    bgIndex: 0,
-    name: "Ultimate",
-    keyCode: 53,
-    key: 5
-    mp: 50
-  }
+
 ]
+###
+{
+  attack: 5,
+  bgIndex: 0,
+  name: "Ultimate",
+  keyCode: 53,
+  key: 5
+  mp: 50
+}
+###
 class @Interface
 
   CHAT_WIDTH = 400
@@ -99,6 +102,12 @@ class @Interface
 
     @$canvas.css
       display: 'block'
+
+  reloadUser: ->
+    u = game.getUser()
+    u.setHp(u.hp)
+    u.changeMp(0)
+    u.increaseExperience(0)
 
   setHp: (percent)->
     @$myHp.css
