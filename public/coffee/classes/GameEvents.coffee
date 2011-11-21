@@ -53,6 +53,9 @@ class @GameEvents
   setMovementSpeed: (fn) ->
     @events['set-movement-speed'] = fn
 
+  heal: (fn)->
+    @events['heal'] = fn
+
   moveMe: (x, y) ->
     @socket.emit('move', [x, y])
 

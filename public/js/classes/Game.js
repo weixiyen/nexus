@@ -103,7 +103,7 @@
         entity.aggro(entity.target);
       }
       this.entities[STUB + entity.id] = entity;
-      this.addToCanvas(entity.$el);
+      map.addToCanvas(entity.$el);
       if (isUser) {
         return this.centerOnUser();
       }
@@ -130,7 +130,7 @@
         return;
       }
       this.props[PROP + propData.id] = prop;
-      return this.addToCanvas(prop.$el);
+      return map.addToCanvas(prop.$el);
     };
     Game.prototype.removeEntity = function(entityId) {
       this.entities[STUB + entityId].remove();
@@ -165,6 +165,12 @@
         return;
       }
       return this.entities[STUB + id].takeDamage(amt, isCrit);
+    };
+    Game.prototype.heal = function(id, amt) {
+      if (!this.entitiesExist(id)) {
+        return;
+      }
+      return this.entities[STUB + id].heal(amt);
     };
     Game.prototype.changeMp = function(id, mp) {
       if (!this.entitiesExist(id)) {

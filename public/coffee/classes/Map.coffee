@@ -27,6 +27,7 @@ class @Map
     @$canvas.empty()
 
   setup: (graph) ->
+    @graph = graph
     @setDimensions(graph[0].length, graph.length)
     @listenToEvents()
     @setUpTiles()
@@ -74,6 +75,9 @@ class @Map
   setClientDimensions: ->
     @clientX = $window.width()
     @clientY = $window.height()
+
+  addToCanvas: ($element)->
+    @$canvas.append($element)
 
   render: =>
 

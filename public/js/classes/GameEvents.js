@@ -63,6 +63,9 @@
     GameEvents.prototype.setMovementSpeed = function(fn) {
       return this.events['set-movement-speed'] = fn;
     };
+    GameEvents.prototype.heal = function(fn) {
+      return this.events['heal'] = fn;
+    };
     GameEvents.prototype.moveMe = function(x, y) {
       return this.socket.emit('move', [x, y]);
     };

@@ -25,6 +25,7 @@
       return this.$canvas.empty();
     };
     Map.prototype.setup = function(graph) {
+      this.graph = graph;
       this.setDimensions(graph[0].length, graph.length);
       this.listenToEvents();
       return this.setUpTiles();
@@ -83,6 +84,9 @@
     Map.prototype.setClientDimensions = function() {
       this.clientX = $window.width();
       return this.clientY = $window.height();
+    };
+    Map.prototype.addToCanvas = function($element) {
+      return this.$canvas.append($element);
     };
     Map.prototype.render = function() {
       var id, imgpath, left, leftEnd, pieces, purgeIds, stub, top, topEnd, txy, x, x1, x2, y, y1, y2, _ref, _ref2;

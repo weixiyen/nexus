@@ -116,6 +116,9 @@
         return interface.setName(this.name);
       }
     };
+    Entity.prototype.heal = function(amt) {
+      return this.setHp(this.hp + amt);
+    };
     Entity.prototype.takeDamage = function(amt, isCrit) {
       return this.setHp(this.hp - amt);
     };

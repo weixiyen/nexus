@@ -22,7 +22,6 @@ events.init (data)->
   game.setUserId(data.me)
   game.addEntities(data.entities)
   game.addProps(data.props)
-  game.centerOnUser()
 
 # spawn an entity
 events.spawn (entity)->
@@ -56,6 +55,8 @@ events.xpChange (id, xp)->
 events.levelUp (id, data)->
   game.levelUp(id, data)
 
+events.heal (id, amt)->
+  game.heal(id, amt)
 
 $document.on 'keydown', (e)->
   captured = false
@@ -115,7 +116,8 @@ $document.on 'keyup', (e)->
     e.preventDefault()
     e.stopPropagation()
 
-game.$canvas.on 'click', '.entity', (e)->
+map.$canvas.on 'click', '.entity', (e)->
+  e.stopPropagation()
   entity = $(@).data('entity')
   game.setUserTarget(entity.id)
   events.userAttack(0, entity.id, [map.getMouseCoords()])

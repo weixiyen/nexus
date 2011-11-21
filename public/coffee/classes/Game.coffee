@@ -74,7 +74,7 @@ class @Game
     if entity.hasTarget() then entity.aggro(entity.target)
     @entities[STUB+entity.id] = entity
 
-    @addToCanvas(entity.$el)
+    map.addToCanvas(entity.$el)
     if isUser then @centerOnUser()
 
   addProps: (props)->
@@ -89,7 +89,7 @@ class @Game
     if prop == null then return
     @props[PROP+propData.id] = prop
 
-    @addToCanvas(prop.$el)
+    map.addToCanvas(prop.$el)
 
   removeEntity: (entityId)->
     @entities[STUB+entityId].remove()
@@ -114,6 +114,10 @@ class @Game
   damageTaken: (id, amt, isCrit) ->
     if !@entitiesExist(id) then return
     @entities[STUB+id].takeDamage(amt, isCrit)
+
+  heal: (id, amt) ->
+    if !@entitiesExist(id) then return
+    @entities[STUB+id].heal(amt)
 
   changeMp: (id, mp)->
     if !@entitiesExist(id) then return

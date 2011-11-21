@@ -101,6 +101,9 @@ class @Entity
     @$elName.html(name)
     if game.isUserId(@id) then interface.setName(@name)
 
+  heal: (amt)->
+    @setHp(@hp + amt)
+
   takeDamage: (amt, isCrit)->
     @setHp(@hp - amt)
 
