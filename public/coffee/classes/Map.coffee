@@ -16,10 +16,12 @@ class @Map
     @cachedFragments = {}
 
     @setClientDimensions()
-    @beginRenderLoop()
 
-  beginRenderLoop: ->
-    game.addLoopItem 'map:render', 10, @render
+  startRenderLoop: ->
+    game.addLoopItem('map:render', 12, @render)
+
+  stopRenderLoop: ->
+    game.removeLoopItem('map.render')
 
   reset: ->
     @$canvas.empty()
@@ -74,6 +76,7 @@ class @Map
     @clientY = $window.height()
 
   render: =>
+
     left = Math.abs(@left)
     top = Math.abs(@top)
     leftEnd = left + @clientX
@@ -89,7 +92,7 @@ class @Map
       pieces = stub.split('-')
       x = pieces[1]
       y = pieces[2]
-      if (x < x1) || (x > x2) || (y < y1) || (y > y2)
+      if (x > 0 && y > 0) && ( (x < x1) || (x > x2) || (y < y1) || (y > y2) )
         purgeIds.push('#'+stub)
         delete @visibleTiles[id]
 
@@ -112,17 +115,3 @@ class @Map
       <div id="t-#{x}-#{y}" style="background:url(#{imgpath}) no-repeat;top:#{top}px;left:#{left}px;width:#{TILE_W}px;height:#{TILE_H}px;position:absolute;"></div>
     """
     return $(html)
-
-  renderAllTiles: ->
-    htmlArr = []
-    for row, y in @tiles
-      for img, x in row
-        tile = $ '<img/>',
-          src: img
-          css:
-            position: "absolute"
-            left: x * TILE_W
-            top: y * TILE_H
-            width: TILE_W
-            height: TILE_H
-        tile.appendTo(@$canvas)

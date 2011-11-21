@@ -14,10 +14,12 @@
       this.visibleTiles = {};
       this.cachedFragments = {};
       this.setClientDimensions();
-      this.beginRenderLoop();
     }
-    Map.prototype.beginRenderLoop = function() {
-      return game.addLoopItem('map:render', 10, this.render);
+    Map.prototype.startRenderLoop = function() {
+      return game.addLoopItem('map:render', 12, this.render);
+    };
+    Map.prototype.stopRenderLoop = function() {
+      return game.removeLoopItem('map.render');
     };
     Map.prototype.reset = function() {
       return this.$canvas.empty();
@@ -99,7 +101,7 @@
         pieces = stub.split('-');
         x = pieces[1];
         y = pieces[2];
-        if ((x < x1) || (x > x2) || (y < y1) || (y > y2)) {
+        if ((x > 0 && y > 0) && ((x < x1) || (x > x2) || (y < y1) || (y > y2))) {
           purgeIds.push('#' + stub);
           delete this.visibleTiles[id];
         }
@@ -126,35 +128,6 @@
       top = y * TILE_H;
       html = "<div id=\"t-" + x + "-" + y + "\" style=\"background:url(" + imgpath + ") no-repeat;top:" + top + "px;left:" + left + "px;width:" + TILE_W + "px;height:" + TILE_H + "px;position:absolute;\"></div>";
       return $(html);
-    };
-    Map.prototype.renderAllTiles = function() {
-      var htmlArr, img, row, tile, x, y, _len, _ref, _results;
-      htmlArr = [];
-      _ref = this.tiles;
-      _results = [];
-      for (y = 0, _len = _ref.length; y < _len; y++) {
-        row = _ref[y];
-        _results.push((function() {
-          var _len2, _results2;
-          _results2 = [];
-          for (x = 0, _len2 = row.length; x < _len2; x++) {
-            img = row[x];
-            tile = $('<img/>', {
-              src: img,
-              css: {
-                position: "absolute",
-                left: x * TILE_W,
-                top: y * TILE_H,
-                width: TILE_W,
-                height: TILE_H
-              }
-            });
-            _results2.push(tile.appendTo(this.$canvas));
-          }
-          return _results2;
-        }).call(this));
-      }
-      return _results;
     };
     return Map;
   })();

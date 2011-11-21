@@ -53,6 +53,7 @@ class @Game
     @left = -me.left - me.width / 2 + $window.width() / 2
     @top = -me.top - me.height / 2 + $window.height() / 2 - UI_HEIGHT
     @renderOffset()
+    map.render()
 
   addEntities: (entities)->
     for entity in entities
@@ -145,10 +146,12 @@ class @Game
     @panning[dir] = true
     @addLoopItem 'pan:'+dir, PAN_SPEED, =>
       @pan(dir)
+    map.startRenderLoop()
 
   panStop: (dir)->
     @panning[dir] = false
     @removeLoopItem('pan:'+dir)
+    map.stopRenderLoop()
 
   panStopAll: ->
     for dir, value of @panning
