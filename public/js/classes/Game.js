@@ -70,7 +70,9 @@
     Game.prototype.centerOnUser = function() {
       var me;
       if (!this.userExists()) {
-        return this.centerOnMap();
+        this.centerOnMap();
+        this.userDied();
+        return;
       }
       me = this.entities[STUB + this.userId];
       this.left = -me.left - me.width / 2 + $window.width() / 2;
@@ -120,7 +122,7 @@
     };
     Game.prototype.getEntity = function(id) {
       if (!this.entitiesExist(id)) {
-        return;
+        return null;
       }
       return this.entities[STUB + id];
     };
@@ -157,7 +159,13 @@
     };
     Game.prototype.removeEntity = function(entityId) {
       this.entities[STUB + entityId].remove();
-      return delete this.entities[STUB + entityId];
+      delete this.entities[STUB + entityId];
+      if (this.isUserId(entityId)) {
+        return this.userDied();
+      }
+    };
+    Game.prototype.userDied = function() {
+      return interface.showUserDeath();
     };
     Game.prototype.moveEntity = function(id, x, y) {
       if (!this.entitiesExist(id)) {

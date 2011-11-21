@@ -161,11 +161,11 @@
       return interface.setXp(perc);
     };
     Entity.prototype.levelUp = function(data) {
-      this.stats = this.stats;
+      this.stats = data.stats;
       this.experience = data.experience;
       this.increaseExperience(0);
-      this.setHp(data.stats.hp);
-      this.setMp(data.stats.mp);
+      this.setHp(data.hp);
+      this.setMp(data.mp);
       return this.setLevel(data.level);
     };
     Entity.prototype.setLevel = function(level) {

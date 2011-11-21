@@ -54,7 +54,10 @@ class @Game
     return @entitiesExist(@userId)
 
   centerOnUser: ->
-    if !@userExists() then return @centerOnMap()
+    if !@userExists()
+      @centerOnMap()
+      @userDied()
+      return
     me = @entities[STUB+@userId]
     @left = -me.left - me.width / 2 + $window.width() / 2
     @top = -me.top - me.height / 2 + $window.height() / 2 - UI_HEIGHT
@@ -88,7 +91,7 @@ class @Game
     if isUser then @userLoaded()
 
   getEntity: (id)->
-    if !@entitiesExist(id) then return
+    if !@entitiesExist(id) then return null
     return @entities[STUB + id]
 
   getUser: ->
@@ -115,6 +118,10 @@ class @Game
   removeEntity: (entityId)->
     @entities[STUB+entityId].remove()
     delete @entities[ STUB + entityId ]
+    @userDied() if @isUserId(entityId)
+
+  userDied: ->
+    interface.showUserDeath()
 
   moveEntity: (id, x, y)->
     if !@entitiesExist(id) then return

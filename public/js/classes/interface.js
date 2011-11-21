@@ -105,6 +105,13 @@
       u.changeMp(0);
       return u.increaseExperience(0);
     };
+    Interface.prototype.showUserDeath = function() {
+      this.setHp(0);
+      this.setMp(0);
+      this.setXp(0);
+      this.setName('Dead');
+      return this.renderAbilityIconsByMp(0);
+    };
     Interface.prototype.setHp = function(percent) {
       return this.$myHp.css({
         width: percent + '%'

@@ -109,6 +109,13 @@ class @Interface
     u.changeMp(0)
     u.increaseExperience(0)
 
+  showUserDeath: ->
+    @setHp(0)
+    @setMp(0)
+    @setXp(0)
+    @setName('Dead')
+    @renderAbilityIconsByMp(0)
+
   setHp: (percent)->
     @$myHp.css
       width: percent+'%'

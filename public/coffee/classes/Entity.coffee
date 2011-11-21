@@ -137,11 +137,11 @@ class @Entity
     interface.setXp(perc)
 
   levelUp: (data)->
-    @stats = @stats
+    @stats = data.stats
     @experience = data.experience
     @increaseExperience(0)
-    @setHp(data.stats.hp)
-    @setMp(data.stats.mp)
+    @setHp(data.hp)
+    @setMp(data.mp)
     @setLevel(data.level)
 
   setLevel: (level)->
