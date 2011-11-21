@@ -2,6 +2,7 @@ import random
 import logging
 import tornado.ioloop
 import datetime
+import simplejson
 
 from map import Map
 from entity import Entity, PlayerEntity
@@ -23,6 +24,7 @@ class Instance(object):
 
         self.map = Map(200, 200)
         self._entities = {}
+        self._emit_buffer = []
 
         self.iteration_counter = 0
 
@@ -41,7 +43,7 @@ class Instance(object):
             instance = Instance(instance_id)
             _instances[instance_id] = instance
 
-            for i in xrange(25):
+            for i in xrange(100):
                 instance.spawn('Minion',  kind=mob.Minion, hp=50, attack=1)
 
             for i in xrange(2):
@@ -92,9 +94,17 @@ class Instance(object):
             self.remove_entity(conn.player)
 
     def emit(self, event, *args):
-        for player in self.players:
-            for conn in player.connections:
-                conn.emit(event, *args)
+        self._emit_buffer.append((event, args))
+
+    def flush(self):
+        if self._emit_buffer:
+            buffer = simplejson.dumps(self._emit_buffer)
+
+            for player in self.players:
+                for conn in player.connections:
+                    conn.emit('instructions', buffer)
+
+            self._emit_buffer = []
 
     def next_iteration(self):
         self.iteration_counter += 1
@@ -104,6 +114,8 @@ class Instance(object):
                 entity.next_iteration()
             except StopIteration:
                 pass
+
+        self.flush()
 
         if self.players:
             self._ioloop.add_timeout(self._delay, self.next_iteration)

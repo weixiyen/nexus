@@ -214,6 +214,7 @@ class Entity(object):
                     self.instance.remove_entity(self)
                 else:
                     self.set_target(None)
+                    self.stop_movement()
 
                 if from_:
                     from_.increase_experience(self.level * 50)
@@ -432,7 +433,8 @@ class StationaryMonsterEntity(Entity):
             self.set_target(self.get_nearby_entities(self.stats['aggro_radius']).next())
             self.instance.logger.debug('Targeting %r' % self.target)
         except StopIteration:
-            self.set_target(None)
+            if self.target:
+                self.set_target(None)
 
     def next_iteration(self):
         self.aggro()
