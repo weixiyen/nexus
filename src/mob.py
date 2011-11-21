@@ -13,10 +13,13 @@ class Nexus(Entity):
 
         self._tick_limiter = Limiter(1000)
 
+    def set_target(self, target):
+        pass
+
     def next_iteration(self):
         if self._tick_limiter.is_ready():
             for entity in self.get_nearby_entities(20):
                 if isinstance(entity, PlayerEntity):
                     entity.heal(5)
                 else:
-                    entity.damage_taken(None, 5)
+                    entity.damage_taken(self, 5)
