@@ -261,6 +261,21 @@ class Entity(object):
 
         return False
 
+    def heal(self, amt):
+        hp = self.hp + amt
+
+        if hp > self.stats['hp']:
+            hp = self.stats['hp']
+
+            amt = hp - self.hp
+
+            if amt > 0:
+                self.emit('heal', amt)
+        else:
+            self.emit('heal', amt)
+
+        self.hp = hp
+
     def next_iteration(self):
         if not self.is_alive():
             if self.instance.iteration_counter % 1000 == 0 and self.stats['respawn']:
