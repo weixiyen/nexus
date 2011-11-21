@@ -20,7 +20,8 @@
     map.setup(data.map);
     game.setUserId(data.me);
     game.addEntities(data.entities);
-    return game.addProps(data.props);
+    game.addProps(data.props);
+    return game.centerOnUser();
   });
   events.spawn(function(entity) {
     return game.addEntity(entity);

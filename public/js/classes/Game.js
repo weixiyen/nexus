@@ -64,14 +64,23 @@
     Game.prototype.setUserId = function(entityId) {
       return this.userId = entityId;
     };
+    Game.prototype.userExists = function() {
+      return this.entitiesExist(this.userId);
+    };
     Game.prototype.centerOnUser = function() {
       var me;
-      if (!this.entities[STUB + this.userId]) {
-        return;
+      if (!this.userExists()) {
+        return this.centerOnMap();
       }
       me = this.entities[STUB + this.userId];
       this.left = -me.left - me.width / 2 + $window.width() / 2;
       this.top = -me.top - me.height / 2 + $window.height() / 2 - UI_HEIGHT;
+      this.renderOffset();
+      return map.render();
+    };
+    Game.prototype.centerOnMap = function() {
+      this.left = -Math.round(map.width / 2);
+      this.top = -Math.round(map.height / 2);
       this.renderOffset();
       return map.render();
     };

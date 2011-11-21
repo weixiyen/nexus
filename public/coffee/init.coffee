@@ -22,6 +22,7 @@ events.init (data)->
   game.setUserId(data.me)
   game.addEntities(data.entities)
   game.addProps(data.props)
+  game.centerOnUser()
 
 # spawn an entity
 events.spawn (entity)->
