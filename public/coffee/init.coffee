@@ -82,7 +82,7 @@ $document.on 'keydown', (e)->
     game.centerOnUser()
 
   # user abilities
-  if code >= 49 && code <= 54
+  if code >= 49 && code <= 55
     captured = true
     interface.pressAbilityIcon(code - 48)
 

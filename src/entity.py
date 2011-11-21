@@ -241,23 +241,26 @@ class Entity(object):
             self.emit('damage-taken', self.id, damage, critcal, from_.faction if from_ else None)
 
             if not self.is_alive():
-                if isinstance(self, MovableEntity):
-                    self.stop_movement()
-
-                if not self.stats['respawn']:
-                    self.instance.remove_entity(self)
-                else:
-                    self.set_target(None)
-
                 if from_ and isinstance(from_, PlayerEntity):
                     from_.increase_experience(self.level * 50)
 
-                self.instance.logger.debug('Killed %r' % self)
-                self.emit('death', self.id)
+                self.kill_off()
 
             return True
 
         return False
+
+    def kill_off(self):
+        if isinstance(self, MovableEntity):
+            self.stop_movement()
+    
+        if not self.stats['respawn']:
+            self.instance.remove_entity(self)
+        else:
+            self.set_target(None)
+    
+        self.instance.logger.debug('Killed %r' % self)
+        self.emit('death', self.id)
 
     def increase_experience(self, amt):
         self.experience['have'] += amt
@@ -379,6 +382,46 @@ class MovableEntity(Entity):
         self._execute_movement_queue()
         Entity.next_iteration(self)
 
+class SimpleProjectile(MovableEntity):
+    def __init__(self, *args, **kwargs):
+        self.ownerid = kwargs.pop('ownerid')
+        self.dx = 0 # XXX
+        self.dy = 0 # XXX
+
+        MovableEntity.__init__(self, *args, **kwargs)
+
+    def aggro(self):
+        try:
+            potential_target = self.get_nearby_entities(self.stats['collision_radius']).next()
+            if ( potential_target != None and potential_target.id != self.ownerid ):
+                self.instance.logger.debug('Hit %r' % potential_target)
+                potential_target.damage_taken(self, self.stats['attack'])
+                self.kill_off()
+        except StopIteration:
+            pass
+
+    def next_iteration(self):
+        try:
+            MovableEntity.next_iteration(self)
+            self.move(self.x + self.stats['movement_speed']*8, self.y)
+        except StopIteration as e:
+            raise e
+        finally:
+            self.aggro()
+
+    def get_base_stats(self):
+        base_stats = MovableEntity.get_base_stats(self)
+        base_stats.update({
+            'hp': 1,
+            'mp': 1,
+            'movement_speed': 2,
+            'attack': 5,
+            'aggro_radius': 0,
+            'collision_radius': 1,
+            'respawn': False
+        })
+        return base_stats
+
 class PlayerEntity(MovableEntity):
     def __init__(self, *args, **kwargs):
         self.uid = kwargs.pop('uid')
@@ -413,6 +456,8 @@ class PlayerEntity(MovableEntity):
             ability.poison(self, target)
         elif action == 5 and self.use_mp(50): # ultimate
             ability.ultimate(self)
+	elif action == 6: # bullet -- TODO: check for # of bullet entities
+	    ability.bullet(self)
 
     def get_base_stats(self):
         base_stats = MovableEntity.get_base_stats(self)

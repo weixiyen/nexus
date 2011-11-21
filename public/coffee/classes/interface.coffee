@@ -20,7 +20,7 @@ abilities = [
     bgIndex: 4,
     name: "Flee",
     keyCode: 51,
-    key: 3
+    key: 3,
     mp: 15
   }
   {
@@ -28,10 +28,17 @@ abilities = [
     bgIndex: 5,
     name: "Poison",
     keyCode: 52,
-    key: 4
+    key: 4,
     mp: 5
   }
-
+  {
+    attack: 5,
+    bgIndex: 5,
+    name: "BOOLEET",
+    keyCode: 53,
+    key: 5,
+    mp: 5
+  }
 ]
 ###
 {

@@ -1,4 +1,5 @@
 import buff
+import entity
 
 def aoe(self, coordinates):
     targets = []
@@ -29,3 +30,9 @@ def ultimate(self):
     for entity in self.instance.entities:
         if entity.is_alive() and entity != self:
             entity.damage_taken(self, entity.hp / 2)
+
+def bullet(source_entity):
+    x = source_entity.x
+    y = source_entity.y
+    owner_id = source_entity.id
+    newentity = source_entity.instance.spawn('bullet', x, y, entity.SimpleProjectile, ownerid=owner_id)

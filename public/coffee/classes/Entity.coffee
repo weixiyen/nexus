@@ -337,6 +337,14 @@ class @MovableEntity extends Entity
     direction = dirList[random(0,7)]
     @standFacing(direction)
 
+class @SimpleProjectile extends MovableEntity
+  constructor: (entity)->
+    super
+    @width = 10
+    @height = 10
+    @imgurl = IMGPATH + 'sprite_base.png'
+    @create()
+
 class @Tower extends Entity
   constructor: (entity)->
     super
