@@ -25,6 +25,7 @@ class @Map
 
   reset: ->
     @$canvas.empty()
+    @visibleTiles = {}
 
   setup: (graph) ->
     @graph = graph

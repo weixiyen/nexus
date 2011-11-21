@@ -38,6 +38,7 @@ class @Game
   reset: ->
     @$canvas.empty()
     @entities = {}
+    @props = {}
 
   renderOffset: ->
     style =

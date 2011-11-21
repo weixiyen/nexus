@@ -49,7 +49,8 @@
     };
     Game.prototype.reset = function() {
       this.$canvas.empty();
-      return this.entities = {};
+      this.entities = {};
+      return this.props = {};
     };
     Game.prototype.renderOffset = function() {
       var style;

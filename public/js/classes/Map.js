@@ -22,7 +22,8 @@
       return game.removeLoopItem('map.render');
     };
     Map.prototype.reset = function() {
-      return this.$canvas.empty();
+      this.$canvas.empty();
+      return this.visibleTiles = {};
     };
     Map.prototype.setup = function(graph) {
       this.graph = graph;

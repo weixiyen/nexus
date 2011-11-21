@@ -36,7 +36,6 @@ class @Tree extends Prop
     @width = 300
     @type = data.type
     @imgurl = IMGPATH + 'sprite_tree.png'
-
     @create()
 
 class @Tree1 extends Tree
