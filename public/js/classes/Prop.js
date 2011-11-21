@@ -55,6 +55,18 @@
     }
     return Tree;
   })();
+  this.Rock = (function() {
+    __extends(Rock, Prop);
+    function Rock(data) {
+      Rock.__super__.constructor.apply(this, arguments);
+      this.height = 150;
+      this.width = 150;
+      this.type = data.type;
+      this.imgurl = IMGPATH + 'sprite_rock.png';
+      this.create();
+    }
+    return Rock;
+  })();
   this.Tree1 = (function() {
     __extends(Tree1, Tree);
     function Tree1(data) {
@@ -86,5 +98,37 @@
       Tree4.__super__.constructor.apply(this, arguments);
     }
     return Tree4;
+  })();
+  this.Rock1 = (function() {
+    __extends(Rock1, Rock);
+    function Rock1(data) {
+      this.bgPos = '0 0';
+      Rock1.__super__.constructor.apply(this, arguments);
+    }
+    return Rock1;
+  })();
+  this.Rock2 = (function() {
+    __extends(Rock2, Rock);
+    function Rock2(data) {
+      this.bgPos = '-150px 0';
+      Rock2.__super__.constructor.apply(this, arguments);
+    }
+    return Rock2;
+  })();
+  this.Rock3 = (function() {
+    __extends(Rock3, Rock);
+    function Rock3(data) {
+      this.bgPos = '-300px 0';
+      Rock3.__super__.constructor.apply(this, arguments);
+    }
+    return Rock3;
+  })();
+  this.Rock4 = (function() {
+    __extends(Rock4, Rock);
+    function Rock4(data) {
+      this.bgPos = '-450px 0';
+      Rock4.__super__.constructor.apply(this, arguments);
+    }
+    return Rock4;
   })();
 }).call(this);

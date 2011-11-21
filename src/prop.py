@@ -38,3 +38,15 @@ class Tree3(Prop):
 
 class Tree4(Prop):
     pass
+
+class Rock1(Prop):
+    pass
+
+class Rock2(Prop):
+    pass
+
+class Rock3(Prop):
+    pass
+
+class Rock4(Prop):
+    pass

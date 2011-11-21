@@ -25,7 +25,7 @@
     }, {
       attack: 4,
       bgIndex: 5,
-      name: "Slow",
+      name: "Poison",
       keyCode: 52,
       key: 4,
       mp: 5

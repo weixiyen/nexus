@@ -38,6 +38,15 @@ class @Tree extends Prop
     @imgurl = IMGPATH + 'sprite_tree.png'
     @create()
 
+class @Rock extends Prop
+  constructor: (data)->
+    super
+    @height = 150
+    @width = 150
+    @type = data.type
+    @imgurl = IMGPATH + 'sprite_rock.png'
+    @create()
+
 class @Tree1 extends Tree
   constructor: (data)->
     @bgPos = '0 0'
@@ -56,4 +65,24 @@ class @Tree3 extends Tree
 class @Tree4 extends Tree
   constructor: (data)->
     @bgPos = '-900px 0'
+    super
+
+class @Rock1 extends Rock
+  constructor: (data)->
+    @bgPos = '0 0'
+    super
+
+class @Rock2 extends Rock
+  constructor: (data)->
+    @bgPos = '-150px 0'
+    super
+
+class @Rock3 extends Rock
+  constructor: (data)->
+    @bgPos = '-300px 0'
+    super
+
+class @Rock4 extends Rock
+  constructor: (data)->
+    @bgPos = '-450px 0'
     super
