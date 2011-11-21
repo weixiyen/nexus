@@ -1,6 +1,6 @@
 from operator import itemgetter
 import random
-from limiter import Limiter
+from timer import Timer
 from map import Map
 import ability
 
@@ -37,8 +37,8 @@ class Entity(object):
 
         self.buffs = []
 
-        self._attack_limiter = None
-        self._mp_regen_limiter = Limiter(500)
+        self._attack_timer = None
+        self._mp_regen_timer = Timer(500)
 
         self.instance.add_entity(self)
 
@@ -128,8 +128,8 @@ class Entity(object):
 
         target = self.target
 
-        if self._attack_limiter is None:
-            self._attack_limiter = Limiter(self.stats['attack_speed'] * 100)
+        if self._attack_timer is None:
+            self._attack_timer = Timer(self.stats['attack_speed'] * 100)
 
         if not target.is_alive():
             self.set_target(None)
@@ -145,7 +145,7 @@ class Entity(object):
             if isinstance(self, MovableEntity) and self.instance.map.get_distance(self, target) > 1:
                 self.move_to(target)
                 self._execute_movement_queue(True)
-            elif self._attack_limiter.is_ready():
+            elif self._attack_timer.is_ready():
                 if target and target.damage_taken(self, self.stats['attack']):
                     self.instance.logger.debug('Attacking %r -> %r' % (self, target))
 
@@ -261,6 +261,21 @@ class Entity(object):
 
         return False
 
+    def heal(self, amt):
+        hp = self.hp + amt
+
+        if hp > self.stats['hp']:
+            hp = self.stats['hp']
+
+            amt = hp - self.hp
+
+            if amt > 0:
+                self.emit('heal', self.id, amt)
+        else:
+            self.emit('heal', self.id, amt)
+
+        self.hp = hp
+
     def next_iteration(self):
         if not self.is_alive():
             if self.instance.iteration_counter % 1000 == 0 and self.stats['respawn']:
@@ -270,7 +285,7 @@ class Entity(object):
         if self.buffs:
             self.buffs = [buff for buff in self.buffs if not buff.elapsed]
 
-        if self.mp < self.stats['mp'] and self._mp_regen_limiter.is_ready():
+        if self.mp < self.stats['mp'] and self._mp_regen_timer.is_ready():
             self.mp += 5
             self.emit('mp', self.id, 5)
 
@@ -311,13 +326,13 @@ class MovableEntity(Entity):
     def set_movement_speed(self, movement_speed):
         self.movement_speed = movement_speed
 
-        if hasattr(self, '_movement_limiter'):
+        if hasattr(self, '_movement_timer'):
             self.emit('set-movement-speed', self.id, movement_speed)
 
-        self._movement_limiter = Limiter(movement_speed * 100)
+        self._movement_timer = Timer(movement_speed * 100)
 
     def _execute_movement_queue(self, ignore_atk=False):
-        if self.is_moving() and self._movement_limiter.is_ready():
+        if self.is_moving() and self._movement_timer.is_ready():
             if not ignore_atk and self.is_attacking() and self.instance.map.get_distance(self, self.target) > 2:
                 self.move_to(self.target)
 
@@ -380,7 +395,7 @@ class MonsterEntity(MovableEntity):
     def __init__(self, *args, **kwargs):
         MovableEntity.__init__(self, *args, **kwargs)
 
-        self._patrol_limiter = Limiter(10000, True)
+        self._patrol_timer = Timer(10000, True)
 
     def aggro(self):
         if self.is_attacking():
@@ -401,7 +416,7 @@ class MonsterEntity(MovableEntity):
         finally:
             self.aggro()
 
-        if not self.is_moving() and self._patrol_limiter.is_ready():
+        if not self.is_moving() and self._patrol_timer.is_ready():
             if Map.get_distance((self.x, self.y), self._home) > self.stats['patrol_radius']:
                 x, y = self._home
             else:

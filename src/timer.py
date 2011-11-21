@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from random import randint
 
-class Limiter(object):
+class Timer(object):
     def __init__(self, ms=100, randomize=False):
         self.randomize = randomize
         self.set_delta(ms)
