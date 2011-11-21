@@ -149,7 +149,7 @@
       this.mp = mp;
       perc = Math.ceil(this.mp / this.stats.mp * 100);
       interface.setMp(perc);
-      return interface.renderAbilityIconsByMp(mp);
+      return interface.renderAbilityIconsByMp(this.mp);
     };
     Entity.prototype.increaseExperience = function(amt) {
       var perc;

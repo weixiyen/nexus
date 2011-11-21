@@ -128,7 +128,7 @@ class @Entity
     @mp = mp
     perc = Math.ceil(@mp / @stats.mp * 100)
     interface.setMp(perc)
-    interface.renderAbilityIconsByMp(mp)
+    interface.renderAbilityIconsByMp(@mp)
 
   increaseExperience: (amt)->
     @experience.have += amt
