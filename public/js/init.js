@@ -130,7 +130,8 @@
   $window.on('blur', function() {
     return game.panStopAll();
   });
-  $window.on('resize', function() {
-    return interface.reload();
+  $window.on('resize', function(e) {
+    interface.reload();
+    return map.setClientDimensions();
   });
 }).call(this);

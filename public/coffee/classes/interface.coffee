@@ -68,8 +68,9 @@ class @Interface
     @$myXp.css
       width: percent+'%'
 
+  setName: (name)->
+    @$myName.html(name)
+
   setLevel: (level)->
     @$myLevel.html(level)
 
-  setName: (name)->
-    @$myName.html(name)

@@ -69,11 +69,11 @@
         width: percent + '%'
       });
     };
-    Interface.prototype.setLevel = function(level) {
-      return this.$myLevel.html(level);
-    };
     Interface.prototype.setName = function(name) {
       return this.$myName.html(name);
+    };
+    Interface.prototype.setLevel = function(level) {
+      return this.$myLevel.html(level);
     };
     return Interface;
   })();

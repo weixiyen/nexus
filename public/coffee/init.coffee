@@ -120,5 +120,6 @@ game.$canvas.on 'click', '.entity', (e)->
 $window.on 'blur', ->
   game.panStopAll()
 
-$window.on 'resize', ->
+$window.on 'resize', (e)->
   interface.reload()
+  map.setClientDimensions()
