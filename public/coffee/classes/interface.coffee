@@ -20,6 +20,8 @@ class @Interface
     @$myHp = @$unitframes.find('.hp').first()
     @$myMp = @$unitframes.find('.mp').first()
     @$myXp = @$canvas.find('.xp').first()
+    @$myLevel = @$unitframes.find('.level').first()
+    @$myName = @$unitframes.find('.name').first()
     @reload()
 
   reload: ->
@@ -62,3 +64,9 @@ class @Interface
   setXp: (percent)->
     @$myXp.css
       width: percent+'%'
+
+  setLevel: (level)->
+    @$myLevel.html(level)
+
+  setName: (name)->
+    @$myName.html(name)

@@ -14,6 +14,7 @@ class @Entity
     @mp = data.mp
     @kind = data.kind
     @name = data.name
+    @level = data.level
     @stats = data.stats
     @experience = data.experience
     @x = data.x
@@ -98,6 +99,7 @@ class @Entity
   changeName: (name)->
     @name = name
     @$elName.html(name)
+    if game.isUserId(@id) then interface.setName(@name)
 
   takeDamage: (amt, isCrit)->
     @setHp(@hp - amt)
@@ -136,6 +138,11 @@ class @Entity
     @increaseExperience(0)
     @setHp(data.hp)
     @setMp(data.mp)
+    @setLevel(data.level)
+
+  setLevel: (level)->
+    @level = level
+    if game.isUserId(@id) then interface.setLevel(@level)
 
 class @MovableEntity extends Entity
   constructor: (entity)->
@@ -524,6 +531,8 @@ class @User extends MovableEntity
 
   setupInterface: ->
     @increaseExperience(0)
+    @setLevel(@level)
+    @changeName(@name)
 
 ###
 class @User extends MovableEntity

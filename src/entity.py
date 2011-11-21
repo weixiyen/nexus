@@ -248,6 +248,7 @@ class Entity(object):
             'hp': self.hp,
             'mp': self.mp,
             'experience': self.experience,
+            'level': self.level
         })
 
         # incase we earned more then we need

@@ -22,6 +22,7 @@
       this.mp = data.mp;
       this.kind = data.kind;
       this.name = data.name;
+      this.level = data.level;
       this.stats = data.stats;
       this.experience = data.experience;
       this.x = data.x;
@@ -110,7 +111,10 @@
     };
     Entity.prototype.changeName = function(name) {
       this.name = name;
-      return this.$elName.html(name);
+      this.$elName.html(name);
+      if (game.isUserId(this.id)) {
+        return interface.setName(this.name);
+      }
     };
     Entity.prototype.takeDamage = function(amt, isCrit) {
       return this.setHp(this.hp - amt);
@@ -157,7 +161,14 @@
       this.experience = data.experience;
       this.increaseExperience(0);
       this.setHp(data.hp);
-      return this.setMp(data.mp);
+      this.setMp(data.mp);
+      return this.setLevel(data.level);
+    };
+    Entity.prototype.setLevel = function(level) {
+      this.level = level;
+      if (game.isUserId(this.id)) {
+        return interface.setLevel(this.level);
+      }
     };
     return Entity;
   })();
@@ -366,7 +377,9 @@
       this.setupInterface();
     }
     User.prototype.setupInterface = function() {
-      return this.increaseExperience(0);
+      this.increaseExperience(0);
+      this.setLevel(this.level);
+      return this.changeName(this.name);
     };
     return User;
   })();

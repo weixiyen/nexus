@@ -17,6 +17,8 @@
       this.$myHp = this.$unitframes.find('.hp').first();
       this.$myMp = this.$unitframes.find('.mp').first();
       this.$myXp = this.$canvas.find('.xp').first();
+      this.$myLevel = this.$unitframes.find('.level').first();
+      this.$myName = this.$unitframes.find('.name').first();
       this.reload();
     }
     Interface.prototype.reload = function() {
@@ -63,6 +65,12 @@
       return this.$myXp.css({
         width: percent + '%'
       });
+    };
+    Interface.prototype.setLevel = function(level) {
+      return this.$myLevel.html(level);
+    };
+    Interface.prototype.setName = function(name) {
+      return this.$myName.html(name);
     };
     return Interface;
   })();
