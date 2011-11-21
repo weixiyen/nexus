@@ -8,7 +8,7 @@ def aoe(self, coordinates):
              targets.append(entity)
 
     if targets:
-        damage = 10 / len(targets)
+        damage = (10 * self.level) / len(targets)
 
         for target in targets:
             target.damage_taken(self, damage)

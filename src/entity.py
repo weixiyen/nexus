@@ -9,6 +9,8 @@ LEVEL = {}
 for level in range(1, 20):
     LEVEL[level] = 100 * level
 
+MAX_LEVEL = max(LEVEL.keys())
+
 class Entity(object):
     id = 0
 
@@ -232,7 +234,8 @@ class Entity(object):
         overflow = self.experience['have'] - self.experience['need']
 
         if overflow >= 0:
-            self.level_up(overflow)
+            if self.level < MAX_LEVEL:
+                self.level_up(overflow)
         else:
             self.emit('experience', self.id, amt)
 
