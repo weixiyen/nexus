@@ -11,6 +11,7 @@ class @Entity
     # entity stats
     @id = data.id
     @hp = data.hp
+    @mp = data.mp
     @kind = data.kind
     @name = data.name
     @stats = data.stats
@@ -107,9 +108,20 @@ class @Entity
 
   setHp: (hp)->
     @hp = hp
-    perc = Math.ceil(@hp / @stats.hp * 100) + '%'
+    perc = Math.ceil(@hp / @stats.hp * 100)
     @$elHp.css
-      width: perc
+      width: perc + '%'
+
+    if game.isUserId(@id) then interface.setHp(perc)
+
+  changeMp: (amt)->
+    if !game.isUserId(@id) then return
+    @setMp(@mp + amt)
+
+  setMp: (mp)->
+    @mp = mp
+    perc = Math.ceil(@mp / @stats.mp * 100)
+    interface.setMp(perc)
 
 
 class @MovableEntity extends Entity

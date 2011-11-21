@@ -19,8 +19,7 @@
     map.reset();
     map.setup(data.map);
     game.setUserId(data.me);
-    game.addEntities(data.entities);
-    return game.centerOnUser();
+    return game.addEntities(data.entities);
   });
   events.spawn(function(entity) {
     return game.addEntity(entity);
@@ -42,6 +41,9 @@
   });
   events.setMovementSpeed(function(id, speed) {
     return game.setMovementSpeed(id, speed);
+  });
+  events.mpChange(function(id, mp) {
+    return game.changeMp(id, mp);
   });
   $document.on('keydown', function(e) {
     var captured, code;
@@ -121,5 +123,8 @@
   });
   $window.on('blur', function() {
     return game.panStopAll();
+  });
+  $window.on('resize', function() {
+    return interface.reload();
   });
 }).call(this);

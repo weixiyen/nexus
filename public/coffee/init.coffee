@@ -21,8 +21,6 @@ events.init (data)->
   map.setup(data.map)
   game.setUserId(data.me)
   game.addEntities(data.entities)
-  game.centerOnUser()
-
 
 # spawn an entity
 events.spawn (entity)->
@@ -46,6 +44,9 @@ events.damageTaken (id, amt, isCrit) ->
 
 events.setMovementSpeed (id, speed) ->
   game.setMovementSpeed(id, speed)
+
+events.mpChange (id, mp)->
+  game.changeMp(id, mp)
 
 $document.on 'keydown', (e)->
   captured = false
@@ -113,3 +114,5 @@ game.$canvas.on 'click', '.entity', (e)->
 $window.on 'blur', ->
   game.panStopAll()
 
+$window.on 'resize', ->
+  interface.reload()

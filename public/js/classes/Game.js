@@ -22,6 +22,9 @@
       };
       this.beginLoop();
     }
+    Game.prototype.isUserId = function(id) {
+      return id === this.userId;
+    };
     Game.prototype.beginLoop = function() {
       var gameLoop;
       this.loopCount = 0;
@@ -79,12 +82,14 @@
       return _results;
     };
     Game.prototype.addEntity = function(entityData) {
-      var entity;
+      var entity, isUser;
+      isUser = false;
       if (this.entities[STUB + entityData.id]) {
         return;
       }
       entity = null;
       if (entityData.id === this.userId) {
+        isUser = true;
         entity = new User(entityData);
       } else if (window.hasOwnProperty(entityData.kind)) {
         entity = new window[entityData.kind](entityData);
@@ -96,7 +101,10 @@
         entity.aggro(entity.target);
       }
       this.entities[STUB + entity.id] = entity;
-      return this.addToCanvas(entity.$el);
+      this.addToCanvas(entity.$el);
+      if (isUser) {
+        return this.centerOnUser();
+      }
     };
     Game.prototype.removeEntity = function(entityId) {
       this.entities[STUB + entityId].remove();
@@ -131,6 +139,12 @@
         return;
       }
       return this.entities[STUB + id].takeDamage(amt, isCrit);
+    };
+    Game.prototype.changeMp = function(id, mp) {
+      if (!this.entitiesExist(id)) {
+        return;
+      }
+      return this.entities[STUB + id].changeMp(mp);
     };
     Game.prototype.setMovementSpeed = function(id, speed) {
       if (!this.entitiesExist(id)) {

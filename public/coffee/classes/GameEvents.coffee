@@ -29,6 +29,10 @@ class @GameEvents
     @socket.on 'target', (aggressorId, targetId) ->
       fn(aggressorId, targetId)
 
+  mpChange: (fn)->
+    @socket.on 'mp', (id, mp)->
+      fn(id, mp)
+
   nameChange: (fn) ->
     @socket.on 'name-change', (id, name) ->
       fn(id, name)
@@ -46,4 +50,4 @@ class @GameEvents
 
   userAttack: (attackType, targetId, mousePosition) ->
     @socket.emit('attack', attackType, targetId, mousePosition)
-    #@socket.emit('attack', targetId, attackType)
+#@socket.emit('attack', targetId, attackType)

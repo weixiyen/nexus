@@ -19,6 +19,7 @@
     function Entity(data) {
       this.id = data.id;
       this.hp = data.hp;
+      this.mp = data.mp;
       this.kind = data.kind;
       this.name = data.name;
       this.stats = data.stats;
@@ -121,10 +122,25 @@
     Entity.prototype.setHp = function(hp) {
       var perc;
       this.hp = hp;
-      perc = Math.ceil(this.hp / this.stats.hp * 100) + '%';
-      return this.$elHp.css({
-        width: perc
+      perc = Math.ceil(this.hp / this.stats.hp * 100);
+      this.$elHp.css({
+        width: perc + '%'
       });
+      if (game.isUserId(this.id)) {
+        return interface.setHp(perc);
+      }
+    };
+    Entity.prototype.changeMp = function(amt) {
+      if (!game.isUserId(this.id)) {
+        return;
+      }
+      return this.setMp(this.mp + amt);
+    };
+    Entity.prototype.setMp = function(mp) {
+      var perc;
+      this.mp = mp;
+      perc = Math.ceil(this.mp / this.stats.mp * 100);
+      return interface.setMp(perc);
     };
     return Entity;
   })();

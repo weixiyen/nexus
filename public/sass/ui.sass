@@ -10,6 +10,16 @@ body
     -moz-border-radius: 2px
     border-radius: 2px
 
+.br5
+    -webkit-border-radius: 5px
+    -moz-border-radius: 5px
+    border-radius: 5px
+
+.br10
+    -webkit-border-radius: 10px
+    -moz-border-radius: 10px
+    border-radius: 10px
+
 .ui-map
     position: absolute
     background: #45630a
@@ -68,17 +78,97 @@ body
 
 .ui-interface
     position: absolute
-    bottom: 0
+    top: 0
     left: 0
     width: 0
     height: 0
     z-index: 10000
 
+    .unitframes
+        position: absolute
+        top: 10px
+        left: 5px
+
+        .unit
+            overflow: hidden
+            width: 136px
+            margin: 5px 0 0 5px
+            background: rgba(4, 4, 56, 0.7)
+
+            .avatar
+                float: left
+                height: 36px
+                width: 36px
+                background: url('/public/img/profile_icon_ryu.gif') no-repeat 0 -5px
+
+            .stats
+                float: left
+                height: 36px
+                width: 100px
+
+                .namelevel
+                    color: white
+                    text-shadow: black 0 0 4px
+                    font: bold 11px Arial
+                    text-align: center
+                    width: 100px
+
+                    .name
+                        width: 90px
+                        height: 21px
+                        line-height: 21px
+
+                    .level
+                        color: yellow
+                        float: left
+                        width: 15px
+                        height: 15px
+                        line-height: 15px
+                        font-weight: bold
+                        background: #150b6e
+                        position: relative
+                        top: 3px
+                        left: 3px
+
+                .hpbar
+                    background: #333
+                    border: 1px solid #333
+                    width: 95px
+
+                    .hp
+                        height: 5px
+                        background: #adff2f
+                        max-width: 100%
+                        width: 100%
+
+                .mpbar
+                    background: #333
+                    border: 1px solid #333
+                    width: 95px
+                    position: relative
+
+                    .mp
+                        height: 5px
+                        background: #8dd0ff
+                        max-width: 100%
+                        width: 100%
+
+
+    .minimap
+        background: rgba(4, 4, 56, 0.7)
+        position: absolute
+
+    .chatbox
+        background: rgba(4, 4, 56, 0.7)
+        position: absolute
+
+    .xpbar
+        background: red
+        position: absolute
+
     .abilities
         position: absolute
-        top: -50px
-        height: 50px
-        background: #333
+        background: rgba(4, 4, 56, 0.7)
 
         .ability
             float: left

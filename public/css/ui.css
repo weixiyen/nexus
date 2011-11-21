@@ -10,6 +10,16 @@ body {
   -moz-border-radius: 2px;
   border-radius: 2px; }
 
+.br5 {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px; }
+
+.br10 {
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px; }
+
 .ui-map {
   position: absolute;
   background: #45630a;
@@ -60,16 +70,81 @@ body {
 
 .ui-interface {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   width: 0;
   height: 0;
   z-index: 10000; }
+  .ui-interface .unitframes {
+    position: absolute;
+    top: 10px;
+    left: 5px; }
+    .ui-interface .unitframes .unit {
+      overflow: hidden;
+      width: 136px;
+      margin: 5px 0 0 5px;
+      background: rgba(4, 4, 56, 0.7); }
+      .ui-interface .unitframes .unit .avatar {
+        float: left;
+        height: 36px;
+        width: 36px;
+        background: url("/public/img/profile_icon_ryu.gif") no-repeat 0 -5px; }
+      .ui-interface .unitframes .unit .stats {
+        float: left;
+        height: 36px;
+        width: 100px; }
+        .ui-interface .unitframes .unit .stats .namelevel {
+          color: white;
+          text-shadow: black 0 0 4px;
+          font: bold 11px Arial;
+          text-align: center;
+          width: 100px; }
+          .ui-interface .unitframes .unit .stats .namelevel .name {
+            width: 90px;
+            height: 21px;
+            line-height: 21px; }
+          .ui-interface .unitframes .unit .stats .namelevel .level {
+            color: yellow;
+            float: left;
+            width: 15px;
+            height: 15px;
+            line-height: 15px;
+            font-weight: bold;
+            background: #150b6e;
+            position: relative;
+            top: 3px;
+            left: 3px; }
+        .ui-interface .unitframes .unit .stats .hpbar {
+          background: #333333;
+          border: 1px solid #333333;
+          width: 95px; }
+          .ui-interface .unitframes .unit .stats .hpbar .hp {
+            height: 5px;
+            background: #adff2f;
+            max-width: 100%;
+            width: 100%; }
+        .ui-interface .unitframes .unit .stats .mpbar {
+          background: #333333;
+          border: 1px solid #333333;
+          width: 95px;
+          position: relative; }
+          .ui-interface .unitframes .unit .stats .mpbar .mp {
+            height: 5px;
+            background: #8dd0ff;
+            max-width: 100%;
+            width: 100%; }
+  .ui-interface .minimap {
+    background: rgba(4, 4, 56, 0.7);
+    position: absolute; }
+  .ui-interface .chatbox {
+    background: rgba(4, 4, 56, 0.7);
+    position: absolute; }
+  .ui-interface .xpbar {
+    background: red;
+    position: absolute; }
   .ui-interface .abilities {
     position: absolute;
-    top: -50px;
-    height: 50px;
-    background: #333333; }
+    background: rgba(4, 4, 56, 0.7); }
     .ui-interface .abilities .ability {
       float: left;
       position: relative;

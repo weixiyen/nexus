@@ -20,6 +20,9 @@ class @Game
       down: false
     @beginLoop()
 
+  isUserId: (id)->
+    return id == @userId
+
   beginLoop: ->
     @loopCount = 0
     gameLoop = =>
@@ -57,9 +60,11 @@ class @Game
       @addEntity entity
 
   addEntity: (entityData)->
+    isUser = false
     if @entities[STUB+entityData.id] then return
     entity = null
     if entityData.id == @userId
+      isUser = true
       entity = new User(entityData)
     else if window.hasOwnProperty(entityData.kind)
       entity = new window[entityData.kind](entityData)
@@ -68,6 +73,7 @@ class @Game
     @entities[STUB+entity.id] = entity
 
     @addToCanvas(entity.$el)
+    if isUser then @centerOnUser()
 
   removeEntity: (entityId)->
     @entities[STUB+entityId].remove()
@@ -92,6 +98,10 @@ class @Game
   damageTaken: (id, amt, isCrit) ->
     if !@entitiesExist(id) then return
     @entities[STUB+id].takeDamage(amt, isCrit)
+
+  changeMp: (id, mp)->
+    if !@entitiesExist(id) then return
+    @entities[STUB+id].changeMp(mp)
 
   setMovementSpeed: (id, speed) ->
     if !@entitiesExist(id) then return
