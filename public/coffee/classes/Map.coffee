@@ -4,7 +4,7 @@ GRID_H = 16
 TILE_W = 302
 TILE_H = 176
 
-BUFFER = 2 # for rendering tiles
+BUFFER = 1 # for rendering tiles
 
 class @Map
 
@@ -12,7 +12,14 @@ class @Map
     @$canvas = options.$canvas
     @mouseOffsetX = 0
     @mouseOffsetY = 0
+    @visibleTiles = {}
+    @cachedFragments = {}
+
     @setClientDimensions()
+    @beginRenderLoop()
+
+  beginRenderLoop: ->
+    game.addLoopItem 'map:render', 10, @render
 
   reset: ->
     @$canvas.empty()
@@ -21,7 +28,6 @@ class @Map
     @setDimensions(graph[0].length, graph.length)
     @listenToEvents()
     @setUpTiles()
-    #@renderAllTiles()
 
   setDimensions: (x, y) ->
     @width = GRID_W * x
@@ -60,12 +66,14 @@ class @Map
       for x in [0...20]
         path = ['/public/img/map/', y, '_', x, '.png'].join('')
         @tiles[y][x] = path
+        txy = 't-'+x+'-'+y
+        @cachedFragments[txy] = @getTileFragment(x,y,path)
 
   setClientDimensions: ->
     @clientX = $window.width()
     @clientY = $window.height()
 
-  render: ->
+  render: =>
     left = Math.abs(@left)
     top = Math.abs(@top)
     leftEnd = left + @clientX
@@ -76,24 +84,34 @@ class @Map
     x2 = Math.ceil(leftEnd / TILE_W) + BUFFER
     y2 = Math.ceil(topEnd / TILE_H) + BUFFER
 
-    #@removeVisibleTiles(x1, y1, x2, y2)
+    purgeIds = []
+    for id, stub of @visibleTiles
+      pieces = stub.split('-')
+      x = pieces[1]
+      y = pieces[2]
+      if (x < x1) || (x > x2) || (y < y1) || (y > y2)
+        purgeIds.push('#'+stub)
+        delete @visibleTiles[id]
 
     for y in [y1...y2]
       for x in [x1...x2]
-        continue if !(img=@tiles[y][x])
-        continue if @visibleTiles[y] && @visibleTiles[y][x]
-        @visibleTiles[y][x] = true
-        tile = $('<div/>').css
-          background: "no-repeat url("+img+")"
-          position: "absolute"
-          left: x * TILE_W
-          top: y * TILE_H
-          width: TILE_W
-          height: TILE_H
-        tile.appendTo(@$canvas)
+        txy = 't-'+x+'-'+y
+        continue if !(imgpath=@tiles[y]?[x])
+        continue if @visibleTiles[txy]
 
+        @visibleTiles[txy] = txy
+        @$canvas.append( @cachedFragments[txy] )
 
+    @$canvas.find(purgeIds.join(',')).remove()
     return null
+
+  getTileFragment: (x,y,imgpath) ->
+    left = x * TILE_W
+    top = y * TILE_H
+    html = """
+      <div id="t-#{x}-#{y}" style="background:url(#{imgpath}) no-repeat;top:#{top}px;left:#{left}px;width:#{TILE_W}px;height:#{TILE_H}px;position:absolute;"></div>
+    """
+    return $(html)
 
   renderAllTiles: ->
     htmlArr = []

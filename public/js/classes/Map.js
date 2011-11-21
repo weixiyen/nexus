@@ -5,14 +5,20 @@
   GRID_H = 16;
   TILE_W = 302;
   TILE_H = 176;
-  BUFFER = 2;
+  BUFFER = 1;
   this.Map = (function() {
     function Map(options) {
-      this.$canvas = options.$canvas;
+      this.render = __bind(this.render, this);      this.$canvas = options.$canvas;
       this.mouseOffsetX = 0;
       this.mouseOffsetY = 0;
+      this.visibleTiles = {};
+      this.cachedFragments = {};
       this.setClientDimensions();
+      this.beginRenderLoop();
     }
+    Map.prototype.beginRenderLoop = function() {
+      return game.addLoopItem('map:render', 10, this.render);
+    };
     Map.prototype.reset = function() {
       return this.$canvas.empty();
     };
@@ -53,7 +59,7 @@
       return this.$canvas.css(style);
     };
     Map.prototype.setUpTiles = function() {
-      var path, x, y, _results;
+      var path, txy, x, y, _results;
       this.tiles = [];
       _results = [];
       for (y = 0; y < 20; y++) {
@@ -63,7 +69,9 @@
           _results2 = [];
           for (x = 0; x < 20; x++) {
             path = ['/public/img/map/', y, '_', x, '.png'].join('');
-            _results2.push(this.tiles[y][x] = path);
+            this.tiles[y][x] = path;
+            txy = 't-' + x + '-' + y;
+            _results2.push(this.cachedFragments[txy] = this.getTileFragment(x, y, path));
           }
           return _results2;
         }).call(this));
@@ -75,7 +83,7 @@
       return this.clientY = $window.height();
     };
     Map.prototype.render = function() {
-      var img, left, leftEnd, tile, top, topEnd, x, x1, x2, y, y1, y2;
+      var id, imgpath, left, leftEnd, pieces, purgeIds, stub, top, topEnd, txy, x, x1, x2, y, y1, y2, _ref, _ref2;
       left = Math.abs(this.left);
       top = Math.abs(this.top);
       leftEnd = left + this.clientX;
@@ -84,27 +92,40 @@
       y1 = Math.floor(top / TILE_H) - BUFFER;
       x2 = Math.ceil(leftEnd / TILE_W) + BUFFER;
       y2 = Math.ceil(topEnd / TILE_H) + BUFFER;
-      for (y = y1; y1 <= y2 ? y < y2 : y > y2; y1 <= y2 ? y++ : y--) {
-        for (x = x1; x1 <= x2 ? x < x2 : x > x2; x1 <= x2 ? x++ : x--) {
-          if (!(img = this.tiles[y][x])) {
-            continue;
-          }
-          if (this.visibleTiles[y] && this.visibleTiles[y][x]) {
-            continue;
-          }
-          this.visibleTiles[y][x] = true;
-          tile = $('<div/>').css({
-            background: "no-repeat url(" + img + ")",
-            position: "absolute",
-            left: x * TILE_W,
-            top: y * TILE_H,
-            width: TILE_W,
-            height: TILE_H
-          });
-          tile.appendTo(this.$canvas);
+      purgeIds = [];
+      _ref = this.visibleTiles;
+      for (id in _ref) {
+        stub = _ref[id];
+        pieces = stub.split('-');
+        x = pieces[1];
+        y = pieces[2];
+        if ((x < x1) || (x > x2) || (y < y1) || (y > y2)) {
+          purgeIds.push('#' + stub);
+          delete this.visibleTiles[id];
         }
       }
+      for (y = y1; y1 <= y2 ? y < y2 : y > y2; y1 <= y2 ? y++ : y--) {
+        for (x = x1; x1 <= x2 ? x < x2 : x > x2; x1 <= x2 ? x++ : x--) {
+          txy = 't-' + x + '-' + y;
+          if (!(imgpath = (_ref2 = this.tiles[y]) != null ? _ref2[x] : void 0)) {
+            continue;
+          }
+          if (this.visibleTiles[txy]) {
+            continue;
+          }
+          this.visibleTiles[txy] = txy;
+          this.$canvas.append(this.cachedFragments[txy]);
+        }
+      }
+      this.$canvas.find(purgeIds.join(',')).remove();
       return null;
+    };
+    Map.prototype.getTileFragment = function(x, y, imgpath) {
+      var html, left, top;
+      left = x * TILE_W;
+      top = y * TILE_H;
+      html = "<div id=\"t-" + x + "-" + y + "\" style=\"background:url(" + imgpath + ") no-repeat;top:" + top + "px;left:" + left + "px;width:" + TILE_W + "px;height:" + TILE_H + "px;position:absolute;\"></div>";
+      return $(html);
     };
     Map.prototype.renderAllTiles = function() {
       var htmlArr, img, row, tile, x, y, _len, _ref, _results;
