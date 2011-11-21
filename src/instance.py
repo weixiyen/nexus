@@ -22,7 +22,7 @@ class Instance(object):
 
         self.players = set()
 
-        self.map = Map(200, 200)
+        self.map = Map(188, 219)
         self._entities = {}
         self._emit_buffer = []
 
