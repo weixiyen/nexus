@@ -40,13 +40,6 @@ class SocketConnection(tornadio2.conn.SocketConnection):
 
         self.emit('initialize', state)
 
-    @tornadio2.event('spawn')
-    def spawn(self):
-        for i in xrange(100):
-            self.instance.spawn('Minion', kind=mob.Minion, hp=10, attack=1)
-
-        self.instance.spawn('Turret', kind=mob.Turret, hp=100, attack=3)
-
     @tornadio2.event('attack')
     def attack(self, ability, target_id, coordinates):
         self.player.set_target(target_id)
