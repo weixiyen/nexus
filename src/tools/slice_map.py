@@ -17,4 +17,4 @@ for i in xrange(pieces):
         box = ((box_w * j, box_h * i, box_w * (j + 1), box_h * (i + 1)))
         print box
         slice = image.crop(box)
-        slice.save(os.path.join(directory, '%d_%d.png' % (i, j)))
+        slice.save(os.path.join(directory, '%d_%d.jpg' % (i, j)), 'JPEG', quality=90)

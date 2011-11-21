@@ -68,7 +68,7 @@
           var _results2;
           _results2 = [];
           for (x = 0; x < 20; x++) {
-            path = ['/public/img/map/', y, '_', x, '.png'].join('');
+            path = ['/public/img/map/', y, '_', x, '.jpg'].join('');
             this.tiles[y][x] = path;
             txy = 't-' + x + '-' + y;
             _results2.push(this.cachedFragments[txy] = this.getTileFragment(x, y, path));

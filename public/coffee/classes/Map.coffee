@@ -64,7 +64,7 @@ class @Map
     for y in [0...20]
       @tiles[y] = []
       for x in [0...20]
-        path = ['/public/img/map/', y, '_', x, '.png'].join('')
+        path = ['/public/img/map/', y, '_', x, '.jpg'].join('')
         @tiles[y][x] = path
         txy = 't-'+x+'-'+y
         @cachedFragments[txy] = @getTileFragment(x,y,path)
