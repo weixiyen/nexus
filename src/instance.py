@@ -21,7 +21,7 @@ class Instance(object):
 
         self.players = set()
 
-        self.map = Map(50, 50)
+        self.map = Map(200, 200)
         self._entities = {}
 
         self.iteration_counter = 0
