@@ -5,7 +5,6 @@ import os
 import tornadio2
 import uuid
 from instance import Instance
-import mob
 
 ROOT_PATH = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(ROOT_PATH, '../public')
