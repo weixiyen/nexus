@@ -3,9 +3,34 @@
   abilities = [
     {
       attack: 1,
-      background: 108,
-      name: "Attack",
-      keyCode: 1
+      bgIndex: 1,
+      name: "AoE",
+      keyCode: 49,
+      key: 1
+    }, {
+      attack: 2,
+      bgIndex: 2,
+      name: "Slow",
+      keyCode: 50,
+      key: 2
+    }, {
+      attack: 3,
+      bgIndex: 4,
+      name: "Flee",
+      keyCode: 51,
+      key: 3
+    }, {
+      attack: 4,
+      bgIndex: 5,
+      name: "Slow",
+      keyCode: 52,
+      key: 4
+    }, {
+      attack: 5,
+      bgIndex: 0,
+      name: "Slow",
+      keyCode: 53,
+      key: 5
     }
   ];
   this.Interface = (function() {
@@ -90,15 +115,16 @@
       _results = [];
       for (_i = 0, _len = abilities.length; _i < _len; _i++) {
         abilityData = abilities[_i];
-        _results.push(console.log(abilityData));
+        _results.push(this.$abilities.append(this.getAbilityIconFragment(abilityData)));
       }
       return _results;
     };
     Interface.prototype.getAbilityIconFragment = function(data) {
-      var html;
-      console.log(data);
-      html = "<div>lol</div>";
-      return this(html);
+      var bgPos, html, key;
+      bgPos = (-data.bgIndex * 36) + 'px ' + 0;
+      key = data.key;
+      html = "<div class=\"ability\">\n  <div class=\"key\">" + key + "</div>\n  <div class=\"frame\"></div>\n  <div class=\"icon\" style=\"background-position:" + bgPos + "\"></div>\n</div>";
+      return $(html);
     };
     return Interface;
   })();

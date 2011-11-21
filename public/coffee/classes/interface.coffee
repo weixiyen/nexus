@@ -1,10 +1,38 @@
-#'<div class="ability attack"><div class="frame"></div><div class="icon">1</div></div>'
 abilities = [
   {
     attack: 1,
-    background: 108, # horizontal offset on sprite
-    name: "Attack",
-    keyCode: 1
+    bgIndex: 1,
+    name: "AoE",
+    keyCode: 49,
+    key: 1
+  }
+  {
+    attack: 2,
+    bgIndex: 2,
+    name: "Slow",
+    keyCode: 50,
+    key: 2
+  }
+  {
+    attack: 3,
+    bgIndex: 4,
+    name: "Flee",
+    keyCode: 51,
+    key: 3
+  }
+  {
+    attack: 4,
+    bgIndex: 5,
+    name: "Slow",
+    keyCode: 52,
+    key: 4
+  }
+  {
+    attack: 5,
+    bgIndex: 0,
+    name: "Slow",
+    keyCode: 53,
+    key: 5
   }
 ]
 class @Interface
@@ -18,7 +46,6 @@ class @Interface
   ABILITY_BAR_HEIGHT = 60
 
   XPBAR_HEIGHT = 5
-
 
   constructor: (options)->
     @$canvas = options.$canvas
@@ -87,12 +114,16 @@ class @Interface
 
   addAbilityIcons: ->
     for abilityData in abilities
-      console.log abilityData
-      #@getAbilityIconFragment(abilityData)
+      @$abilities.append(@getAbilityIconFragment(abilityData))
 
   getAbilityIconFragment: (data)->
-    console.log data
+    bgPos = (-data.bgIndex * 36) + 'px ' + 0
+    key = data.key
     html = """
-    <div>lol</div>
+    <div class="ability">
+      <div class="key">#{key}</div>
+      <div class="frame"></div>
+      <div class="icon" style="background-position:#{bgPos}"></div>
+    </div>
     """
-    return @(html)
+    return $(html)

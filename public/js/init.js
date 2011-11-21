@@ -104,21 +104,8 @@
       captured = true;
       game.panStop('up');
     }
-    if (code === 81) {
-      captured = true;
-      game.userAttack(1);
-    }
-    if (code === 69) {
-      captured = true;
-      game.userAttack(2);
-    }
-    if (code === 82) {
-      captured = true;
-      game.userAttack(3);
-    }
-    if (code === 70) {
-      captured = true;
-      game.userAttack(4);
+    if (code >= 49 && code <= 54) {
+      game.userAttack(code - 48);
     }
     if (captured === true) {
       e.preventDefault();
@@ -128,6 +115,7 @@
   map.$canvas.on('click', '.entity', function(e) {
     var entity;
     e.stopPropagation();
+    e.preventDefault();
     entity = $(this).data('entity');
     game.setUserTarget(entity.id);
     return events.userAttack(0, entity.id, [map.getMouseCoords()]);

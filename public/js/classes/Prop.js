@@ -29,8 +29,8 @@
         id: STUB + this.id,
         "class": 'prop ' + this.type,
         css: {
-          left: this.left,
-          top: this.top - this.height,
+          left: this.left - this.width / 2,
+          top: this.top - this.height / 2,
           width: this.width,
           height: this.height,
           zIndex: this.top,

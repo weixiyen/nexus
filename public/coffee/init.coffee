@@ -97,20 +97,9 @@ $document.on 'keyup', (e)->
   if code == 83
     captured = true
     game.panStop('up')
-
   # user abilities
-  if code == 81 # Q
-    captured = true
-    game.userAttack(1)
-  if code == 69 # E
-    captured = true
-    game.userAttack(2)
-  if code == 82 # R
-    captured = true
-    game.userAttack(3)
-  if code == 70 # F
-    captured = true
-    game.userAttack(4)
+  if code >= 49 && code <= 54
+    game.userAttack(code - 48)
 
   if captured == true
     e.preventDefault()
@@ -118,6 +107,7 @@ $document.on 'keyup', (e)->
 
 map.$canvas.on 'click', '.entity', (e)->
   e.stopPropagation()
+  e.preventDefault()
   entity = $(@).data('entity')
   game.setUserTarget(entity.id)
   events.userAttack(0, entity.id, [map.getMouseCoords()])

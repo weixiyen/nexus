@@ -168,6 +168,9 @@ img {
       font: bold 11px Arial;
       top: 4px;
       left: 3px; }
+      .ui-interface .abilities .ability .key {
+        position: absolute;
+        z-index: 3; }
       .ui-interface .abilities .ability .frame {
         height: 46px;
         width: 46px;

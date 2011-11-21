@@ -13,15 +13,15 @@ class @Prop
     @left = @x * GRID_W
     @top = @y * GRID_H
 
-
   create: ->
     if !@bgPos then @bgPos = '0 0'
+
     @$el = $ '<div/>',
       id: STUB + @id
       class: 'prop '+@type
       css:
-        left: @left
-        top: @top - @height
+        left: @left - @width / 2
+        top: @top - @height / 2
         width: @width
         height: @height
         zIndex: @top
