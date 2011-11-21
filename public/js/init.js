@@ -19,7 +19,9 @@
     map.reset();
     map.setup(data.map);
     game.setUserId(data.me);
-    return game.addEntities(data.entities);
+    game.addEntities(data.entities);
+    game.addProps(data.props);
+    return game.centerOnUser();
   });
   events.spawn(function(entity) {
     return game.addEntity(entity);

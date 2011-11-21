@@ -32,6 +32,8 @@ img {
   z-index: 1000;
   height: 0;
   width: 0; }
+  .ui-game .prop {
+    position: absolute; }
   .ui-game .entity {
     position: absolute; }
     .ui-game .entity .body {

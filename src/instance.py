@@ -55,8 +55,11 @@ class Instance(object):
             for i in xrange(2):
                 instance.spawn('Nexus', kind=mob.Nexus, hp=1000)
 
-            for i in xrange(50):
-                instance.place(kind=prop.Tree)
+            for i in xrange(15):
+                instance.place(kind=prop.Tree1)
+                instance.place(kind=prop.Tree2)
+                instance.place(kind=prop.Tree3)
+                instance.place(kind=prop.Tree4)
 
             instance.start()
 

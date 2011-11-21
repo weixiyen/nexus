@@ -1,8 +1,9 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __slice = Array.prototype.slice;
   this.Game = (function() {
-    var PAN_DIST, PAN_SPEED, STUB, UI_HEIGHT;
+    var PAN_DIST, PAN_SPEED, PROP, STUB, UI_HEIGHT;
     STUB = 'ent-';
+    PROP = 'prop-';
     PAN_SPEED = 1;
     PAN_DIST = 15;
     UI_HEIGHT = 50;
@@ -10,6 +11,7 @@
       this.$canvas = options.$canvas;
       this.loopItems = {};
       this.entities = {};
+      this.props = {};
       this.left = 0;
       this.top = 0;
       this.userId = null;
@@ -84,7 +86,7 @@
     Game.prototype.addEntity = function(entityData) {
       var entity, isUser;
       isUser = false;
-      if (this.entities[STUB + entityData.id]) {
+      if (this.entitiesExist(entityData.id)) {
         return;
       }
       entity = null;
@@ -105,6 +107,30 @@
       if (isUser) {
         return this.centerOnUser();
       }
+    };
+    Game.prototype.addProps = function(props) {
+      var prop, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = props.length; _i < _len; _i++) {
+        prop = props[_i];
+        _results.push(this.addProp(prop));
+      }
+      return _results;
+    };
+    Game.prototype.addProp = function(propData) {
+      var prop;
+      if (this.propsExist(propData.id)) {
+        return;
+      }
+      prop = null;
+      if (window.hasOwnProperty(propData.kind)) {
+        prop = new window[propData.kind](propData);
+      }
+      if (prop === null) {
+        return;
+      }
+      this.props[PROP + propData.id] = prop;
+      return this.addToCanvas(prop.$el);
     };
     Game.prototype.removeEntity = function(entityId) {
       this.entities[STUB + entityId].remove();
@@ -158,6 +184,17 @@
       for (_i = 0, _len = ids.length; _i < _len; _i++) {
         id = ids[_i];
         if (!this.entities[STUB + id]) {
+          return false;
+        }
+      }
+      return true;
+    };
+    Game.prototype.propsExist = function() {
+      var id, ids, _i, _len;
+      ids = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      for (_i = 0, _len = ids.length; _i < _len; _i++) {
+        id = ids[_i];
+        if (!this.props[PROP + id]) {
           return false;
         }
       }

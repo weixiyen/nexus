@@ -1,6 +1,7 @@
 class @Game
 
   STUB = 'ent-'
+  PROP = 'prop-'
   PAN_SPEED = 1
   PAN_DIST = 15
   UI_HEIGHT = 50 #height of bottom interface used to center user correctly
@@ -9,6 +10,7 @@ class @Game
     @$canvas = options.$canvas
     @loopItems = {}
     @entities = {}
+    @props = {}
     @left = 0
     @top = 0
     @userId = null
@@ -61,7 +63,7 @@ class @Game
 
   addEntity: (entityData)->
     isUser = false
-    if @entities[STUB+entityData.id] then return
+    if @entitiesExist(entityData.id) then return
     entity = null
     if entityData.id == @userId
       isUser = true
@@ -74,6 +76,20 @@ class @Game
 
     @addToCanvas(entity.$el)
     if isUser then @centerOnUser()
+
+  addProps: (props)->
+    for prop in props
+      @addProp prop
+
+  addProp: (propData)->
+    if @propsExist(propData.id) then return
+    prop = null
+    if window.hasOwnProperty(propData.kind)
+      prop = new window[propData.kind](propData)
+    if prop == null then return
+    @props[PROP+propData.id] = prop
+
+    @addToCanvas(prop.$el)
 
   removeEntity: (entityId)->
     @entities[STUB+entityId].remove()
@@ -110,6 +126,11 @@ class @Game
   entitiesExist: (ids...) ->
     for id in ids
       if !@entities[STUB+id] then return false
+    return true
+
+  propsExist: (ids...) ->
+    for id in ids
+      if !@props[PROP+id] then return false
     return true
 
   userAttack: (attackType)->

@@ -26,6 +26,14 @@ class Prop(object):
             'y': self.y
         }
 
-class Tree(Prop):
+class Tree1(Prop):
     pass
 
+class Tree2(Prop):
+    pass
+
+class Tree3(Prop):
+    pass
+
+class Tree4(Prop):
+    pass
