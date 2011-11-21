@@ -270,9 +270,9 @@ class Entity(object):
             amt = hp - self.hp
 
             if amt > 0:
-                self.emit('heal', amt)
+                self.emit('heal', self.id, amt)
         else:
-            self.emit('heal', amt)
+            self.emit('heal', self.id, amt)
 
         self.hp = hp
 

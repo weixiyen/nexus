@@ -19,4 +19,4 @@ class Nexus(Entity):
                 if isinstance(entity, PlayerEntity):
                     entity.heal(5)
                 else:
-                    entity.damage_taken(None, 1)
+                    entity.damage_taken(None, 5)
