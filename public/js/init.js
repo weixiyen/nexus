@@ -142,4 +142,5 @@
     interface.reload();
     return map.setClientDimensions();
   });
+  $document.disableSelection();
 }).call(this);

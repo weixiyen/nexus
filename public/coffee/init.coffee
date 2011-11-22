@@ -134,3 +134,5 @@ $window.on 'blur', ->
 $window.on 'resize', (e)->
   interface.reload()
   map.setClientDimensions()
+
+$document.disableSelection()

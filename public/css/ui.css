@@ -3,7 +3,8 @@ body {
   padding: 0;
   margin: 0;
   background: black;
-  font-family: Arial; }
+  font-family: Arial;
+  cursor: pointer; }
 
 img {
   border: none; }
