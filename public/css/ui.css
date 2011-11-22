@@ -4,7 +4,7 @@ body {
   margin: 0;
   background: black;
   font-family: Arial;
-  cursor: pointer; }
+  cursor: not-allowed; }
 
 img {
   border: none; }
@@ -26,7 +26,8 @@ img {
 
 .ui-map {
   position: absolute;
-  z-index: 100; }
+  z-index: 100;
+  cursor: pointer; }
 
 .ui-game {
   position: absolute;
