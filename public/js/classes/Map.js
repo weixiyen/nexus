@@ -85,25 +85,17 @@
       return _results;
     };
     Map.prototype.associatePropsToTiles = function() {
-      var id, prop, txy, x, y, _ref;
+      var id, prop, txy, x, y, _ref, _results;
       _ref = game.props;
+      _results = [];
       for (id in _ref) {
         prop = _ref[id];
         x = Math.floor(prop.left / TILE_W);
         y = Math.floor(prop.top / TILE_H);
         txy = 't-' + x + '-' + y;
-        if (this.cachedProps[txy]) {
-          this.cachedProps[txy].push(prop);
-        } else {
-          this.cachedProps[txy] = [prop];
-        }
+        _results.push(this.cachedProps[txy] ? this.cachedProps[txy].push(prop) : this.cachedProps[txy] = [prop]);
       }
-      return this.freshRender();
-    };
-    Map.prototype.freshRender = function() {
-      this.$canvas.empty();
-      this.visibleTiles = {};
-      return this.render();
+      return _results;
     };
     Map.prototype.setClientDimensions = function() {
       this.clientX = $window.width();

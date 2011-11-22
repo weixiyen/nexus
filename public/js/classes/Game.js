@@ -77,14 +77,12 @@
       me = this.entities[STUB + this.userId];
       this.left = -me.left - me.width / 2 + $window.width() / 2;
       this.top = -me.top - me.height / 2 + $window.height() / 2 - UI_HEIGHT;
-      this.renderOffset();
-      return map.render();
+      return this.renderOffset();
     };
     Game.prototype.centerOnMap = function() {
       this.left = -Math.round(map.width / 2);
       this.top = -Math.round(map.height / 2);
-      this.renderOffset();
-      return map.render();
+      return this.renderOffset();
     };
     Game.prototype.addEntities = function(entities) {
       var entity, _i, _len, _results;
@@ -280,15 +278,13 @@
         return;
       }
       this.panning[dir] = true;
-      this.addLoopItem('pan:' + dir, PAN_SPEED, __bind(function() {
+      return this.addLoopItem('pan:' + dir, PAN_SPEED, __bind(function() {
         return this.pan(dir);
       }, this));
-      return map.startRenderLoop();
     };
     Game.prototype.panStop = function(dir) {
       this.panning[dir] = false;
-      this.removeLoopItem('pan:' + dir);
-      return map.stopRenderLoop();
+      return this.removeLoopItem('pan:' + dir);
     };
     Game.prototype.panStopAll = function() {
       var dir, value, _ref, _results;

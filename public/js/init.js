@@ -21,7 +21,8 @@
     game.setUserId(data.me);
     game.addEntities(data.entities);
     game.addProps(data.props);
-    return game.centerOnUser();
+    game.centerOnUser();
+    return map.startRenderLoop();
   });
   events.spawn(function(entity) {
     return game.addEntity(entity);

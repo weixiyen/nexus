@@ -84,12 +84,6 @@ class @Map
         @cachedProps[txy].push(prop)
       else
         @cachedProps[txy] = [prop]
-    @freshRender()
-
-  freshRender: ->
-    @$canvas.empty()
-    @visibleTiles = {}
-    @render()
 
   setClientDimensions: ->
     @clientX = $window.width()

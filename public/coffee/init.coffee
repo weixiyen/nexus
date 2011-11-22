@@ -23,6 +23,7 @@ events.init (data)->
   game.addEntities(data.entities)
   game.addProps(data.props)
   game.centerOnUser()
+  map.startRenderLoop()
 
 # spawn an entity
 events.spawn (entity)->
