@@ -55,9 +55,10 @@
         left: this.width / 2 - 5,
         top: -35
       });
-      return this.$el.prepend(this.$targetArrow);
+      return this.$el.addClass('targeted').prepend(this.$targetArrow);
     };
     Entity.prototype.removeUserTarget = function() {
+      this.$el.removeClass('targeted');
       return this.$targetArrow.remove();
     };
     Entity.prototype.create = function() {

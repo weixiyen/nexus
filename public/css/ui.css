@@ -38,6 +38,14 @@ img {
     position: absolute; }
     .ui-game .entity .body {
       position: absolute; }
+    .ui-game .entity.user:hover, .ui-game .entity.player:hover, .ui-game .entity.unit:hover {
+      cursor: pointer; }
+      .ui-game .entity.user:hover .name, .ui-game .entity.player:hover .name, .ui-game .entity.unit:hover .name {
+        color: #6cbfff; }
+    .ui-game .entity.user.targeted, .ui-game .entity.player.targeted, .ui-game .entity.unit.targeted {
+      cursor: pointer; }
+      .ui-game .entity.user.targeted .name, .ui-game .entity.player.targeted .name, .ui-game .entity.unit.targeted .name {
+        color: #6cbfff; }
     .ui-game .entity.user .name {
       color: white;
       text-shadow: black 0 0 4px;

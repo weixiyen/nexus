@@ -42,9 +42,10 @@ class @Entity
       position: 'absolute'
       left: @width / 2 - 5
       top: -35
-    @$el.prepend(@$targetArrow)
+    @$el.addClass('targeted').prepend(@$targetArrow)
 
   removeUserTarget: ->
+    @$el.removeClass('targeted')
     @$targetArrow.remove()
 
   create: ->

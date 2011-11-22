@@ -119,6 +119,9 @@
       return e.stopPropagation();
     }
   });
+  $document.on('contextmenu', function(e) {
+    return e.preventDefault();
+  });
   game.$canvas.on('click', '.entity', function(e) {
     var entity;
     entity = $(this).data('entity');

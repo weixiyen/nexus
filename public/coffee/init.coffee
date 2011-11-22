@@ -114,6 +114,9 @@ $document.on 'keyup', (e)->
     e.preventDefault()
     e.stopPropagation()
 
+$document.on 'contextmenu', (e)->
+  e.preventDefault()
+
 game.$canvas.on 'click', '.entity', (e)->
   entity = $(@).data('entity')
   game.setUserTarget(entity.id)

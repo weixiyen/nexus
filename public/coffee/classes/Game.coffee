@@ -185,8 +185,6 @@ class @Game
     events.userAttack(attackType, targetId, mouseCoords)
     interface.releaseAbilityIcon(attackType)
 
-
-
   addToCanvas: ($element)->
     @$canvas.append($element)
 
