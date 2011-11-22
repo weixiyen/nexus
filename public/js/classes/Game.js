@@ -134,13 +134,12 @@
       return interface.reloadUser();
     };
     Game.prototype.addProps = function(props) {
-      var prop, _i, _len, _results;
-      _results = [];
+      var prop, _i, _len;
       for (_i = 0, _len = props.length; _i < _len; _i++) {
         prop = props[_i];
-        _results.push(this.addProp(prop));
+        this.addProp(prop);
       }
-      return _results;
+      return map.associatePropsToTiles();
     };
     Game.prototype.addProp = function(propData) {
       var prop;
@@ -154,8 +153,7 @@
       if (prop === null) {
         return;
       }
-      this.props[PROP + propData.id] = prop;
-      return this.addToCanvas(prop.$el);
+      return this.props[PROP + propData.id] = prop;
     };
     Game.prototype.removeEntity = function(entityId) {
       this.entities[STUB + entityId].remove();

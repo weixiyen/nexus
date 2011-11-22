@@ -15,6 +15,7 @@
   this.Prop = (function() {
     function Prop(data) {
       this.id = data.id;
+      this.elementId = STUB + this.id;
       this.kind = data.kind;
       this.x = data.x;
       this.y = data.y;
@@ -26,8 +27,8 @@
         this.bgPos = '0 0';
       }
       return this.$el = $('<div/>', {
-        id: STUB + this.id,
-        "class": 'prop ' + this.type,
+        id: this.elementId,
+        "class": 'prop',
         css: {
           left: this.left - this.width / 2,
           top: this.top - this.height / 2,
@@ -49,7 +50,6 @@
       Tree.__super__.constructor.apply(this, arguments);
       this.height = 300;
       this.width = 300;
-      this.type = data.type;
       this.imgurl = IMGPATH + 'sprite_tree.png';
       this.create();
     }
@@ -61,7 +61,6 @@
       Rock.__super__.constructor.apply(this, arguments);
       this.height = 150;
       this.width = 150;
-      this.type = data.type;
       this.imgurl = IMGPATH + 'sprite_rock.png';
       this.create();
     }

@@ -7,6 +7,7 @@ STUB = 'prop-'
 class @Prop
   constructor: (data)->
     @id = data.id
+    @elementId = STUB + @id
     @kind = data.kind
     @x = data.x
     @y = data.y
@@ -17,8 +18,8 @@ class @Prop
     if !@bgPos then @bgPos = '0 0'
 
     @$el = $ '<div/>',
-      id: STUB + @id
-      class: 'prop '+@type
+      id: @elementId
+      class: 'prop'
       css:
         left: @left - @width / 2
         top: @top - @height / 2
@@ -34,7 +35,6 @@ class @Tree extends Prop
     super
     @height = 300
     @width = 300
-    @type = data.type
     @imgurl = IMGPATH + 'sprite_tree.png'
     @create()
 
@@ -43,7 +43,6 @@ class @Rock extends Prop
     super
     @height = 150
     @width = 150
-    @type = data.type
     @imgurl = IMGPATH + 'sprite_rock.png'
     @create()
 

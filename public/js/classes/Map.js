@@ -1,11 +1,12 @@
 (function() {
-  var BUFFER, GRID_H, GRID_W, TILE_H, TILE_W;
+  var BUFFER, GRID_H, GRID_W, RENDER_INTERVAL, TILE_H, TILE_W;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   GRID_W = 32;
   GRID_H = 16;
   TILE_W = 302;
   TILE_H = 176;
   BUFFER = 1;
+  RENDER_INTERVAL = 8;
   this.Map = (function() {
     function Map(options) {
       this.render = __bind(this.render, this);      this.$canvas = options.$canvas;
@@ -13,13 +14,14 @@
       this.mouseOffsetY = 0;
       this.visibleTiles = {};
       this.cachedFragments = {};
+      this.cachedProps = {};
       this.setClientDimensions();
     }
     Map.prototype.startRenderLoop = function() {
-      return game.addLoopItem('map:render', 12, this.render);
+      return game.addLoopItem('map:render', RENDER_INTERVAL, this.render);
     };
     Map.prototype.stopRenderLoop = function() {
-      return game.removeLoopItem('map.render');
+      return game.removeLoopItem('map:render');
     };
     Map.prototype.reset = function() {
       this.$canvas.empty();
@@ -82,6 +84,27 @@
       }
       return _results;
     };
+    Map.prototype.associatePropsToTiles = function() {
+      var id, prop, txy, x, y, _ref;
+      _ref = game.props;
+      for (id in _ref) {
+        prop = _ref[id];
+        x = Math.floor(prop.left / TILE_W);
+        y = Math.floor(prop.top / TILE_H);
+        txy = 't-' + x + '-' + y;
+        if (this.cachedProps[txy]) {
+          this.cachedProps[txy].push(prop);
+        } else {
+          this.cachedProps[txy] = [prop];
+        }
+      }
+      return this.freshRender();
+    };
+    Map.prototype.freshRender = function() {
+      this.$canvas.empty();
+      this.visibleTiles = {};
+      return this.render();
+    };
     Map.prototype.setClientDimensions = function() {
       this.clientX = $window.width();
       return this.clientY = $window.height();
@@ -90,7 +113,7 @@
       return this.$canvas.append($element);
     };
     Map.prototype.render = function() {
-      var id, imgpath, left, leftEnd, pieces, purgeIds, stub, top, topEnd, txy, x, x1, x2, y, y1, y2, _ref, _ref2;
+      var $propsToRender, $tilesToRender, id, imgpath, left, leftEnd, pieces, prop, propPurgeIds, props, purgeIds, stub, top, topEnd, txy, x, x1, x2, y, y1, y2, _i, _j, _len, _len2, _ref, _ref2;
       left = Math.abs(this.left);
       top = Math.abs(this.top);
       leftEnd = left + this.clientX;
@@ -100,6 +123,7 @@
       x2 = Math.ceil(leftEnd / TILE_W) + BUFFER;
       y2 = Math.ceil(topEnd / TILE_H) + BUFFER;
       purgeIds = [];
+      propPurgeIds = [];
       _ref = this.visibleTiles;
       for (id in _ref) {
         stub = _ref[id];
@@ -109,8 +133,17 @@
         if ((x > 0 && y > 0) && ((x < x1) || (x > x2) || (y < y1) || (y > y2))) {
           purgeIds.push('#' + stub);
           delete this.visibleTiles[id];
+          if (!(props = this.cachedProps[id])) {
+            continue;
+          }
+          for (_i = 0, _len = props.length; _i < _len; _i++) {
+            prop = props[_i];
+            propPurgeIds.push('#' + prop.elementId);
+          }
         }
       }
+      $tilesToRender = [];
+      $propsToRender = [];
       for (y = y1; y1 <= y2 ? y < y2 : y > y2; y1 <= y2 ? y++ : y--) {
         for (x = x1; x1 <= x2 ? x < x2 : x > x2; x1 <= x2 ? x++ : x--) {
           txy = 't-' + x + '-' + y;
@@ -121,10 +154,28 @@
             continue;
           }
           this.visibleTiles[txy] = txy;
-          this.$canvas.append(this.cachedFragments[txy]);
+          $tilesToRender.push(this.cachedFragments[txy]);
+          if (!(props = this.cachedProps[txy])) {
+            continue;
+          }
+          for (_j = 0, _len2 = props.length; _j < _len2; _j++) {
+            prop = props[_j];
+            $propsToRender.push(prop.$el);
+          }
         }
       }
-      this.$canvas.find(purgeIds.join(',')).remove();
+      if ($tilesToRender.length > 0) {
+        this.$canvas.append.apply(this.$canvas, $tilesToRender);
+      }
+      if (purgeIds.length > 0) {
+        this.$canvas.find(purgeIds.join(',')).remove();
+      }
+      if ($propsToRender.length > 0) {
+        game.$canvas.append.apply(game.$canvas, $propsToRender);
+      }
+      if (propPurgeIds.length > 0) {
+        game.$canvas.find(propPurgeIds.join(',')).remove();
+      }
       return null;
     };
     Map.prototype.getTileFragment = function(x, y, imgpath) {

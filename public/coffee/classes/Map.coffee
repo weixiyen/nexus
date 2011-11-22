@@ -5,6 +5,7 @@ TILE_W = 302
 TILE_H = 176
 
 BUFFER = 1 # for rendering tiles
+RENDER_INTERVAL = 8
 
 class @Map
 
@@ -14,14 +15,15 @@ class @Map
     @mouseOffsetY = 0
     @visibleTiles = {}
     @cachedFragments = {}
+    @cachedProps = {}
 
     @setClientDimensions()
 
   startRenderLoop: ->
-    game.addLoopItem('map:render', 12, @render)
+    game.addLoopItem('map:render', RENDER_INTERVAL, @render)
 
   stopRenderLoop: ->
-    game.removeLoopItem('map.render')
+    game.removeLoopItem('map:render')
 
   reset: ->
     @$canvas.empty()
@@ -73,6 +75,22 @@ class @Map
         txy = 't-'+x+'-'+y
         @cachedFragments[txy] = @getTileFragment(x,y,path)
 
+  associatePropsToTiles: ->
+    for id, prop of game.props
+      x = Math.floor(prop.left / TILE_W)
+      y = Math.floor(prop.top / TILE_H)
+      txy = 't-'+x+'-'+y
+      if @cachedProps[txy]
+        @cachedProps[txy].push(prop)
+      else
+        @cachedProps[txy] = [prop]
+    @freshRender()
+
+  freshRender: ->
+    @$canvas.empty()
+    @visibleTiles = {}
+    @render()
+
   setClientDimensions: ->
     @clientX = $window.width()
     @clientY = $window.height()
@@ -93,6 +111,7 @@ class @Map
     y2 = Math.ceil(topEnd / TILE_H) + BUFFER
 
     purgeIds = []
+    propPurgeIds = []
     for id, stub of @visibleTiles
       pieces = stub.split('-')
       x = pieces[1]
@@ -100,7 +119,12 @@ class @Map
       if (x > 0 && y > 0) && ( (x < x1) || (x > x2) || (y < y1) || (y > y2) )
         purgeIds.push('#'+stub)
         delete @visibleTiles[id]
+        continue if !(props=@cachedProps[id])
+        for prop in props
+          propPurgeIds.push('#'+prop.elementId)
 
+    $tilesToRender = []
+    $propsToRender = []
     for y in [y1...y2]
       for x in [x1...x2]
         txy = 't-'+x+'-'+y
@@ -108,9 +132,17 @@ class @Map
         continue if @visibleTiles[txy]
 
         @visibleTiles[txy] = txy
-        @$canvas.append( @cachedFragments[txy] )
+        $tilesToRender.push(@cachedFragments[txy])
+        continue if !(props=@cachedProps[txy])
+        for prop in props
+          $propsToRender.push(prop.$el)
 
-    @$canvas.find(purgeIds.join(',')).remove()
+    @$canvas.append.apply(@$canvas,$tilesToRender) if $tilesToRender.length > 0
+    @$canvas.find(purgeIds.join(',')).remove() if purgeIds.length > 0
+
+    game.$canvas.append.apply(game.$canvas,$propsToRender) if $propsToRender.length > 0
+    game.$canvas.find(propPurgeIds.join(',')).remove() if propPurgeIds.length > 0
+
     return null
 
   getTileFragment: (x,y,imgpath) ->

@@ -104,6 +104,7 @@ class @Game
   addProps: (props)->
     for prop in props
       @addProp prop
+    map.associatePropsToTiles()
 
   addProp: (propData)->
     if @propsExist(propData.id) then return
@@ -113,7 +114,7 @@ class @Game
     if prop == null then return
     @props[PROP+propData.id] = prop
 
-    @addToCanvas(prop.$el)
+    #@addToCanvas(prop.$el)
 
   removeEntity: (entityId)->
     @entities[STUB+entityId].remove()
