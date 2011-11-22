@@ -43,9 +43,13 @@ img {
       cursor: pointer; }
       .ui-game .entity.user:hover .name, .ui-game .entity.player:hover .name, .ui-game .entity.unit:hover .name {
         color: #6cbfff; }
+      .ui-game .entity.user:hover .name.red, .ui-game .entity.player:hover .name.red, .ui-game .entity.unit:hover .name.red {
+        color: #6cbfff; }
     .ui-game .entity.user.targeted, .ui-game .entity.player.targeted, .ui-game .entity.unit.targeted {
       cursor: pointer; }
       .ui-game .entity.user.targeted .name, .ui-game .entity.player.targeted .name, .ui-game .entity.unit.targeted .name {
+        color: #6cbfff; }
+      .ui-game .entity.user.targeted .name.red, .ui-game .entity.player.targeted .name.red, .ui-game .entity.unit.targeted .name.red {
         color: #6cbfff; }
     .ui-game .entity.user .name {
       color: white;
