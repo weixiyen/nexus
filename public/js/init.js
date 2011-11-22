@@ -124,16 +124,23 @@
   });
   game.$canvas.on('click', '.entity', function(e) {
     var entity;
+    e.stopPropagation();
+    e.preventDefault();
     entity = $(this).data('entity');
     return game.setUserTarget(entity.id);
   });
-  game.$canvas.on('contextmenu', '.entity', function(e) {
+  game.$canvas.on('dblclick', '.entity', function(e) {
     var entity;
     e.preventDefault();
     e.stopPropagation();
     entity = $(this).data('entity');
     game.setUserTarget(entity.id);
     return events.userAttack(0, entity.id, [map.getMouseCoords()]);
+  });
+  game.$canvas.on('contextmenu', '.entity', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    return $(this).trigger('dblclick');
   });
   $window.on('blur', function() {
     return game.panStopAll();

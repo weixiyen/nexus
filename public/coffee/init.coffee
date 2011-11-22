@@ -118,15 +118,22 @@ $document.on 'contextmenu', (e)->
   e.preventDefault()
 
 game.$canvas.on 'click', '.entity', (e)->
+  e.stopPropagation()
+  e.preventDefault()
   entity = $(@).data('entity')
   game.setUserTarget(entity.id)
 
-game.$canvas.on 'contextmenu', '.entity', (e)->
+game.$canvas.on 'dblclick', '.entity', (e)->
   e.preventDefault()
   e.stopPropagation()
   entity = $(@).data('entity')
   game.setUserTarget(entity.id)
   events.userAttack(0, entity.id, [map.getMouseCoords()])
+
+game.$canvas.on 'contextmenu', '.entity', (e)->
+  e.preventDefault()
+  e.stopPropagation()
+  $(@).trigger('dblclick')
 
 $window.on 'blur', ->
   game.panStopAll()
