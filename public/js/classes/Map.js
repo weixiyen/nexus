@@ -43,7 +43,7 @@
     };
     Map.prototype.listenToEvents = function() {
       this.$canvas.on('click', __bind(function(e) {
-        return events.moveMe(this.getMouseX(), this.getMouseY());
+        return game.moveUser(this.getMouseX(), this.getMouseY());
       }, this));
       return this.$canvas.on('mousemove', __bind(function(e) {
         this.mouseOffsetX = e.pageX - this.left;

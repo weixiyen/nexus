@@ -45,7 +45,7 @@ class @Map
 
   listenToEvents: ->
     @$canvas.on 'click', (e)=>
-      events.moveMe(@getMouseX(), @getMouseY())
+      game.moveUser(@getMouseX(), @getMouseY())
 
     @$canvas.on 'mousemove', (e)=>
       @mouseOffsetX = e.pageX - @left

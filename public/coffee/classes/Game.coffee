@@ -178,6 +178,10 @@ class @Game
       @targetedEntity.removeUserTarget()
     @targetedEntity = null
 
+  moveUser: (x, y)->
+    events.moveMe(x, y)
+    @removeCurrentUserTarget()
+
   userAttack: (attackType)->
     if !@userExists() then return
     targetId = @getUser().getTarget()

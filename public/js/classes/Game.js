@@ -252,6 +252,10 @@
       }
       return this.targetedEntity = null;
     };
+    Game.prototype.moveUser = function(x, y) {
+      events.moveMe(x, y);
+      return this.removeCurrentUserTarget();
+    };
     Game.prototype.userAttack = function(attackType) {
       var mouseCoords, targetId;
       if (!this.userExists()) {
