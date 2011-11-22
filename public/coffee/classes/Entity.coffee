@@ -33,6 +33,20 @@ class @Entity
   hasTarget: ->
     return if @target then true else false
 
+  userTargeted: ->
+    imgurl = IMGPATH + 'target_arrow.png'
+    @$targetArrow = $('<div/>').css
+      background: 'url('+imgurl+') no-repeat'
+      height: 10
+      width: 10
+      position: 'absolute'
+      left: @width / 2 - 5
+      top: -35
+    @$el.prepend(@$targetArrow)
+
+  removeUserTarget: ->
+    @$targetArrow.remove()
+
   create: ->
     # create dom fragment and store it in the object
     @$el = $ '<div/>',

@@ -26,12 +26,15 @@
       if (!this.bgPos) {
         this.bgPos = '0 0';
       }
+      if (!this.topOffset) {
+        this.topOffset = 0;
+      }
       return this.$el = $('<div/>', {
         id: this.elementId,
         "class": 'prop',
         css: {
           left: this.left - this.width / 2,
-          top: this.top - this.height / 2,
+          top: this.top - this.height / 2 + this.topOffset,
           width: this.width,
           height: this.height,
           zIndex: this.top,
@@ -51,6 +54,7 @@
       this.height = 300;
       this.width = 300;
       this.imgurl = IMGPATH + 'sprite_tree.png';
+      this.topOffset = -80;
       this.create();
     }
     return Tree;

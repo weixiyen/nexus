@@ -122,6 +122,13 @@
   game.$canvas.on('click', '.entity', function(e) {
     var entity;
     entity = $(this).data('entity');
+    return game.setUserTarget(entity.id);
+  });
+  game.$canvas.on('contextmenu', '.entity', function(e) {
+    var entity;
+    e.preventDefault();
+    e.stopPropagation();
+    entity = $(this).data('entity');
     game.setUserTarget(entity.id);
     return events.userAttack(0, entity.id, [map.getMouseCoords()]);
   });

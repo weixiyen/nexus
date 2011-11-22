@@ -44,6 +44,22 @@
         return false;
       }
     };
+    Entity.prototype.userTargeted = function() {
+      var imgurl;
+      imgurl = IMGPATH + 'target_arrow.png';
+      this.$targetArrow = $('<div/>').css({
+        background: 'url(' + imgurl + ') no-repeat',
+        height: 10,
+        width: 10,
+        position: 'absolute',
+        left: this.width / 2 - 5,
+        top: -35
+      });
+      return this.$el.prepend(this.$targetArrow);
+    };
+    Entity.prototype.removeUserTarget = function() {
+      return this.$targetArrow.remove();
+    };
     Entity.prototype.create = function() {
       this.$el = $('<div/>', {
         id: STUB + this.id,

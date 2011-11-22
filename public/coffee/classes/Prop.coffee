@@ -16,13 +16,14 @@ class @Prop
 
   create: ->
     if !@bgPos then @bgPos = '0 0'
+    if !@topOffset then @topOffset = 0
 
     @$el = $ '<div/>',
       id: @elementId
       class: 'prop'
       css:
         left: @left - @width / 2
-        top: @top - @height / 2
+        top: @top - @height / 2 + @topOffset
         width: @width
         height: @height
         zIndex: @top
@@ -36,6 +37,7 @@ class @Tree extends Prop
     @height = 300
     @width = 300
     @imgurl = IMGPATH + 'sprite_tree.png'
+    @topOffset = -80
     @create()
 
 class @Rock extends Prop

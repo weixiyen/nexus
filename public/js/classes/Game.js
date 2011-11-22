@@ -15,6 +15,7 @@
       this.left = 0;
       this.top = 0;
       this.userId = null;
+      this.targetedEntity = null;
       this.panning = {
         left: false,
         right: false,
@@ -233,21 +234,33 @@
       }
       return true;
     };
-    Game.prototype.userAttack = function(attackType) {
-      var mouseCoords, targetId;
-      if (!this.entitiesExist(this.userId)) {
+    Game.prototype.setUserTarget = function(targetId) {
+      game.removeCurrentUserTarget();
+      if (!this.userExists()) {
         return;
       }
-      targetId = this.entities[STUB + this.userId].getTarget();
+      if (!this.entitiesExist(targetId)) {
+        return;
+      }
+      this.getUser().setTarget(targetId);
+      this.targetedEntity = this.getEntity(targetId);
+      return this.targetedEntity.userTargeted();
+    };
+    Game.prototype.removeCurrentUserTarget = function() {
+      if (this.targetedEntity) {
+        this.targetedEntity.removeUserTarget();
+      }
+      return this.targetedEntity = null;
+    };
+    Game.prototype.userAttack = function(attackType) {
+      var mouseCoords, targetId;
+      if (!this.userExists()) {
+        return;
+      }
+      targetId = this.getUser().getTarget();
       mouseCoords = map.getMouseCoords();
       events.userAttack(attackType, targetId, mouseCoords);
       return interface.releaseAbilityIcon(attackType);
-    };
-    Game.prototype.setUserTarget = function(targetId) {
-      if (!this.entitiesExist(this.userId)) {
-        return;
-      }
-      return this.entities[STUB + this.userId].setTarget(targetId);
     };
     Game.prototype.addToCanvas = function($element) {
       return this.$canvas.append($element);

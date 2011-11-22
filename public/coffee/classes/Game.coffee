@@ -14,6 +14,7 @@ class @Game
     @left = 0
     @top = 0
     @userId = null
+    @targetedEntity = null
     @panning =
       left: false
       right: false
@@ -164,16 +165,27 @@ class @Game
       if !@props[PROP+id] then return false
     return true
 
+  setUserTarget: (targetId)->
+    game.removeCurrentUserTarget()
+    if !@userExists() then return
+    if !@entitiesExist(targetId) then return
+    @getUser().setTarget(targetId)
+    @targetedEntity = @getEntity(targetId)
+    @targetedEntity.userTargeted()
+
+  removeCurrentUserTarget: ->
+    if @targetedEntity
+      @targetedEntity.removeUserTarget()
+    @targetedEntity = null
+
   userAttack: (attackType)->
-    if !@entitiesExist(@userId) then return
-    targetId = @entities[STUB+@userId].getTarget()
+    if !@userExists() then return
+    targetId = @getUser().getTarget()
     mouseCoords = map.getMouseCoords()
     events.userAttack(attackType, targetId, mouseCoords)
     interface.releaseAbilityIcon(attackType)
 
-  setUserTarget: (targetId)->
-    if !@entitiesExist(@userId) then return
-    @entities[STUB+@userId].setTarget(targetId)
+
 
   addToCanvas: ($element)->
     @$canvas.append($element)

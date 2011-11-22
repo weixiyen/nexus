@@ -117,6 +117,12 @@ $document.on 'keyup', (e)->
 game.$canvas.on 'click', '.entity', (e)->
   entity = $(@).data('entity')
   game.setUserTarget(entity.id)
+
+game.$canvas.on 'contextmenu', '.entity', (e)->
+  e.preventDefault()
+  e.stopPropagation()
+  entity = $(@).data('entity')
+  game.setUserTarget(entity.id)
   events.userAttack(0, entity.id, [map.getMouseCoords()])
 
 $window.on 'blur', ->
