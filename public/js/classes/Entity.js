@@ -313,16 +313,16 @@
     };
     return MovableEntity;
   })();
-  this.Turret = (function() {
-    __extends(Turret, Entity);
-    function Turret(entity) {
-      Turret.__super__.constructor.apply(this, arguments);
-      this.width = 96;
-      this.height = 96;
-      this.imgurl = IMGPATH + 'turret.png';
+  this.Tower = (function() {
+    __extends(Tower, Entity);
+    function Tower(entity) {
+      Tower.__super__.constructor.apply(this, arguments);
+      this.width = 150;
+      this.height = 300;
+      this.imgurl = IMGPATH + 'sprite_tower.png';
       this.create();
     }
-    return Turret;
+    return Tower;
   })();
   this.Nexus = (function() {
     __extends(Nexus, Entity);

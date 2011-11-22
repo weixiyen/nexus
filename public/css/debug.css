@@ -28,9 +28,9 @@
   .monster.attacking {
     background-color: red !important; }
 
-.turret {
+.tower {
   background-color: #8a2be2; }
-  .turret.attacking {
+  .tower.attacking {
     background-color: red !important; }
 
 #spawn {

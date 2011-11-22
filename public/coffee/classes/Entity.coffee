@@ -278,12 +278,12 @@ class @MovableEntity extends Entity
     direction = dirList[random(0,7)]
     @standFacing(direction)
 
-class @Turret extends Entity
+class @Tower extends Entity
   constructor: (entity)->
     super
-    @width = 96
-    @height = 96
-    @imgurl = IMGPATH + 'turret.png'
+    @width = 150
+    @height = 300
+    @imgurl = IMGPATH + 'sprite_tower.png'
     @create()
 
 class @Nexus extends Entity

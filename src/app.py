@@ -23,10 +23,6 @@ class IndexHandler(BaseHandler):
     def get(self):
         self.render('index.html')
 
-class DebugHandler(BaseHandler):
-    def get(self):
-        self.render('debug.html')
-
 class SocketConnection(tornadio2.conn.SocketConnection):
     def on_open(self, request):
         self.instance = Instance.get(request.get_argument('instance'))
@@ -64,7 +60,6 @@ application = tornado.web.Application(
         'enabled_protocols': ['websocket', 'xhr-polling', 'jsonp-polling', 'htmlfile'],
     }, namespace='socket').apply_routes([
         (r'/', IndexHandler),
-        (r'/debug', DebugHandler),
         (r'/public/(.*)', tornado.web.StaticFileHandler, {'path': STATIC_PATH})
     ]),
     template_path=os.path.join(ROOT_PATH, '../templates'),

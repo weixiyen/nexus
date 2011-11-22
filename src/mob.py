@@ -4,7 +4,7 @@ from timer import Timer
 class Minion(MonsterEntity):
     pass
 
-class Turret(StationaryMonsterEntity):
+class Tower(StationaryMonsterEntity):
     pass
 
 class Nexus(Entity):
