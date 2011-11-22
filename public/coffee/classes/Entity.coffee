@@ -121,12 +121,12 @@ class @Entity
     if game.isUserId(@id) then interface.setHp(perc)
 
   changeMp: (amt)->
-    if !game.isUserId(@id) then return
     @setMp(@mp + amt)
 
   setMp: (mp)->
     @mp = mp
     perc = Math.ceil(@mp / @stats.mp * 100)
+    if !game.isUserId(@id) then return
     interface.setMp(perc)
     interface.renderAbilityIconsByMp(@mp)
 

@@ -139,15 +139,15 @@
       }
     };
     Entity.prototype.changeMp = function(amt) {
-      if (!game.isUserId(this.id)) {
-        return;
-      }
       return this.setMp(this.mp + amt);
     };
     Entity.prototype.setMp = function(mp) {
       var perc;
       this.mp = mp;
       perc = Math.ceil(this.mp / this.stats.mp * 100);
+      if (!game.isUserId(this.id)) {
+        return;
+      }
       interface.setMp(perc);
       return interface.renderAbilityIconsByMp(this.mp);
     };
