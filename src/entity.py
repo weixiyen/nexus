@@ -519,8 +519,13 @@ class ParticleEntity(MovableEntity):
 
             if self._target_coords != target_coords:
                 self._target_coords = target_coords
+
                 self.move_to(target)
-                self._execute_movement_queue(True)
+
+                if not self.is_moving():
+                    self.suicide()
+                else:
+                    self._execute_movement_queue(True)
         else:
             target.damage_taken(self.parent, self.parent.stats['attack'])
             self.suicide()

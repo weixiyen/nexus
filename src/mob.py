@@ -13,6 +13,7 @@ class Tower(StationaryMonsterEntity):
             faction=self.faction,
             kind=TowerAttack,
             parent=self,
+            respawn=False,
             sprite=Sprite('particle/bolt-%s.png' % self.faction, width=33, height=33),
         )
 
