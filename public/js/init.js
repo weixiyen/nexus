@@ -1,4 +1,5 @@
 (function() {
+  this.DEBUG = false;
   this.$document = $(document);
   this.$window = $(window);
   this.game = new Game({

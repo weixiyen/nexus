@@ -1,3 +1,5 @@
+@DEBUG = false
+
 @$document = $(document)
 @$window = $(window)
 

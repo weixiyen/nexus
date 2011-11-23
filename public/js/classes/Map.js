@@ -33,6 +33,36 @@
       this.listenToEvents();
       return this.setUpTiles();
     };
+    Map.prototype.renderGraph = function() {
+      var blocks, x, xMax, y, yMax;
+      blocks = [];
+      yMax = this.graph.length;
+      xMax = this.graph[0].length;
+      for (y = 0; 0 <= yMax ? y < yMax : y > yMax; 0 <= yMax ? y++ : y--) {
+        for (x = 0; 0 <= xMax ? x < xMax : x > xMax; 0 <= xMax ? x++ : x--) {
+          if (this.graph[y][x] === 2) {
+            blocks.push(this.getCollisionBlock(x, y));
+          }
+        }
+      }
+      game.$canvas.find('.collision-block').remove().append.apply(game.$canvas, blocks);
+      console.log(blocks.length + ' blocks rendered');
+      return null;
+    };
+    Map.prototype.getCollisionBlock = function(x, y) {
+      return $('<div/>', {
+        "class": 'collision-block',
+        css: {
+          left: x * GRID_W,
+          top: y * GRID_H,
+          width: GRID_W,
+          height: GRID_H,
+          background: 'rgba(0,0,0,0.7)',
+          position: 'absolute',
+          zIndex: y * GRID_H + 1000
+        }
+      });
+    };
     Map.prototype.setDimensions = function(x, y) {
       this.width = GRID_W * x;
       this.height = GRID_H * y;
@@ -43,14 +73,14 @@
     };
     Map.prototype.listenToEvents = function() {
       this.$canvas.on('click', __bind(function(e) {
-        return game.moveUser(this.getMouseX(), this.getMouseY());
+        game.moveUser(this.getMouseX(), this.getMouseY());
+        if (window.DEBUG === true) {
+          return console.log(Math.round(this.mouseOffsetX / GRID_W), Math.round(this.mouseOffsetY / GRID_H));
+        }
       }, this));
       return this.$canvas.on('mousemove', __bind(function(e) {
         this.mouseOffsetX = e.pageX - this.left;
-        this.mouseOffsetY = e.pageY - this.top;
-        if (game.debug === true) {
-          return console.log(Math.round(this.mouseOffsetX / GRID_W), Math.round(this.mouseOffsetY / GRID_H));
-        }
+        return this.mouseOffsetY = e.pageY - this.top;
       }, this));
     };
     Map.prototype.getMouseX = function() {

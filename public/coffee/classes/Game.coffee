@@ -23,11 +23,16 @@ class @Game
       down: false
     @beginLoop()
 
-  debugOn: ->
-    @debug = true
+  hide: ->
+    window.DEBUG = true
+    @$canvas.hide()
 
-  debugOff: ->
-    @debug = false
+  show: ->
+    window.DEBUG = false
+    @$canvas.show()
+
+  showBlocks: ->
+    map.renderGraph()
 
   isUserId: (id)->
     return id == @userId

@@ -35,6 +35,30 @@ class @Map
     @listenToEvents()
     @setUpTiles()
 
+  renderGraph: ->
+    blocks = []
+    yMax = @graph.length
+    xMax = @graph[0].length
+    for y in [0...yMax]
+      for x in [0...xMax]
+        if @graph[y][x] == 2
+          blocks.push(@getCollisionBlock(x, y))
+    game.$canvas.find('.collision-block').remove().append.apply(game.$canvas, blocks)
+    console.log blocks.length + ' blocks rendered'
+    return null
+
+  getCollisionBlock: (x, y)->
+    $ '<div/>'
+      class: 'collision-block'
+      css:
+        left: x * GRID_W
+        top: y * GRID_H
+        width: GRID_W
+        height: GRID_H
+        background: 'rgba(0,0,0,0.7)'
+        position: 'absolute'
+        zIndex: y * GRID_H + 1000
+
   setDimensions: (x, y) ->
     @width = GRID_W * x
     @height = GRID_H * y
@@ -46,12 +70,12 @@ class @Map
   listenToEvents: ->
     @$canvas.on 'click', (e)=>
       game.moveUser(@getMouseX(), @getMouseY())
+      if window.DEBUG == true
+        console.log Math.round(@mouseOffsetX / GRID_W), Math.round(@mouseOffsetY / GRID_H)
 
     @$canvas.on 'mousemove', (e)=>
       @mouseOffsetX = e.pageX - @left
       @mouseOffsetY = e.pageY - @top
-      if game.debug == true
-        console.log Math.round(@mouseOffsetX / GRID_W), Math.round(@mouseOffsetY / GRID_H)
 
   getMouseX: ->
     return Math.round(@mouseOffsetX / GRID_W)

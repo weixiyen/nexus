@@ -49,13 +49,16 @@ class @Entity
     @$targetArrow.remove()
 
   create: ->
+
+    @topOffset = 0 if !@topOffset
+
     # create dom fragment and store it in the object
     @$el = $ '<div/>',
       id: STUB + @id
       class: 'entity '+@type
       css:
         left: @left
-        top: @top
+        top: @top + @topOffset
         zIndex: @top
       data:
         entity: @
@@ -283,6 +286,7 @@ class @Tower extends Entity
     super
     @width = 150
     @height = 300
+    @topOffset = -80
     @imgurl = IMGPATH + 'sprite_tower.png'
     @create()
 

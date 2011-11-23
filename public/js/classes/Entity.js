@@ -62,12 +62,15 @@
       return this.$targetArrow.remove();
     };
     Entity.prototype.create = function() {
+      if (!this.topOffset) {
+        this.topOffset = 0;
+      }
       this.$el = $('<div/>', {
         id: STUB + this.id,
         "class": 'entity ' + this.type,
         css: {
           left: this.left,
-          top: this.top,
+          top: this.top + this.topOffset,
           zIndex: this.top
         },
         data: {
@@ -319,6 +322,7 @@
       Tower.__super__.constructor.apply(this, arguments);
       this.width = 150;
       this.height = 300;
+      this.topOffset = -80;
       this.imgurl = IMGPATH + 'sprite_tower.png';
       this.create();
     }

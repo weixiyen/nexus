@@ -25,11 +25,16 @@
       };
       this.beginLoop();
     }
-    Game.prototype.debugOn = function() {
-      return this.debug = true;
+    Game.prototype.hide = function() {
+      window.DEBUG = true;
+      return this.$canvas.hide();
     };
-    Game.prototype.debugOff = function() {
-      return this.debug = false;
+    Game.prototype.show = function() {
+      window.DEBUG = false;
+      return this.$canvas.show();
+    };
+    Game.prototype.showBlocks = function() {
+      return map.renderGraph();
     };
     Game.prototype.isUserId = function(id) {
       return id === this.userId;
