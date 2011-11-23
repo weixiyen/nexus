@@ -192,7 +192,6 @@ class Entity(object):
             if entity.faction != self.faction:
                 yield entity
 
-
     def get_nearby_allies(self, radius):
         for entity in self.get_nearby_entities(radius):
             if entity.faction == self.faction:
@@ -203,13 +202,15 @@ class Entity(object):
             if entity == self:
                 continue
 
-            if isinstance(entity, self.__class__):
-                continue
-
             if not entity.is_alive():
                 continue
 
             if self.instance.map.get_distance(coordinates, entity) <= radius:
+                yield entity
+
+    def get_enemies_at(self, coordinates, radius):
+        for entity in self.get_entities_at(coordinates, radius):
+            if entity.faction != self.faction:
                 yield entity
 
     def is_alive(self):

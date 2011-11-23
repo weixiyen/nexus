@@ -3,7 +3,7 @@ import buff
 def aoe(self, coordinates):
     targets = []
 
-    for entity in self.get_entities_at(coordinates, 5):
+    for entity in self.get_enemies_at(coordinates, 5):
          if self.instance.map.get_distance(self, entity) <= 15:
              targets.append(entity)
 
