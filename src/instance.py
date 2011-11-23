@@ -76,15 +76,9 @@ class Instance(object):
             for i in xrange(2):
                 instance.spawn('Nexus', kind=mob.Nexus, hp=1000, sprite='structure/base1.png')
 
-            for i in xrange(7):
-                instance.place(kind=prop.Tree, sprite='prop/tree1.png')
-                instance.place(kind=prop.Tree, sprite='prop/tree2.png')
-                instance.place(kind=prop.Tree, sprite='prop/tree3.png')
-                instance.place(kind=prop.Tree, sprite='prop/tree4.png')
-                instance.place(kind=prop.Rock, sprite='prop/rock1.png')
-                instance.place(kind=prop.Rock, sprite='prop/rock2.png')
-                instance.place(kind=prop.Rock, sprite='prop/rock3.png')
-                instance.place(kind=prop.Rock, sprite='prop/rock4.png')
+            for i in xrange(25):
+                instance.place(kind=prop.Tree)
+                instance.place(kind=prop.Rock)
 
             instance.start()
 

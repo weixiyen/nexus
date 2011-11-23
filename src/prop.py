@@ -11,6 +11,10 @@ class Prop(object):
 
         self.x = x
         self.y = y
+
+        if sprite is None and hasattr(self.__class__, 'sprite'):
+            sprite = self.__class__.sprite
+
         self.sprite = sprite if isinstance(sprite, Sprite) else Sprite(sprite)
 
         self.instance.map.block(x, y)
@@ -32,7 +36,17 @@ class Prop(object):
         }
 
 class Tree(Prop):
-    pass
+    sprite = [
+        'prop/tree1.png',
+        'prop/tree2.png',
+        'prop/tree3.png',
+        'prop/tree4.png',
+    ]
 
 class Rock(Prop):
-    pass
+    sprite = [
+        'prop/rock1.png',
+        'prop/rock2.png',
+        'prop/rock3.png',
+        'prop/rock4.png',
+    ]

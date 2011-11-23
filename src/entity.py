@@ -28,9 +28,9 @@ class Entity(object):
         self.target = None
 
         if sprite is None and hasattr(self.__class__, 'sprite'):
-            self.sprite = self.__class__.sprite
-        else:
-            self.sprite = sprite if isinstance(sprite, Sprite) else Sprite(sprite)
+            sprite = self.__class__.sprite
+
+        self.sprite = sprite if isinstance(sprite, Sprite) else Sprite(sprite)
 
         self.base_stats = self.get_base_stats()
         self.base_stats.update(stats)

@@ -1,10 +1,14 @@
 import Image
 import os
+import random
 
 SPRITE_PATH = os.path.join(os.path.dirname(__file__), '../public/img')
 
 class Sprite(object):
     def __init__(self, src, width=None, height=None, frames=1):
+        if isinstance(src, (list, tuple)):
+            src = random.choice(src)
+
         self.src = os.path.join('sprite', src)
         self.frames = frames
         self.width = width
