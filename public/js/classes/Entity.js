@@ -68,10 +68,7 @@
         css: {
           left: this.left,
           top: this.top,
-          zIndex: this.top,
-          background: 'red',
-          height: 3,
-          width: 3
+          zIndex: this.top
         },
         data: {
           entity: this
@@ -305,8 +302,8 @@
     };
     MovableEntity.prototype.moveTo = function(x, y) {
       this.moving = true;
-      this.endLeft = x * GRID_W - Math.floor(this.width / 2);
-      return this.endTop = y * GRID_H - Math.floor(this.height / 2);
+      this.endLeft = x * GRID_W - Math.round(this.width / 2) + Math.round(GRID_W / 2);
+      return this.endTop = y * GRID_H - Math.round(this.height / 2) + GRID_H * 2;
     };
     MovableEntity.prototype.standFacing = function(direction) {
       return this.sprite.set(this.anim[direction][0]);

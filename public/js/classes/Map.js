@@ -54,8 +54,8 @@
       el = $('<div/>', {
         "class": 'collision-block',
         css: {
-          left: x * GRID_W,
-          top: y * GRID_H,
+          left: x * GRID_W - Math.round(GRID_W / 2),
+          top: y * GRID_H - GRID_H,
           width: GRID_W,
           height: GRID_H,
           background: 'rgba(0,0,0,0.7)',

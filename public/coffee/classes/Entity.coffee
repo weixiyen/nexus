@@ -58,9 +58,6 @@ class @Entity
         left: @left
         top: @top
         zIndex: @top
-        background: 'red'
-        height: 3
-        width: 3
       data:
         entity: @
 
@@ -273,8 +270,8 @@ class @MovableEntity extends Entity
 
   moveTo: (x, y)->
     @moving = true
-    @endLeft = x * GRID_W - Math.floor(@width / 2)
-    @endTop = y * GRID_H - Math.floor(@height / 2)
+    @endLeft = x * GRID_W - Math.round(@width / 2) + Math.round(GRID_W / 2)
+    @endTop = y * GRID_H - Math.round(@height / 2) + GRID_H * 2
 
   standFacing: (direction)->
     @sprite.set(@anim[direction][0])
