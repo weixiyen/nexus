@@ -13,7 +13,7 @@ class Tower(StationaryMonsterEntity):
             faction=self.faction,
             kind=TowerAttack,
             parent=self,
-            sprite='character/robot.png'
+            sprite=Sprite('particle/bolt-%s.png' % self.faction, width=33, height=33),
         )
 
         particle.set_target(target)

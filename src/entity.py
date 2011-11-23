@@ -71,7 +71,7 @@ class Entity(object):
             'attack': 0,
             'attack_speed': 5,
             'movement_speed': 4,
-            'aggro_radius': 3,
+            'aggro_radius': 5,
             'patrol_radius': 8,
             'respawn': True
         }
@@ -178,6 +178,9 @@ class Entity(object):
             if not entity.is_alive():
                 continue
 
+            if isinstance(entity, ParticleEntity):
+                continue
+
             distance = self.instance.map.get_distance(self, entity)
 
             if distance <= radius:
@@ -204,6 +207,9 @@ class Entity(object):
                 continue
 
             if not entity.is_alive():
+                continue
+
+            if isinstance(entity, ParticleEntity):
                 continue
 
             if self.instance.map.get_distance(coordinates, entity) <= radius:
@@ -487,7 +493,7 @@ class StationaryMonsterEntity(Entity):
     def get_base_stats(self):
         base_stats = Entity.get_base_stats(self)
         base_stats.update({
-            'aggro_radius': 20,
+            'aggro_radius': 15,
             'attack_speed': 25,
         })
         return base_stats
@@ -507,7 +513,7 @@ class ParticleEntity(MovableEntity):
 
         if not target.is_alive():
             self.suicide()
-        elif self.instance.map.get_distance(self, target) > 1:
+        elif self.instance.map.get_distance(self, target) > 0:
             target_coords = (target.x, target.y)
 
             if self._target_coords != target_coords:
