@@ -17,7 +17,7 @@ class Prop(object):
 
         self.sprite = sprite if isinstance(sprite, Sprite) else Sprite(sprite)
 
-        self.instance.map.block(x, y)
+        self.instance.map.block(x, y, self.sprite.width, self.sprite.height)
         self.instance.add_prop(self)
 
     def __str__(self):

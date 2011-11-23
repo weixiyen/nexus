@@ -3,6 +3,7 @@ import os
 import random
 
 SPRITE_PATH = os.path.join(os.path.dirname(__file__), '../public/img')
+CACHE = {}
 
 class Sprite(object):
     def __init__(self, src, width=None, height=None, frames=1):
@@ -15,9 +16,11 @@ class Sprite(object):
         self.height = height
 
         if width is None or height is None:
-            image = Image.open(os.path.join(SPRITE_PATH, self.src))
-
-            width, height = image.size
+            if self.src not in CACHE:
+                image = Image.open(os.path.join(SPRITE_PATH, self.src))
+                width, height = CACHE[self.src] = image.size
+            else:
+                width, height = CACHE[self.src]
 
             if self.width is None:
                 self.width = width / frames

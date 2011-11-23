@@ -27,15 +27,28 @@ class Map(object):
 
         self._graph = Graph(self)
 
-    def block(self, x, y):
-        node = self._graph.get_node(x, y)
+    def block(self, x, y, width=1, height=1):
+        width = int(math.ceil(width / 32.0 / 2.0))
+        height = int(math.ceil(height / 16.0 / 2.0))
 
-        node.type = 2
-        self._data[y][x] = 2
+        for i in xrange(height):
+            for j in xrange(width):
+                node = self._graph.get_node(x + j, y - i)
 
-        for neighbor in node.get_neigbhors():
-            neighbor.type = 2
-            self._data[neighbor.y][neighbor.x] = 2
+                if not node:
+                    continue
+
+                node.type = 2
+                self._data[y + i][x + j] = 2
+
+            for j in xrange(width):
+                node = self._graph.get_node(x - j, y - i)
+
+                if not node:
+                    continue
+
+                node.type = 2
+                self._data[y + i][x - j] = 2
 
     def is_walkable(self, x, y):
         return self[y][x] == 0
