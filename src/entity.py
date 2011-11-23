@@ -494,7 +494,7 @@ class StationaryMonsterEntity(Entity):
     def get_base_stats(self):
         base_stats = Entity.get_base_stats(self)
         base_stats.update({
-            'aggro_radius': 15,
+            'aggro_radius': 20,
             'attack_speed': 25,
         })
         return base_stats
