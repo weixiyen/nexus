@@ -25,6 +25,9 @@
       this.level = data.level;
       this.stats = data.stats;
       this.experience = data.experience;
+      this.width = data.sprite.width;
+      this.height = data.sprite.height;
+      this.imgurl = IMGPATH + data.sprite.src;
       this.x = data.x;
       this.y = data.y;
       this.left = this.x * GRID_W;
@@ -320,9 +323,6 @@
     __extends(Tower, Entity);
     function Tower(entity) {
       Tower.__super__.constructor.apply(this, arguments);
-      this.width = 150;
-      this.height = 200;
-      this.imgurl = IMGPATH + 'sprite_tower.png';
       this.create();
     }
     return Tower;
@@ -331,9 +331,6 @@
     __extends(Nexus, Entity);
     function Nexus(entity) {
       Nexus.__super__.constructor.apply(this, arguments);
-      this.width = 371;
-      this.height = 270;
-      this.imgurl = IMGPATH + 'sprite_base.png';
       this.create();
     }
     return Nexus;
@@ -342,10 +339,7 @@
     __extends(Minion, MovableEntity);
     function Minion(entity) {
       Minion.__super__.constructor.apply(this, arguments);
-      this.width = 48;
-      this.height = 45;
       this.animationSkip = 8;
-      this.imgurl = IMGPATH + 'sprite_robot.png';
       this.anim = {
         n: ["-50px 0", "-716px 0", "-776px 0", "-836px 0", "-896px 0", "-956px 0", "-1016px 0"],
         s: ["-207px 0", "-1766px 0", "-1824px 0", "-1883px 0", "-1941px 0", "-1999px 0", "-2058px 0"],
@@ -366,9 +360,6 @@
     function PlayerEntity(entity) {
       PlayerEntity.__super__.constructor.apply(this, arguments);
       this.type = 'user';
-      this.width = 28;
-      this.height = 50;
-      this.imgurl = IMGPATH + 'sprite_ryu.png';
       this.animationSkip = 4;
       this.anim = {
         n: ["-63px 0", "-482px 0", "-515px 0", "-548px 0", "-581px 0", "-614px 0", "-647px 0"],
@@ -390,9 +381,6 @@
     function User(entity) {
       User.__super__.constructor.apply(this, arguments);
       this.type = 'user';
-      this.width = 28;
-      this.height = 50;
-      this.imgurl = IMGPATH + 'sprite_ryu.png';
       this.animationSkip = 4;
       this.anim = {
         n: ["-63px 0", "-482px 0", "-515px 0", "-548px 0", "-581px 0", "-614px 0", "-647px 0"],

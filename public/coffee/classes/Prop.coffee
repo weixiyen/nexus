@@ -13,6 +13,9 @@ class @Prop
     @y = data.y
     @left = @x * GRID_W
     @top = @y * GRID_H
+    @width = data.sprite.width
+    @height = data.sprite.height
+    @imgurl = IMGPATH + data.sprite.src
 
   create: ->
     if !@bgPos then @bgPos = '0 0'
@@ -34,56 +37,9 @@ class @Prop
 class @Tree extends Prop
   constructor: (data)->
     super
-    @height = 300
-    @width = 300
-    @imgurl = IMGPATH + 'sprite_tree.png'
-    @topOffset = -80
     @create()
 
 class @Rock extends Prop
   constructor: (data)->
     super
-    @height = 150
-    @width = 150
-    @imgurl = IMGPATH + 'sprite_rock.png'
     @create()
-
-class @Tree1 extends Tree
-  constructor: (data)->
-    @bgPos = '0 0'
-    super
-
-class @Tree2 extends Tree
-  constructor: (data)->
-    @bgPos = '-300px 0'
-    super
-
-class @Tree3 extends Tree
-  constructor: (data)->
-    @bgPos = '-600px 0'
-    super
-
-class @Tree4 extends Tree
-  constructor: (data)->
-    @bgPos = '-900px 0'
-    super
-
-class @Rock1 extends Rock
-  constructor: (data)->
-    @bgPos = '0 0'
-    super
-
-class @Rock2 extends Rock
-  constructor: (data)->
-    @bgPos = '-150px 0'
-    super
-
-class @Rock3 extends Rock
-  constructor: (data)->
-    @bgPos = '-300px 0'
-    super
-
-class @Rock4 extends Rock
-  constructor: (data)->
-    @bgPos = '-450px 0'
-    super

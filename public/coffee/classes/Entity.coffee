@@ -17,6 +17,9 @@ class @Entity
     @level = data.level
     @stats = data.stats
     @experience = data.experience
+    @width = data.sprite.width
+    @height = data.sprite.height
+    @imgurl = IMGPATH + data.sprite.src
     @x = data.x
     @y = data.y
     @left = @x * GRID_W
@@ -284,26 +287,17 @@ class @MovableEntity extends Entity
 class @Tower extends Entity
   constructor: (entity)->
     super
-    @width = 150
-    @height = 200
-    @imgurl = IMGPATH + 'sprite_tower.png'
     @create()
 
 class @Nexus extends Entity
   constructor: (entity)->
     super
-    @width = 371
-    @height = 270
-    @imgurl = IMGPATH + 'sprite_base.png'
     @create()
 
 class @Minion extends MovableEntity
   constructor: (entity)->
     super
-    @width = 48
-    @height = 45
     @animationSkip = 8
-    @imgurl = IMGPATH + 'sprite_robot.png'
 
     @anim =
       n: [
@@ -387,9 +381,6 @@ class @PlayerEntity extends MovableEntity
   constructor: (entity)->
     super
     @type = 'user'
-    @width = 28
-    @height = 50
-    @imgurl = IMGPATH + 'sprite_ryu.png'
     @animationSkip = 4
     @anim =
       n: [
@@ -473,9 +464,6 @@ class @User extends MovableEntity
   constructor: (entity)->
     super
     @type = 'user'
-    @width = 28
-    @height = 50
-    @imgurl = IMGPATH + 'sprite_ryu.png'
     @animationSkip = 4
     @anim =
       n: [

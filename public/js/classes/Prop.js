@@ -21,6 +21,9 @@
       this.y = data.y;
       this.left = this.x * GRID_W;
       this.top = this.y * GRID_H;
+      this.width = data.sprite.width;
+      this.height = data.sprite.height;
+      this.imgurl = IMGPATH + data.sprite.src;
     }
     Prop.prototype.create = function() {
       if (!this.bgPos) {
@@ -51,10 +54,6 @@
     __extends(Tree, Prop);
     function Tree(data) {
       Tree.__super__.constructor.apply(this, arguments);
-      this.height = 300;
-      this.width = 300;
-      this.imgurl = IMGPATH + 'sprite_tree.png';
-      this.topOffset = -80;
       this.create();
     }
     return Tree;
@@ -63,75 +62,8 @@
     __extends(Rock, Prop);
     function Rock(data) {
       Rock.__super__.constructor.apply(this, arguments);
-      this.height = 150;
-      this.width = 150;
-      this.imgurl = IMGPATH + 'sprite_rock.png';
       this.create();
     }
     return Rock;
-  })();
-  this.Tree1 = (function() {
-    __extends(Tree1, Tree);
-    function Tree1(data) {
-      this.bgPos = '0 0';
-      Tree1.__super__.constructor.apply(this, arguments);
-    }
-    return Tree1;
-  })();
-  this.Tree2 = (function() {
-    __extends(Tree2, Tree);
-    function Tree2(data) {
-      this.bgPos = '-300px 0';
-      Tree2.__super__.constructor.apply(this, arguments);
-    }
-    return Tree2;
-  })();
-  this.Tree3 = (function() {
-    __extends(Tree3, Tree);
-    function Tree3(data) {
-      this.bgPos = '-600px 0';
-      Tree3.__super__.constructor.apply(this, arguments);
-    }
-    return Tree3;
-  })();
-  this.Tree4 = (function() {
-    __extends(Tree4, Tree);
-    function Tree4(data) {
-      this.bgPos = '-900px 0';
-      Tree4.__super__.constructor.apply(this, arguments);
-    }
-    return Tree4;
-  })();
-  this.Rock1 = (function() {
-    __extends(Rock1, Rock);
-    function Rock1(data) {
-      this.bgPos = '0 0';
-      Rock1.__super__.constructor.apply(this, arguments);
-    }
-    return Rock1;
-  })();
-  this.Rock2 = (function() {
-    __extends(Rock2, Rock);
-    function Rock2(data) {
-      this.bgPos = '-150px 0';
-      Rock2.__super__.constructor.apply(this, arguments);
-    }
-    return Rock2;
-  })();
-  this.Rock3 = (function() {
-    __extends(Rock3, Rock);
-    function Rock3(data) {
-      this.bgPos = '-300px 0';
-      Rock3.__super__.constructor.apply(this, arguments);
-    }
-    return Rock3;
-  })();
-  this.Rock4 = (function() {
-    __extends(Rock4, Rock);
-    function Rock4(data) {
-      this.bgPos = '-450px 0';
-      Rock4.__super__.constructor.apply(this, arguments);
-    }
-    return Rock4;
   })();
 }).call(this);
