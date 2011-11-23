@@ -28,7 +28,7 @@ class Node(object):
     def is_walkable(self):
         return self.type == 0
 
-    def get_neigbhors(self):
+    def get_neigbhors(self, walkable_only=True):
         ret = []
 
         x = self.x
@@ -46,7 +46,7 @@ class Node(object):
             if node is None:
                 continue
 
-            if not node.is_walkable():
+            if walkable_only and not node.is_walkable():
                 continue
 
             ret.append(node)
@@ -81,7 +81,7 @@ class Graph(object):
 
         return None
 
-    def search(self, start, end, heuristic=manhatton):
+    def search(self, start, end, walkable_only=True, heuristic=manhatton):
         for row in self.nodes:
             for node in row:
                 node.f = 0
@@ -114,7 +114,7 @@ class Graph(object):
 
             current_node.closed = True
 
-            for neighbor in current_node.get_neigbhors():
+            for neighbor in current_node.get_neigbhors(walkable_only):
                 if neighbor.closed:
                     continue
 

@@ -53,8 +53,8 @@ class Map(object):
     def is_walkable(self, x, y):
         return self[y][x] == 0
 
-    def find_path(self, from_, to):
-        return self._graph.search(from_, to)
+    def find_path(self, from_, to, walkable_only=True):
+        return self._graph.search(from_, to, walkable_only)
 
     @staticmethod
     def get_distance(from_, to):

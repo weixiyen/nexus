@@ -1,4 +1,4 @@
-from entity import Entity, MonsterEntity, StationaryMonsterEntity, PlayerEntity
+from entity import Entity, MonsterEntity, StationaryMonsterEntity, ParticleEntity
 from timer import Timer
 from sprite import Sprite
 
@@ -6,6 +6,19 @@ class Minion(MonsterEntity):
     sprite = Sprite('character/robot.png', 48, 45)
 
 class Tower(StationaryMonsterEntity):
+    def _execute_attack(self, target):
+        particle = self.instance.spawn('%s (Attack)' % self.name,
+            parent=self,
+            x=self.x,
+            y=self.y,
+            faction=self.faction,
+            kind=TowerAttack,
+            sprite='character/robot.png'
+        )
+
+        particle.set_target(target)
+
+class TowerAttack(ParticleEntity):
     pass
 
 class Nexus(Entity):
