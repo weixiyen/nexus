@@ -60,10 +60,9 @@ class Instance(object):
             instance.spawn('Inhibitor', x=34, y=112, kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
             instance.spawn('Inhibitor', x=28, y=127, kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
 
-            instance.spawn('Turret', x=73, y=108, kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
-
-            instance.spawn('Turret', x=50, y=155, kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
-            instance.spawn('Turret', x=75, y=185, kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
+            instance.spawn('Turret', x=62, y=57, kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
+            instance.spawn('Turret', x=62, y=112, kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
+            instance.spawn('Turret', x=62, y=168, kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
 
             # Team Pink
             instance.spawn('Nexus', x=instance.map.width - 14, y=117, kind=mob.Nexus, sprite='structure/base6.png',hp=1000)
@@ -71,10 +70,9 @@ class Instance(object):
             instance.spawn('Inhibitor', x=instance.map.width - 34, y=112, kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
             instance.spawn('Inhibitor', x=instance.map.width - 28, y=127, kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
 
+            instance.spawn('Turret', x=124, y=62, kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
             instance.spawn('Turret', x=124, y=121, kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
-
-            instance.spawn('Turret', x=instance.map.width - 50, y=155, kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
-            instance.spawn('Turret', x=instance.map.width - 75, y=185, kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
+            instance.spawn('Turret', x=124, y=168, kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
 
             instance.start()
 
