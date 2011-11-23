@@ -71,7 +71,7 @@ class Entity(object):
             'attack': 0,
             'attack_speed': 5,
             'movement_speed': 4,
-            'aggro_radius': 5,
+            'aggro_radius': 3,
             'patrol_radius': 8,
             'respawn': True
         }
@@ -238,7 +238,7 @@ class Entity(object):
 
             self.hp -= damage
 
-            self.emit('damage-taken', self.id, damage, critcal)
+            self.emit('damage-taken', self.id, damage, critcal, from_.faction if from_ else None)
 
             if not self.is_alive():
                 if isinstance(self, MovableEntity):

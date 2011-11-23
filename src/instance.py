@@ -47,7 +47,7 @@ class Instance(object):
             instance = Instance(instance_id)
             _instances[instance_id] = instance
 
-            for i in xrange(60):
+            for i in xrange(50):
                 instance.spawn('Minion',  kind=mob.Minion, hp=50, attack=1)
 
             for i in xrange(25):

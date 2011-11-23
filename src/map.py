@@ -39,7 +39,7 @@ class Map(object):
                     continue
 
                 node.type = 2
-                self._data[y + i][x + j] = 2
+                self._data[y - i][x + j] = 2
 
             for j in xrange(width):
                 node = self._graph.get_node(x - j, y - i)
@@ -48,7 +48,7 @@ class Map(object):
                     continue
 
                 node.type = 2
-                self._data[y + i][x - j] = 2
+                self._data[y - i][x - j] = 2
 
     def is_walkable(self, x, y):
         return self[y][x] == 0
