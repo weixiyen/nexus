@@ -30,7 +30,6 @@
       this.left = this.x * GRID_W;
       this.top = this.y * GRID_H;
       this.sprite = null;
-      this.bodyOffset = 0;
       this.target = data.target || null;
       this.type = 'unit';
     }
@@ -55,23 +54,24 @@
         left: this.width / 2 - 5,
         top: -35
       });
-      return this.$el.addClass('targeted').prepend(this.$targetArrow);
+      this.$el.addClass('targeted');
+      return this.$elBody.prepend(this.$targetArrow);
     };
     Entity.prototype.removeUserTarget = function() {
       this.$el.removeClass('targeted');
       return this.$targetArrow.remove();
     };
     Entity.prototype.create = function() {
-      if (!this.topOffset) {
-        this.topOffset = 0;
-      }
       this.$el = $('<div/>', {
         id: STUB + this.id,
         "class": 'entity ' + this.type,
         css: {
           left: this.left,
-          top: this.top + this.topOffset,
-          zIndex: this.top
+          top: this.top,
+          zIndex: this.top,
+          background: 'red',
+          height: 3,
+          width: 3
         },
         data: {
           entity: this
@@ -83,7 +83,9 @@
           height: this.height,
           width: this.width,
           background: 'no-repeat url(' + this.imgurl + ')',
-          left: this.bodyOffset
+          left: -Math.ceil(this.width / 2),
+          top: -this.height,
+          position: 'absolute'
         }
       });
       this.$elName = $('<div/>', {
@@ -105,7 +107,8 @@
         "class": 'hp br2'
       });
       this.$elBar.append(this.$elHp);
-      this.$el.append(this.$elName, this.$elBar, this.$elBody);
+      this.$elBody.append(this.$elName, this.$elBar);
+      this.$el.append(this.$elBody);
       return this.setHp(this.hp);
     };
     Entity.prototype.setTarget = function(targetId) {
@@ -321,8 +324,7 @@
     function Tower(entity) {
       Tower.__super__.constructor.apply(this, arguments);
       this.width = 150;
-      this.height = 300;
-      this.topOffset = -80;
+      this.height = 200;
       this.imgurl = IMGPATH + 'sprite_tower.png';
       this.create();
     }
@@ -343,9 +345,8 @@
     __extends(Minion, MovableEntity);
     function Minion(entity) {
       Minion.__super__.constructor.apply(this, arguments);
-      this.bodyOffset = 2;
       this.width = 48;
-      this.height = 60;
+      this.height = 45;
       this.animationSkip = 8;
       this.imgurl = IMGPATH + 'sprite_robot.png';
       this.anim = {
@@ -369,7 +370,6 @@
       PlayerEntity.__super__.constructor.apply(this, arguments);
       this.type = 'user';
       this.width = 28;
-      this.bodyOffset = 4;
       this.height = 50;
       this.imgurl = IMGPATH + 'sprite_ryu.png';
       this.animationSkip = 4;
@@ -394,7 +394,6 @@
       User.__super__.constructor.apply(this, arguments);
       this.type = 'user';
       this.width = 28;
-      this.bodyOffset = 4;
       this.height = 50;
       this.imgurl = IMGPATH + 'sprite_ryu.png';
       this.animationSkip = 4;

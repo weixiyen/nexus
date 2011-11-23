@@ -34,7 +34,7 @@
         "class": 'prop',
         css: {
           left: this.left - this.width / 2,
-          top: this.top - this.height / 2 + this.topOffset,
+          top: this.top - this.height,
           width: this.width,
           height: this.height,
           zIndex: this.top,

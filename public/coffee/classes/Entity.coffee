@@ -22,7 +22,6 @@ class @Entity
     @left = @x * GRID_W
     @top = @y * GRID_H
     @sprite = null
-    @bodyOffset = 0
 
     @target = data.target or null
     @type = 'unit'
@@ -42,7 +41,8 @@ class @Entity
       position: 'absolute'
       left: @width / 2 - 5
       top: -35
-    @$el.addClass('targeted').prepend(@$targetArrow)
+    @$el.addClass('targeted')
+    @$elBody.prepend(@$targetArrow)
 
   removeUserTarget: ->
     @$el.removeClass('targeted')
@@ -50,16 +50,17 @@ class @Entity
 
   create: ->
 
-    @topOffset = 0 if !@topOffset
-
     # create dom fragment and store it in the object
     @$el = $ '<div/>',
       id: STUB + @id
       class: 'entity '+@type
       css:
         left: @left
-        top: @top + @topOffset
+        top: @top
         zIndex: @top
+        background: 'red'
+        height: 3
+        width: 3
       data:
         entity: @
 
@@ -69,7 +70,9 @@ class @Entity
         height: @height
         width: @width
         background: 'no-repeat url('+@imgurl+')'
-        left: @bodyOffset
+        left: -Math.ceil(@width / 2)
+        top: -@height
+        position: 'absolute'
 
     @$elName = $ '<div/>',
       class: 'name'
@@ -88,8 +91,8 @@ class @Entity
       class: 'hp br2'
 
     @$elBar.append(@$elHp)
-
-    @$el.append(@$elName, @$elBar, @$elBody)
+    @$elBody.append(@$elName, @$elBar)
+    @$el.append(@$elBody)
 
     @setHp(@hp)
 
@@ -285,8 +288,7 @@ class @Tower extends Entity
   constructor: (entity)->
     super
     @width = 150
-    @height = 300
-    @topOffset = -80
+    @height = 200
     @imgurl = IMGPATH + 'sprite_tower.png'
     @create()
 
@@ -301,9 +303,8 @@ class @Nexus extends Entity
 class @Minion extends MovableEntity
   constructor: (entity)->
     super
-    @bodyOffset = 2
     @width = 48
-    @height = 60
+    @height = 45
     @animationSkip = 8
     @imgurl = IMGPATH + 'sprite_robot.png'
 
@@ -390,7 +391,6 @@ class @PlayerEntity extends MovableEntity
     super
     @type = 'user'
     @width = 28
-    @bodyOffset = 4
     @height = 50
     @imgurl = IMGPATH + 'sprite_ryu.png'
     @animationSkip = 4
@@ -477,7 +477,6 @@ class @User extends MovableEntity
     super
     @type = 'user'
     @width = 28
-    @bodyOffset = 4
     @height = 50
     @imgurl = IMGPATH + 'sprite_ryu.png'
     @animationSkip = 4

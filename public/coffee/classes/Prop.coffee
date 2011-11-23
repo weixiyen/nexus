@@ -23,7 +23,7 @@ class @Prop
       class: 'prop'
       css:
         left: @left - @width / 2
-        top: @top - @height / 2 + @topOffset
+        top: @top - @height
         width: @width
         height: @height
         zIndex: @top
