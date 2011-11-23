@@ -1,7 +1,9 @@
+from sprite import Sprite
+
 class Prop(object):
     id = 0
 
-    def __init__(self, instance, x=0, y=0):
+    def __init__(self, instance, sprite=None, x=0, y=0):
         Prop.id += 1
 
         self.id = Prop.id
@@ -9,6 +11,7 @@ class Prop(object):
 
         self.x = x
         self.y = y
+        self.sprite = sprite if isinstance(sprite, Sprite) else Sprite(sprite)
 
         self.instance.map.block(x, y)
         self.instance.add_prop(self)
@@ -23,30 +26,13 @@ class Prop(object):
         return {
             'kind': self.__class__.__name__,
             'id': self.id,
+            'sprite': self.sprite.serialize(),
             'x': self.x,
             'y': self.y
         }
 
-class Tree1(Prop):
+class Tree(Prop):
     pass
 
-class Tree2(Prop):
-    pass
-
-class Tree3(Prop):
-    pass
-
-class Tree4(Prop):
-    pass
-
-class Rock1(Prop):
-    pass
-
-class Rock2(Prop):
-    pass
-
-class Rock3(Prop):
-    pass
-
-class Rock4(Prop):
+class Rock(Prop):
     pass

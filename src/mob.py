@@ -1,8 +1,9 @@
 from entity import Entity, MonsterEntity, StationaryMonsterEntity, PlayerEntity
 from timer import Timer
+from sprite import Sprite
 
 class Minion(MonsterEntity):
-    pass
+    sprite = Sprite('character/robot.png', 48, 45)
 
 class Tower(StationaryMonsterEntity):
     pass
@@ -21,5 +22,5 @@ class Nexus(Entity):
             for entity in self.get_nearby_entities(20):
                 if isinstance(entity, PlayerEntity):
                     entity.heal(5)
-                else:
-                    entity.damage_taken(self, 5)
+#                else:
+#                    entity.damage_taken(self, 5)

@@ -6,6 +6,7 @@ import simplejson
 
 from map import Map
 from entity import Entity, PlayerEntity
+from sprite import Sprite
 import mob
 import prop
 
@@ -50,20 +51,40 @@ class Instance(object):
                 instance.spawn('Minion',  kind=mob.Minion, hp=50, attack=1)
 
             for i in xrange(4):
-                instance.spawn('Tower', kind=mob.Tower, hp=50, attack=3)
+                instance.spawn('Tower', kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
+
+#            instance.spawn('Nexus', x=14, y=117, kind=mob.Nexus, hp=1000)
+#            instance.spawn('Inhibitor', x=28, y=97, kind=mob.Tower, hp=50, attack=3)
+#            instance.spawn('Inhibitor', x=34, y=112, kind=mob.Tower, hp=50, attack=3)
+#            instance.spawn('Inhibitor', x=28, y=127, kind=mob.Tower, hp=50, attack=3)
+#
+#            instance.spawn('Turret', x=73, y=108, kind=mob.Tower, hp=50, attack=3)
+#
+#            instance.spawn('Turret', x=50, y=155, kind=mob.Tower, hp=50, attack=3)
+#            instance.spawn('Turret', x=75, y=185, kind=mob.Tower, hp=50, attack=3)
+#
+#            instance.spawn('Nexus', x=instance.map.width - 14, y=117, kind=mob.Nexus, hp=1000)
+#            instance.spawn('Inhibitor', x=instance.map.width - 28, y=97, kind=mob.Tower, hp=50, attack=3)
+#            instance.spawn('Inhibitor', x=instance.map.width - 34, y=112, kind=mob.Tower, hp=50, attack=3)
+#            instance.spawn('Inhibitor', x=instance.map.width - 28, y=127, kind=mob.Tower, hp=50, attack=3)
+#
+#            instance.spawn('Turret', x=124, y=121, kind=mob.Tower, hp=50, attack=3)
+#
+#            instance.spawn('Turret', x=instance.map.width - 50, y=155, kind=mob.Tower, hp=50, attack=3)
+#            instance.spawn('Turret', x=instance.map.width - 75, y=185, kind=mob.Tower, hp=50, attack=3)
 
             for i in xrange(2):
-                instance.spawn('Nexus', kind=mob.Nexus, hp=1000)
+                instance.spawn('Nexus', kind=mob.Nexus, hp=1000, sprite='structure/base1.png')
 
             for i in xrange(7):
-                instance.place(kind=prop.Tree1)
-                instance.place(kind=prop.Tree2)
-                instance.place(kind=prop.Tree3)
-                instance.place(kind=prop.Tree4)
-                instance.place(kind=prop.Rock1)
-                instance.place(kind=prop.Rock2)
-                instance.place(kind=prop.Rock3)
-                instance.place(kind=prop.Rock4)
+                instance.place(kind=prop.Tree, sprite='prop/tree1.png')
+                instance.place(kind=prop.Tree, sprite='prop/tree2.png')
+                instance.place(kind=prop.Tree, sprite='prop/tree3.png')
+                instance.place(kind=prop.Tree, sprite='prop/tree4.png')
+                instance.place(kind=prop.Rock, sprite='prop/rock1.png')
+                instance.place(kind=prop.Rock, sprite='prop/rock2.png')
+                instance.place(kind=prop.Rock, sprite='prop/rock3.png')
+                instance.place(kind=prop.Rock, sprite='prop/rock4.png')
 
             instance.start()
 
@@ -94,7 +115,7 @@ class Instance(object):
                     e.connections.add(conn)
                     return e
 
-        player = self.spawn(name, uid=conn.uid, kind=PlayerEntity, **kwargs)
+        player = self.spawn(name, uid=conn.uid, kind=PlayerEntity, sprite=Sprite('character/ryu.png', 28, 50), **kwargs)
         player.connections.add(conn)
 
         self.players.add(player)
@@ -180,7 +201,7 @@ class Instance(object):
                 if self.map.is_walkable(x, y):
                     break
 
-        prop_ = kind(self, x, y, **kwargs)
+        prop_ = kind(self, x=x, y=y, **kwargs)
 
         self.logger.debug('Placing %r' % prop_)
 

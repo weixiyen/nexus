@@ -3,6 +3,7 @@ import random
 from timer import Timer
 from map import Map
 import ability
+from sprite import Sprite
 
 LEVEL = {}
 
@@ -14,7 +15,7 @@ MAX_LEVEL = max(LEVEL.keys())
 class Entity(object):
     id = 0
 
-    def __init__(self, instance, name, x=0, y=0, **stats):
+    def __init__(self, instance, name, x=0, y=0, sprite=None, **stats):
         Entity.id += 1
 
         self.id = Entity.id
@@ -25,6 +26,11 @@ class Entity(object):
         self.y = y
         self._home = (x, y)
         self.target = None
+
+        if sprite is None and hasattr(self.__class__, 'sprite'):
+            self.sprite = self.__class__.sprite
+        else:
+            self.sprite = sprite if isinstance(sprite, Sprite) else Sprite(sprite)
 
         self.base_stats = self.get_base_stats()
         self.base_stats.update(stats)
@@ -80,6 +86,7 @@ class Entity(object):
             'kind': self.__class__.__name__,
             'id': self.id,
             'name': self.name,
+            'sprite': self.sprite.serialize(),
             'x': self.x,
             'y': self.y,
             'hp': self.hp,
