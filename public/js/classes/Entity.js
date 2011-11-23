@@ -34,6 +34,7 @@
       this.top = this.y * GRID_H;
       this.sprite = null;
       this.suppressInfo = false;
+      this.hitsTaken = 0;
       this.target = data.target || null;
       this.type = 'unit';
     }
@@ -203,6 +204,7 @@
     };
     Entity.prototype.gotHitEffect = function(isCrit) {
       var $explosion, bgPos, imgurl, stub;
+      this.hitsTaken += 1;
       if (this.suppressInfo === true) {
         return;
       }
@@ -221,8 +223,8 @@
         zIndex: 100
       });
       this.$elBody.prepend($explosion);
-      stub = 'dmg:effect:' + this.id;
-      return game.addLoopItem(stub, 5, function() {
+      stub = 'dmg:effect:' + this.id + ':' + this.hitsTaken;
+      return game.addLoopItem(stub, 15, function() {
         $explosion.remove();
         return game.removeLoopItem(stub);
       });

@@ -26,6 +26,7 @@ class @Entity
     @top = @y * GRID_H
     @sprite = null
     @suppressInfo = false
+    @hitsTaken = 0
 
     @target = data.target or null
     @type = 'unit'
@@ -173,6 +174,8 @@ class @Entity
     if game.isUserId(@id) then interface.setLevel(@level)
 
   gotHitEffect: (isCrit)->
+    @hitsTaken += 1
+
     # create dom fragment
     if @suppressInfo == true then return
     bgPos = '0 0'
@@ -189,8 +192,8 @@ class @Entity
     @$elBody.prepend($explosion)
 
     # remove it from DOM on next loop iteration
-    stub = 'dmg:effect:'+@id
-    game.addLoopItem stub, 5, ->
+    stub = 'dmg:effect:'+@id+':'+@hitsTaken
+    game.addLoopItem stub, 15, ->
       $explosion.remove()
       game.removeLoopItem(stub)
 
