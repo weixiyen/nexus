@@ -107,8 +107,8 @@ class @Entity
     return @target
 
   remove: ->
-    @$el.remove()
     @gotKilledEffect()
+    @$el.remove()
 
   setCoords: ->
     @x = Math.floor(@left / GRID_W)
@@ -177,6 +177,7 @@ class @Entity
 
   gotHitEffect: (isCrit)->
     @hitsTaken += 1
+    stub = 'dmg:effect:'+@id+':'+@hitsTaken
 
     # create dom fragment
     if @suppressInfo == true then return
@@ -194,13 +195,14 @@ class @Entity
     @$elBody.prepend($explosion)
 
     # remove it from DOM on next loop iteration
-    stub = 'dmg:effect:'+@id+':'+@hitsTaken
+
     game.addLoopItem stub, 15, ->
       $explosion.remove()
       game.removeLoopItem(stub)
 
   gotKilledEffect: ->
     @hitsTaken += 1
+    stub = 'dmg:effect:'+@id+':'+@hitsTaken
     # create dom fragment
     if @suppressInfo == true then return
     bgPos = '-132px 0'
@@ -216,7 +218,6 @@ class @Entity
     game.$canvas.append($explosion)
 
     # remove it from DOM on next loop iteration
-    stub = 'dmg:effect:'+@id+':'+@hitsTaken
     game.addLoopItem stub, 15, ->
       $explosion.remove()
       game.removeLoopItem(stub)
