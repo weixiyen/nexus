@@ -31,6 +31,11 @@ class Nexus(Entity):
         pass
 
     def next_iteration(self):
+        if not self.is_alive():
+            if self.instance.iteration_counter % 1000 == 0 and self.stats['respawn']:
+                self.respawn()
+            raise StopIteration
+
         if self._tick_timer.is_ready():
             for entity in self.get_nearby_enemies(20):
                 entity.damage_taken(self, 1)
