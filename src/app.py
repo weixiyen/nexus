@@ -37,7 +37,6 @@ class SocketConnection(tornadio2.conn.SocketConnection):
 
     @tornadio2.event('attack')
     def attack(self, ability, target_id, coordinates):
-        self.player.set_target(target_id)
         if not ability:
             self.player.set_target(target_id)
         else:
