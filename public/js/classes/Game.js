@@ -89,8 +89,8 @@
         return;
       }
       me = this.entities[STUB + this.userId];
-      this.left = -me.left - me.width / 2 + $window.width() / 2;
-      this.top = -me.top - me.height / 2 + $window.height() / 2 - UI_HEIGHT;
+      this.left = -me.left + me.width / 2 + $window.width() / 2;
+      this.top = -me.top + me.height / 2 + $window.height() / 2 - UI_HEIGHT;
       return this.renderOffset();
     };
     Game.prototype.centerOnMap = function() {

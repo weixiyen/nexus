@@ -73,8 +73,8 @@ class @Game
       @userDied()
       return
     me = @entities[STUB+@userId]
-    @left = -me.left - me.width / 2 + $window.width() / 2
-    @top = -me.top - me.height / 2 + $window.height() / 2 - UI_HEIGHT
+    @left = -me.left + me.width / 2 + $window.width() / 2
+    @top = -me.top + me.height / 2 + $window.height() / 2 - UI_HEIGHT
     @renderOffset()
 
   centerOnMap: ->
