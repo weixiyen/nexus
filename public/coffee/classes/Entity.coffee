@@ -179,7 +179,7 @@ class @Entity
     # create dom fragment
     if @suppressInfo == true then return
     bgPos = '0 0'
-    if !isCrit then bgPos = '-66px 0'
+    if isCrit then bgPos = '-66px 0'
     imgurl = IMGPATH + 'sprite_explosion_red.png'
     $explosion = $('<div/>').css
       background: 'url('+imgurl+') no-repeat ' + bgPos

@@ -209,7 +209,7 @@
         return;
       }
       bgPos = '0 0';
-      if (!isCrit) {
+      if (isCrit) {
         bgPos = '-66px 0';
       }
       imgurl = IMGPATH + 'sprite_explosion_red.png';
