@@ -107,6 +107,9 @@ class Entity(object):
         if isinstance(target, int):
             target = self.instance.get_entity(target)
 
+        if target == self:
+            return
+
         self.target = target
 
         if self.is_alive():
