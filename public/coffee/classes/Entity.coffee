@@ -181,13 +181,13 @@ class @Entity
     if @suppressInfo == true then return
     bgPos = '0 0'
     if isCrit then bgPos = '-66px 0'
-    imgurl = IMGPATH + 'sprite_explosion_red.png'
+    imgurl = IMGPATH + 'sprite_explosion_yellow.png'
     $explosion = $('<div/>').css
       background: 'url('+imgurl+') no-repeat ' + bgPos
       height: 66
       width: 66
       position: 'absolute'
-      left: @width / 2 - 33
+      left: Math.round(@width / 2) - 33
       top: 0
       zIndex: 100
     @$elBody.prepend($explosion)
