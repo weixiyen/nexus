@@ -123,7 +123,6 @@
       return this.target;
     };
     Entity.prototype.remove = function() {
-      this.gotKilledEffect();
       return this.$el.remove();
     };
     Entity.prototype.setCoords = function() {

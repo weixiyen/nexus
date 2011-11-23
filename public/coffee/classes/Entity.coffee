@@ -107,7 +107,7 @@ class @Entity
     return @target
 
   remove: ->
-    @gotKilledEffect()
+    #@gotKilledEffect()
     @$el.remove()
 
   setCoords: ->
