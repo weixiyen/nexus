@@ -49,8 +49,8 @@ class Instance(object):
             for i in xrange(50):
                 instance.spawn('Minion',  kind=mob.Minion, hp=50, attack=1)
 
-            for i in xrange(10):
-                instance.spawn('Tower', kind=mob.Tower, hp=100, attack=3)
+            for i in xrange(4):
+                instance.spawn('Tower', kind=mob.Tower, hp=50, attack=3)
 
             for i in xrange(2):
                 instance.spawn('Nexus', kind=mob.Nexus, hp=1000)
