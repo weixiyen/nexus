@@ -108,6 +108,7 @@ class @Entity
 
   remove: ->
     @$el.remove()
+    @gotKilledEffect()
 
   setCoords: ->
     @x = Math.floor(@left / GRID_W)
@@ -191,6 +192,28 @@ class @Entity
       top: 0
       zIndex: 100
     @$elBody.prepend($explosion)
+
+    # remove it from DOM on next loop iteration
+    stub = 'dmg:effect:'+@id+':'+@hitsTaken
+    game.addLoopItem stub, 15, ->
+      $explosion.remove()
+      game.removeLoopItem(stub)
+
+  gotKilledEffect: ->
+    @hitsTaken += 1
+    # create dom fragment
+    if @suppressInfo == true then return
+    bgPos = '-132px 0'
+    imgurl = IMGPATH + 'sprite_explosion_yellow.png'
+    $explosion = $('<div/>').css
+      background: 'url('+imgurl+') no-repeat ' + bgPos
+      height: 66
+      width: 66
+      position: 'absolute'
+      left: @left + -Math.ceil(@width / 2) + Math.round(@width / 2) - 33
+      top: @top - @height
+      zIndex: @top+100
+    game.$canvas.append($explosion)
 
     # remove it from DOM on next loop iteration
     stub = 'dmg:effect:'+@id+':'+@hitsTaken

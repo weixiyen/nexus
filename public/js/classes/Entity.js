@@ -123,7 +123,8 @@
       return this.target;
     };
     Entity.prototype.remove = function() {
-      return this.$el.remove();
+      this.$el.remove();
+      return this.gotKilledEffect();
     };
     Entity.prototype.setCoords = function() {
       this.x = Math.floor(this.left / GRID_W);
@@ -224,6 +225,30 @@
         zIndex: 100
       });
       this.$elBody.prepend($explosion);
+      stub = 'dmg:effect:' + this.id + ':' + this.hitsTaken;
+      return game.addLoopItem(stub, 15, function() {
+        $explosion.remove();
+        return game.removeLoopItem(stub);
+      });
+    };
+    Entity.prototype.gotKilledEffect = function() {
+      var $explosion, bgPos, imgurl, stub;
+      this.hitsTaken += 1;
+      if (this.suppressInfo === true) {
+        return;
+      }
+      bgPos = '-132px 0';
+      imgurl = IMGPATH + 'sprite_explosion_yellow.png';
+      $explosion = $('<div/>').css({
+        background: 'url(' + imgurl + ') no-repeat ' + bgPos,
+        height: 66,
+        width: 66,
+        position: 'absolute',
+        left: this.left + -Math.ceil(this.width / 2) + Math.round(this.width / 2) - 33,
+        top: this.top - this.height,
+        zIndex: this.top + 100
+      });
+      game.$canvas.append($explosion);
       stub = 'dmg:effect:' + this.id + ':' + this.hitsTaken;
       return game.addLoopItem(stub, 15, function() {
         $explosion.remove();
