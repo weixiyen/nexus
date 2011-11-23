@@ -65,7 +65,7 @@ class Instance(object):
             instance.spawn('Turret', x=62, y=168, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=100, attack=3)
 
             # Team Pink
-            instance.spawn('Nexus', x=164, y=117, faction='pink', kind=mob.Nexus, sprite='structure/base6.png',hp=1000)
+            instance.spawn('Nexus', x=174, y=117, faction='pink', kind=mob.Nexus, sprite='structure/base6.png',hp=1000)
             instance.spawn('Inhibitor', x=160, y=97, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=200, attack=4)
             instance.spawn('Inhibitor', x=154, y=112, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=200, attack=4)
             instance.spawn('Inhibitor', x=160, y=127, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=200, attack=4)
