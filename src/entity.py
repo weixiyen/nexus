@@ -15,13 +15,14 @@ MAX_LEVEL = max(LEVEL.keys())
 class Entity(object):
     id = 0
 
-    def __init__(self, instance, name, x=0, y=0, sprite=None, **stats):
+    def __init__(self, instance, name, x=0, y=0, sprite=None, faction=None, **stats):
         Entity.id += 1
 
         self.id = Entity.id
         self.instance = instance
 
         self.name = name
+        self.faction = faction
         self.x = x
         self.y = y
         self._home = (x, y)
@@ -117,6 +118,9 @@ class Entity(object):
         if target == self:
             return
 
+        if target and target.faction == self.faction:
+            return
+
         self.target = target
 
         if self.is_alive():
@@ -170,9 +174,6 @@ class Entity(object):
             if entity == self:
                 continue
 
-            if isinstance(entity, self.__class__):
-                continue
-
             if not entity.is_alive():
                 continue
 
@@ -185,6 +186,17 @@ class Entity(object):
 
         for _, entity in entities:
             yield entity
+
+    def get_nearby_enemies(self, radius):
+        for entity in self.get_nearby_entities(radius):
+            if entity.faction != self.faction:
+                yield entity
+
+
+    def get_nearby_allies(self, radius):
+        for entity in self.get_nearby_entities(radius):
+            if entity.faction == self.faction:
+                yield entity
 
     def get_entities_at(self, coordinates, radius):
         for entity in self.instance.entities:
@@ -413,7 +425,7 @@ class MonsterEntity(MovableEntity):
             return
 
         try:
-            self.set_target(self.get_nearby_entities(self.stats['aggro_radius']).next())
+            self.set_target(self.get_nearby_enemies(self.stats['aggro_radius']).next())
             self.move_to(self.target)
             self.instance.logger.debug('Targeting %r' % self.target)
         except StopIteration:
@@ -459,7 +471,7 @@ class StationaryMonsterEntity(Entity):
             return
 
         try:
-            self.set_target(self.get_nearby_entities(self.stats['aggro_radius']).next())
+            self.set_target(self.get_nearby_enemies(self.stats['aggro_radius']).next())
             self.instance.logger.debug('Targeting %r' % self.target)
         except StopIteration:
             if self.target:

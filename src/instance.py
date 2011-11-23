@@ -55,24 +55,24 @@ class Instance(object):
                 instance.place(kind=prop.Rock)
 
             # Team Blue
-            instance.spawn('Nexus', x=14, y=117, kind=mob.Nexus, sprite='structure/base1.png', hp=1000)
-            instance.spawn('Inhibitor', x=28, y=97, kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
-            instance.spawn('Inhibitor', x=34, y=112, kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
-            instance.spawn('Inhibitor', x=28, y=127, kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
+            instance.spawn('Nexus', x=14, y=117, faction='blue', kind=mob.Nexus, sprite='structure/base1.png', hp=1000)
+            instance.spawn('Inhibitor', x=28, y=97,faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
+            instance.spawn('Inhibitor', x=34, y=112, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
+            instance.spawn('Inhibitor', x=28, y=127, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
 
-            instance.spawn('Turret', x=62, y=57, kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
-            instance.spawn('Turret', x=62, y=112, kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
-            instance.spawn('Turret', x=62, y=168, kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
+            instance.spawn('Turret', x=62, y=57, faction='blue',kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
+            instance.spawn('Turret', x=62, y=112, faction='blue',kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
+            instance.spawn('Turret', x=62, y=168, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
 
             # Team Pink
-            instance.spawn('Nexus', x=instance.map.width - 14, y=117, kind=mob.Nexus, sprite='structure/base6.png',hp=1000)
-            instance.spawn('Inhibitor', x=instance.map.width - 28, y=97, kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
-            instance.spawn('Inhibitor', x=instance.map.width - 34, y=112, kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
-            instance.spawn('Inhibitor', x=instance.map.width - 28, y=127, kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
+            instance.spawn('Nexus', x=instance.map.width - 14, y=117, faction='pink', kind=mob.Nexus, sprite='structure/base6.png',hp=1000)
+            instance.spawn('Inhibitor', x=instance.map.width - 28, y=97, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
+            instance.spawn('Inhibitor', x=instance.map.width - 34, y=112, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
+            instance.spawn('Inhibitor', x=instance.map.width - 28, y=127, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
 
-            instance.spawn('Turret', x=124, y=62, kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
-            instance.spawn('Turret', x=124, y=121, kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
-            instance.spawn('Turret', x=124, y=168, kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
+            instance.spawn('Turret', x=124, y=62, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
+            instance.spawn('Turret', x=124, y=121, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
+            instance.spawn('Turret', x=124, y=168, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
 
             instance.start()
 
@@ -103,7 +103,14 @@ class Instance(object):
                     e.connections.add(conn)
                     return e
 
-        player = self.spawn(name, uid=conn.uid, kind=PlayerEntity, sprite=Sprite('character/ryu.png', 28, 50), **kwargs)
+        if len(self.players) % 2:
+            x, y = (20, 117)
+            faction = 'blue'
+        else:
+            x, y = (168, 107)
+            faction = 'pink'
+
+        player = self.spawn(name, x, y, uid=conn.uid, faction=faction, kind=PlayerEntity, sprite=Sprite('character/ryu.png', 28, 50), **kwargs)
         player.connections.add(conn)
 
         self.players.add(player)

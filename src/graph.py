@@ -58,7 +58,7 @@ class Node(object):
 
 class Graph(object):
     def __init__(self, grid):
-        self.elements = grid
+        self.grid = grid
         self.nodes = []
 
         for y, row in enumerate(grid):
@@ -73,10 +73,13 @@ class Graph(object):
         return self.nodes.__iter__()
 
     def get_node(self, x, y):
-        try:
-            return self.nodes[y][x]
-        except IndexError:
-            return None
+        if (0 <= x < self.grid.width) and (0 <= y < self.grid.height):
+            try:
+                return self.nodes[y][x]
+            except IndexError:
+                pass
+
+        return None
 
     def search(self, start, end, heuristic=manhatton):
         for row in self.nodes:

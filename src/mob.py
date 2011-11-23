@@ -19,8 +19,8 @@ class Nexus(Entity):
 
     def next_iteration(self):
         if self._tick_timer.is_ready():
-            for entity in self.get_nearby_entities(20):
-                if isinstance(entity, PlayerEntity):
-                    entity.heal(5)
-#                else:
-#                    entity.damage_taken(self, 5)
+            for entity in self.get_nearby_enemies(20):
+                entity.damage_taken(self, 1)
+
+            for entity in self.get_nearby_allies(20):
+                entity.heal(1)
