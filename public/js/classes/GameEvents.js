@@ -20,7 +20,7 @@
             try {
               return this.events[event].apply(this, data);
             } catch (e) {
-              return console.log(event, data);
+
             }
           }).call(this));
         }

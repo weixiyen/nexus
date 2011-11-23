@@ -15,7 +15,7 @@ class @GameEvents
         try
           @events[event].apply(@, data)
         catch e
-          console.log(event, data)
+          #console.log(event, data)
 
   connect: (fn)->
     @events['connect'] = fn

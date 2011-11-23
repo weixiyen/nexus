@@ -33,6 +33,7 @@
       this.left = this.x * GRID_W;
       this.top = this.y * GRID_H;
       this.sprite = null;
+      this.suppressInfo = false;
       this.target = data.target || null;
       this.type = 'unit';
     }
@@ -88,26 +89,28 @@
           position: 'absolute'
         }
       });
-      this.$elName = $('<div/>', {
-        "class": 'name',
-        css: {
-          left: this.width / 2 - 50,
-          top: -25
-        }
-      });
-      this.$elName.html(this.name);
-      this.$elBar = $('<div/>', {
-        "class": 'bar br2',
-        css: {
-          left: this.width / 2 - 25,
-          top: -10
-        }
-      });
-      this.$elHp = $('<div/>', {
-        "class": 'hp br2'
-      });
-      this.$elBar.append(this.$elHp);
-      this.$elBody.append(this.$elName, this.$elBar);
+      if (!this.suppressInfo) {
+        this.$elName = $('<div/>', {
+          "class": 'name',
+          css: {
+            left: this.width / 2 - 50,
+            top: -25
+          }
+        });
+        this.$elName.html(this.name);
+        this.$elBar = $('<div/>', {
+          "class": 'bar br2',
+          css: {
+            left: this.width / 2 - 25,
+            top: -10
+          }
+        });
+        this.$elHp = $('<div/>', {
+          "class": 'hp br2'
+        });
+        this.$elBar.append(this.$elHp);
+        this.$elBody.append(this.$elName, this.$elBar);
+      }
       this.$el.append(this.$elBody);
       return this.setHp(this.hp);
     };
@@ -402,6 +405,36 @@
       return this.changeName(this.name);
     };
     return User;
+  })();
+  this.TowerAttack = (function() {
+    __extends(TowerAttack, MovableEntity);
+    function TowerAttack(entity) {
+      TowerAttack.__super__.constructor.apply(this, arguments);
+      this.animationSkip = 2;
+      this.width = 33;
+      this.height = 33;
+      this.imgurl = IMGPATH + 'sprite_bolt_red.png';
+      this.suppressInfo = true;
+      this.anim = {
+        n: ["0 -198px", "-33px -198px", "-66px -198px"],
+        s: ["0 -66px", "-33px -66px", "-66px -66px"],
+        w: ["0 0", "-33px 0", "-66px 0"],
+        e: ["0 -132px", "-33px -132px", "-66px -132px"],
+        ne: ["0 -165px", "-33px -165px", "-66px -165px"],
+        se: ["0 -99px", "-33px -99px", "-66px -99px"],
+        nw: ["0 -231px", "-33px -231px", "-66px -231px"],
+        sw: ["0 -33px", "-33px -33px", "-66px -33px"]
+      };
+      this.create();
+      this.startMoving();
+    }
+    TowerAttack.prototype.setHp = function() {
+      return null;
+    };
+    TowerAttack.prototype.aggro = function() {
+      return null;
+    };
+    return TowerAttack;
   })();
   /*
   class @User extends MovableEntity

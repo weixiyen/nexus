@@ -25,6 +25,7 @@ class @Entity
     @left = @x * GRID_W
     @top = @y * GRID_H
     @sprite = null
+    @suppressInfo = false
 
     @target = data.target or null
     @type = 'unit'
@@ -74,24 +75,25 @@ class @Entity
         top: -@height
         position: 'absolute'
 
-    @$elName = $ '<div/>',
-      class: 'name'
-      css:
-        left: @width / 2 - 50
-        top: -25
-    @$elName.html(@name)
+    if !@suppressInfo
+      @$elName = $ '<div/>',
+        class: 'name'
+        css:
+          left: @width / 2 - 50
+          top: -25
+      @$elName.html(@name)
 
-    @$elBar = $ '<div/>',
-      class: 'bar br2'
-      css:
-        left: @width / 2 - 25
-        top: -10
+      @$elBar = $ '<div/>',
+        class: 'bar br2'
+        css:
+          left: @width / 2 - 25
+          top: -10
 
-    @$elHp = $ '<div/>',
-      class: 'hp br2'
+      @$elHp = $ '<div/>',
+        class: 'hp br2'
 
-    @$elBar.append(@$elHp)
-    @$elBody.append(@$elName, @$elBar)
+      @$elBar.append(@$elHp)
+      @$elBody.append(@$elName, @$elBar)
     @$el.append(@$elBody)
 
     @setHp(@hp)
@@ -548,6 +550,66 @@ class @User extends MovableEntity
     @increaseExperience(0)
     @setLevel(@level)
     @changeName(@name)
+
+class @TowerAttack extends MovableEntity
+  constructor:(entity)->
+    super
+    @animationSkip = 2
+    @width = 33
+    @height = 33
+    @imgurl = IMGPATH + 'sprite_bolt_red.png'
+    @suppressInfo = true
+
+    @anim =
+      n: [
+        "0 -198px",
+        "-33px -198px",
+        "-66px -198px"
+        ]
+      s: [
+        "0 -66px",
+        "-33px -66px",
+        "-66px -66px"
+        ]
+      w: [
+        "0 0",
+        "-33px 0",
+        "-66px 0"
+        ]
+      e: [
+        "0 -132px",
+        "-33px -132px",
+        "-66px -132px"
+        ]
+      ne: [
+        "0 -165px",
+        "-33px -165px",
+        "-66px -165px"
+        ]
+      se: [
+        "0 -99px",
+        "-33px -99px",
+        "-66px -99px"
+        ]
+      nw: [
+        "0 -231px",
+        "-33px -231px",
+        "-66px -231px"
+        ]
+      sw: [
+        "0 -33px",
+        "-33px -33px",
+        "-66px -33px"
+        ]
+
+    @create()
+    @startMoving()
+
+  setHp: ->
+    return null
+
+  aggro: ->
+    return null
 
 ###
 class @User extends MovableEntity
