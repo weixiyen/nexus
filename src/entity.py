@@ -158,6 +158,7 @@ class Entity(object):
             elif self._attack_timer.is_ready():
                 if target and target.damage_taken(self, self.stats['attack']):
                     self.instance.logger.debug('Attacking %r -> %r' % (self, target))
+                    self.emit('attack', self.id, target.id)
 
                     if not target.is_alive():
                         self.set_target(None)
