@@ -92,6 +92,7 @@ class Entity(object):
             'y': self.y,
             'hp': self.hp,
             'mp': self.mp,
+            'faction': self.faction,
             'level': self.level,
             'experience': self.experience,
             'movement_speed': self.movement_speed,
