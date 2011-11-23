@@ -359,9 +359,10 @@ class MovableEntity(Entity):
             if not ignore_atk and self.is_attacking() and self.instance.map.get_distance(self, self.target) > 2:
                 self.move_to(self.target)
 
-            x, y = self._next_move()
-
-            self._move(x, y)
+            try:
+                self._move(*self._next_move())
+            except IndexError:
+                pass
 
             raise StopIteration
 
