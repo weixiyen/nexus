@@ -50,6 +50,8 @@ class @Map
     @$canvas.on 'mousemove', (e)=>
       @mouseOffsetX = e.pageX - @left
       @mouseOffsetY = e.pageY - @top
+      if game.debug == true
+        console.log Math.round(@mouseOffsetX / GRID_W), Math.round(@mouseOffsetY / GRID_H)
 
   getMouseX: ->
     return Math.round(@mouseOffsetX / GRID_W)

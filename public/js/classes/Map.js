@@ -47,7 +47,10 @@
       }, this));
       return this.$canvas.on('mousemove', __bind(function(e) {
         this.mouseOffsetX = e.pageX - this.left;
-        return this.mouseOffsetY = e.pageY - this.top;
+        this.mouseOffsetY = e.pageY - this.top;
+        if (game.debug === true) {
+          return console.log(Math.round(this.mouseOffsetX / GRID_W), Math.round(this.mouseOffsetY / GRID_H));
+        }
       }, this));
     };
     Map.prototype.getMouseX = function() {

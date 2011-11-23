@@ -16,6 +16,7 @@
       this.top = 0;
       this.userId = null;
       this.targetedEntity = null;
+      this.debug = false;
       this.panning = {
         left: false,
         right: false,
@@ -24,6 +25,12 @@
       };
       this.beginLoop();
     }
+    Game.prototype.debugOn = function() {
+      return this.debug = true;
+    };
+    Game.prototype.debugOff = function() {
+      return this.debug = false;
+    };
     Game.prototype.isUserId = function(id) {
       return id === this.userId;
     };

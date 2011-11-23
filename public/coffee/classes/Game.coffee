@@ -15,12 +15,19 @@ class @Game
     @top = 0
     @userId = null
     @targetedEntity = null
+    @debug = false
     @panning =
       left: false
       right: false
       up: false
       down: false
     @beginLoop()
+
+  debugOn: ->
+    @debug = true
+
+  debugOff: ->
+    @debug = false
 
   isUserId: (id)->
     return id == @userId
