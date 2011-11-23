@@ -129,6 +129,7 @@ class @Entity
 
   takeDamage: (amt, isCrit)->
     @setHp(@hp - amt)
+    @gotHitEffect(isCrit)
 
   setMovementSpeed: (speed)->
     game.removeLoopItem 'unit:'+@id+':move'
@@ -170,6 +171,28 @@ class @Entity
   setLevel: (level)->
     @level = level
     if game.isUserId(@id) then interface.setLevel(@level)
+
+  gotHitEffect: (isCrit)->
+    # create dom fragment
+    if @suppressInfo == true then return
+    bgPos = '0 0' if !isCrit else '-66px 0'
+    console.log bgPos
+    imgurl = IMGPATH + 'sprite_explosion_red.png'
+    $explosion = $('<div/>').css
+      background: 'url('+imgurl+') no-repeat ' + bgPos
+      height: 66
+      width: 66
+      position: 'absolute'
+      left: @width / 2 - 33
+      top: 0
+      zIndex: 100
+    @$elBody.prepend($explosion)
+
+    # remove it from DOM on next loop iteration
+    stub = 'dmg:effect:'+@id
+    game.addLoopItem stub, 1, ->
+      $explosion.remove()
+      game.removeLoopItem(stub)
 
 class @MovableEntity extends Entity
   constructor: (entity)->
