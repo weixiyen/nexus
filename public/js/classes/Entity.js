@@ -1,13 +1,13 @@
 (function() {
   var GRID_H, GRID_W, IMGPATH, STEP_X, STEP_Y;
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
     ctor.prototype = parent.prototype;
     child.prototype = new ctor;
     child.__super__ = parent.prototype;
     return child;
-  };
+  }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   IMGPATH = '/public/img/';
   GRID_W = 32;
   GRID_H = 16;
@@ -202,14 +202,17 @@
       }
     };
     Entity.prototype.gotHitEffect = function(isCrit) {
-      var $explosion, bgPos, imgurl;
+      var $explosion, bgPos, imgurl, stub;
       if (this.suppressInfo === true) {
         return;
       }
       bgPos = '0 0';
+      if (!isCrit) {
+        bgPos = '-66px 0';
+      }
       imgurl = IMGPATH + 'sprite_explosion_red.png';
       $explosion = $('<div/>').css({
-        background: 'url(' + imgurl + ') no-repeat',
+        background: 'url(' + imgurl + ') no-repeat ' + bgPos,
         height: 66,
         width: 66,
         position: 'absolute',
@@ -218,9 +221,11 @@
         zIndex: 100
       });
       this.$elBody.prepend($explosion);
-      return setTimeout(__bind(function() {
-        return $explosion.remove();
-      }, this), 250);
+      stub = 'dmg:effect:' + this.id;
+      return game.addLoopItem(stub, 5, function() {
+        $explosion.remove();
+        return game.removeLoopItem(stub);
+      });
     };
     return Entity;
   })();

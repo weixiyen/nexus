@@ -175,8 +175,8 @@ class @Entity
   gotHitEffect: (isCrit)->
     # create dom fragment
     if @suppressInfo == true then return
-    bgPos = '0 0' if !isCrit else '-66px 0'
-    console.log bgPos
+    bgPos = '0 0'
+    if !isCrit then bgPos = '-66px 0'
     imgurl = IMGPATH + 'sprite_explosion_red.png'
     $explosion = $('<div/>').css
       background: 'url('+imgurl+') no-repeat ' + bgPos
@@ -190,7 +190,7 @@ class @Entity
 
     # remove it from DOM on next loop iteration
     stub = 'dmg:effect:'+@id
-    game.addLoopItem stub, 1, ->
+    game.addLoopItem stub, 5, ->
       $explosion.remove()
       game.removeLoopItem(stub)
 
