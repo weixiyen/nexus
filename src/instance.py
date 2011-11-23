@@ -56,23 +56,23 @@ class Instance(object):
 
             # Team Blue
             instance.spawn('Nexus', x=14, y=117, faction='blue', kind=mob.Nexus, sprite='structure/base1.png', hp=1000)
-            instance.spawn('Inhibitor', x=28, y=97,faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
-            instance.spawn('Inhibitor', x=34, y=112, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
-            instance.spawn('Inhibitor', x=28, y=127, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
+            instance.spawn('Inhibitor', x=28, y=97,faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=200, attack=4)
+            instance.spawn('Inhibitor', x=34, y=112, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=200, attack=4)
+            instance.spawn('Inhibitor', x=28, y=127, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=200, attack=4)
 
-            instance.spawn('Turret', x=62, y=57, faction='blue',kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
-            instance.spawn('Turret', x=62, y=112, faction='blue',kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
-            instance.spawn('Turret', x=62, y=168, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=50, attack=3)
+            instance.spawn('Turret', x=62, y=57, faction='blue',kind=mob.Tower, sprite='structure/tower1.png', hp=100, attack=3)
+            instance.spawn('Turret', x=62, y=112, faction='blue',kind=mob.Tower, sprite='structure/tower1.png', hp=100, attack=3)
+            instance.spawn('Turret', x=62, y=168, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=100, attack=3)
 
             # Team Pink
-            instance.spawn('Nexus', x=instance.map.width - 14, y=117, faction='pink', kind=mob.Nexus, sprite='structure/base6.png',hp=1000)
-            instance.spawn('Inhibitor', x=instance.map.width - 28, y=97, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
-            instance.spawn('Inhibitor', x=instance.map.width - 34, y=112, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
-            instance.spawn('Inhibitor', x=instance.map.width - 28, y=127, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
+            instance.spawn('Nexus', x=164, y=117, faction='pink', kind=mob.Nexus, sprite='structure/base6.png',hp=1000)
+            instance.spawn('Inhibitor', x=160, y=97, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=200, attack=4)
+            instance.spawn('Inhibitor', x=154, y=112, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=200, attack=4)
+            instance.spawn('Inhibitor', x=160, y=127, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=200, attack=4)
 
-            instance.spawn('Turret', x=124, y=62, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
-            instance.spawn('Turret', x=124, y=121, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
-            instance.spawn('Turret', x=124, y=168, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=50, attack=3)
+            instance.spawn('Turret', x=124, y=62, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=100, attack=3)
+            instance.spawn('Turret', x=124, y=121, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=100, attack=3)
+            instance.spawn('Turret', x=124, y=168, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=100, attack=3)
 
             instance.start()
 
