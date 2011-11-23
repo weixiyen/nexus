@@ -48,7 +48,7 @@ class @Map
     return null
 
   getCollisionBlock: (x, y)->
-    $ '<div/>'
+    el = $ '<div/>'
       class: 'collision-block'
       css:
         left: x * GRID_W
@@ -58,6 +58,10 @@ class @Map
         background: 'rgba(0,0,0,0.7)'
         position: 'absolute'
         zIndex: y * GRID_H + 1000
+        color: 'yellow'
+        font: '9px Arial'
+        textAlign: 'center'
+    el.html(x+','+y)
 
   setDimensions: (x, y) ->
     @width = GRID_W * x
@@ -71,7 +75,10 @@ class @Map
     @$canvas.on 'click', (e)=>
       game.moveUser(@getMouseX(), @getMouseY())
       if window.DEBUG == true
-        console.log Math.round(@mouseOffsetX / GRID_W), Math.round(@mouseOffsetY / GRID_H)
+        x = Math.round(@mouseOffsetX / GRID_W)
+        y = Math.round(@mouseOffsetY / GRID_H)
+        map.$canvas.append(@getCollisionBlock(x, y))
+
 
     @$canvas.on 'mousemove', (e)=>
       @mouseOffsetX = e.pageX - @left

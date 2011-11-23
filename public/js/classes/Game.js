@@ -34,6 +34,7 @@
       return this.$canvas.show();
     };
     Game.prototype.showBlocks = function() {
+      this.show();
       return map.renderGraph();
     };
     Game.prototype.isUserId = function(id) {

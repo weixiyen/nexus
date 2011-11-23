@@ -50,7 +50,8 @@
       return null;
     };
     Map.prototype.getCollisionBlock = function(x, y) {
-      return $('<div/>', {
+      var el;
+      el = $('<div/>', {
         "class": 'collision-block',
         css: {
           left: x * GRID_W,
@@ -59,9 +60,13 @@
           height: GRID_H,
           background: 'rgba(0,0,0,0.7)',
           position: 'absolute',
-          zIndex: y * GRID_H + 1000
+          zIndex: y * GRID_H + 1000,
+          color: 'yellow',
+          font: '9px Arial',
+          textAlign: 'center'
         }
       });
+      return el.html(x + ',' + y);
     };
     Map.prototype.setDimensions = function(x, y) {
       this.width = GRID_W * x;
@@ -73,9 +78,12 @@
     };
     Map.prototype.listenToEvents = function() {
       this.$canvas.on('click', __bind(function(e) {
+        var x, y;
         game.moveUser(this.getMouseX(), this.getMouseY());
         if (window.DEBUG === true) {
-          return console.log(Math.round(this.mouseOffsetX / GRID_W), Math.round(this.mouseOffsetY / GRID_H));
+          x = Math.round(this.mouseOffsetX / GRID_W);
+          y = Math.round(this.mouseOffsetY / GRID_H);
+          return map.$canvas.append(this.getCollisionBlock(x, y));
         }
       }, this));
       return this.$canvas.on('mousemove', __bind(function(e) {

@@ -32,6 +32,7 @@ class @Game
     @$canvas.show()
 
   showBlocks: ->
+    @show()
     map.renderGraph()
 
   isUserId: (id)->
