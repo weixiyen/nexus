@@ -8,11 +8,11 @@ class Minion(MonsterEntity):
 class Tower(StationaryMonsterEntity):
     def _execute_attack(self, target):
         particle = self.instance.spawn('%s (Attack)' % self.name,
-            parent=self,
             x=self.x,
-            y=self.y,
+            y=self.y - self.sprite.height / 16 + 1,
             faction=self.faction,
             kind=TowerAttack,
+            parent=self,
             sprite='character/robot.png'
         )
 

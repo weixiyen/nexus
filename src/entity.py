@@ -155,20 +155,18 @@ class Entity(object):
                     self.stop_movement()
 
                 self.instance.logger.debug('Lost Aggro %r -> %r' % (self, target))
-        else:
-            if isinstance(self, MovableEntity) and self.instance.map.get_distance(self, target) > 1:
-                self.move_to(target)
-                self._execute_movement_queue(True)
-            elif self._attack_timer.is_ready():
-                self._execute_attack(target)
+        elif isinstance(self, MovableEntity) and self.instance.map.get_distance(self, target) > 1:
+            self.move_to(target)
+            self._execute_movement_queue(True)
+        elif self._attack_timer.is_ready():
+            self._execute_attack(target)
 
-                if not target.is_alive():
-                    self.set_target(None)
+            if not target.is_alive():
+                self.set_target(None)
 
     def _execute_attack(self, target):
         if target.damage_taken(self, self.stats['attack']):
             self.instance.logger.debug('Attacking %r -> %r' % (self, target))
-            self.emit('attack', self.id, target.id)
 
     def get_nearby_entities(self, radius):
         entities = []
@@ -497,6 +495,7 @@ class StationaryMonsterEntity(Entity):
 class ParticleEntity(MovableEntity):
     def __init__(self, *args, **kwargs):
         self.parent = kwargs.pop('parent')
+        self._target_coords = None
         MovableEntity.__init__(self, *args, **kwargs)
 
     def suicide(self):
@@ -505,11 +504,23 @@ class ParticleEntity(MovableEntity):
 
     def attack(self):
         target = self.target
+
         if not target.is_alive():
             self.suicide()
         elif self.instance.map.get_distance(self, target) > 1:
-            self.move_to(target)
-            self._execute_movement_queue(True)
+            target_coords = (target.x, target.y)
+
+            if self._target_coords != target_coords:
+                self._target_coords = target_coords
+                self.move_to(target)
+                self._execute_movement_queue(True)
         else:
             target.damage_taken(self.parent, self.parent.stats['attack'])
             self.suicide()
+
+    def get_base_stats(self):
+        base_stats = MovableEntity.get_base_stats(self)
+        base_stats.update({
+            'movement_speed': 1,
+        })
+        return base_stats
