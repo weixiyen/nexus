@@ -27,6 +27,7 @@ class @Entity
     @sprite = null
     @suppressInfo = false
     @hitsTaken = 0
+    @zIndexAdjustment = 0
 
     @target = data.target or null
     @type = 'unit'
@@ -62,7 +63,7 @@ class @Entity
       css:
         left: @left
         top: @top
-        zIndex: @top
+        zIndex: @top + @zIndexAdjustment
       data:
         entity: @
 
@@ -320,6 +321,7 @@ class @Tower extends Entity
 class @Nexus extends Entity
   constructor: (entity)->
     super
+    @zIndexAdjustment = -@height + 60
     @create()
 
 class @Minion extends MovableEntity

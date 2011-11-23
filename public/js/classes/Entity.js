@@ -35,6 +35,7 @@
       this.sprite = null;
       this.suppressInfo = false;
       this.hitsTaken = 0;
+      this.zIndexAdjustment = 0;
       this.target = data.target || null;
       this.type = 'unit';
     }
@@ -73,7 +74,7 @@
         css: {
           left: this.left,
           top: this.top,
-          zIndex: this.top
+          zIndex: this.top + this.zIndexAdjustment
         },
         data: {
           entity: this
@@ -363,6 +364,7 @@
     __extends(Nexus, Entity);
     function Nexus(entity) {
       Nexus.__super__.constructor.apply(this, arguments);
+      this.zIndexAdjustment = -this.height + 60;
       this.create();
     }
     return Nexus;
