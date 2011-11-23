@@ -438,9 +438,6 @@
     function TowerAttack(entity) {
       TowerAttack.__super__.constructor.apply(this, arguments);
       this.animationSkip = 2;
-      this.width = 33;
-      this.height = 33;
-      this.imgurl = IMGPATH + 'sprite_bolt_red.png';
       this.suppressInfo = true;
       this.anim = {
         n: ["0 -198px", "-33px -198px", "-66px -198px"],

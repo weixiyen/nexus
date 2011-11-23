@@ -578,9 +578,6 @@ class @TowerAttack extends MovableEntity
   constructor:(entity)->
     super
     @animationSkip = 2
-    @width = 33
-    @height = 33
-    @imgurl = IMGPATH + 'sprite_bolt_red.png'
     @suppressInfo = true
 
     @anim =
