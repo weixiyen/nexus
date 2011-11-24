@@ -370,6 +370,9 @@ class MovableEntity(Entity):
             if not ignore_atk and self.is_attacking() and Map.get_distance(self.position, self.target.position) > 2:
                 self.move_to(self.target)
 
+                if not self.is_moving():
+                    return
+
             self._move(*self._movement.pop())
 
             if not self._movement:
