@@ -1,4 +1,3 @@
-from operator import itemgetter
 from timer import Timer
 import random
 import ability
@@ -191,7 +190,7 @@ class Entity(object):
             if distance <= radius:
                 entities.append((distance, entity))
 
-        entities.sort(key=itemgetter(0))
+        entities.sort()
 
         for _, entity in entities:
             yield entity
@@ -440,6 +439,9 @@ class MonsterEntity(MovableEntity):
         if self.is_attacking():
             return
 
+        if self.instance.iteration_counter % 60:
+            return
+
         try:
             self.set_target(self.get_nearby_enemies(self.stats['aggro_radius']).next())
             self.move_to(self.target)
@@ -462,6 +464,9 @@ class MonsterEntity(MovableEntity):
 class StationaryMonsterEntity(Entity):
     def aggro(self):
         if self.is_attacking():
+            return
+
+        if self.instance.iteration_counter % 30:
             return
 
         try:
