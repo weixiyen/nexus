@@ -36,17 +36,17 @@ class SocketConnection(tornadio2.conn.SocketConnection):
         self.emit('initialize', state)
 
     @tornadio2.event('attack')
-    def attack(self, ability, target_id, coordinates):
+    def attack(self, ability, target_id, position):
         if not ability:
             self.player.set_target(target_id)
         else:
-            self.player.ability(ability, target_id, coordinates)
+            self.player.ability(ability, target_id, position)
 
     @tornadio2.event('move')
-    def move(self, coordinates):
+    def move(self, position):
         if self.player.is_alive():
             self.player.set_target(None)
-            self.player.move(*coordinates)
+            self.player.move(*position)
 
     def on_message(self, message):
         pass

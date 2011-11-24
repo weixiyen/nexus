@@ -1,10 +1,10 @@
 import buff
 
-def aoe(self, coordinates):
+def aoe(self, position):
     targets = []
 
-    for entity in self.get_enemies_at(coordinates, 5):
-         if self.instance.map.get_distance(self, entity) <= 15:
+    for entity in self.get_enemies_at(position, 5):
+         if self.instance.map.get_distance(self.position, entity.position) <= 15:
              targets.append(entity)
 
     if targets:

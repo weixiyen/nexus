@@ -1,4 +1,5 @@
 from heapq import heappop, heappush
+from collections import defaultdict
 
 DX = [1, 1, 0, -1, -1, -1, 0, 1]
 DY = [0, 1, 1, 1, 0, -1, -1, -1]
@@ -17,13 +18,6 @@ class Node(object):
         self.y = y
         self.pos = [x, y]
         self.type = type_
-
-        self.f = 0
-        self.g = 0
-        self.h = 0
-        self.visited = False
-        self.closed = False
-        self.parent = None
 
     def is_walkable(self):
         return self.type == 0
@@ -53,9 +47,6 @@ class Node(object):
 
         return ret
 
-    def get_heap_value(self):
-        return self.f, self
-
 class Graph(object):
     def __init__(self, grid):
         self.grid = grid
@@ -82,23 +73,21 @@ class Graph(object):
         return None
 
     def search(self, start, end, walkable_only=True, heuristic=manhatton):
-        for row in self.nodes:
-            for node in row:
-                node.f = 0
-                node.g = 0
-                node.h = 0
-                node.visited = False
-                node.closed = False
-                node.parent = None
-
         start = self.get_node(*start)
         end = self.get_node(*end)
 
         if not start or not end or not end.is_walkable():
             return []
 
+        f = defaultdict(lambda: 0)
+        g = defaultdict(lambda: 0)
+        h = defaultdict(lambda: 0)
+        visited = defaultdict(lambda: False)
+        closed = defaultdict(lambda: False)
+        parent = defaultdict(lambda: None)
+
         open_heap = []
-        heappush(open_heap, start.get_heap_value())
+        heappush(open_heap, (f[start], start))
 
         while open_heap:
             _, current_node = heappop(open_heap)
@@ -106,31 +95,31 @@ class Graph(object):
             if current_node == end:
                 ret = []
 
-                while current_node.parent:
+                while parent[current_node]:
                     ret.append([current_node.x, current_node.y])
-                    current_node = current_node.parent
+                    current_node = parent[current_node]
 
                 return ret
 
-            current_node.closed = True
+            closed[current_node] = True
 
             for neighbor in current_node.get_neigbhors(walkable_only):
-                if neighbor.closed:
+                if closed[neighbor]:
                     continue
 
-                g_score = current_node.g + 1
-                been_visited = neighbor.visited
+                g_score = g[current_node] + 1
+                been_visited = visited[neighbor]
 
-                if not been_visited or g_score < neighbor.g:
-                    neighbor.visited = True
-                    neighbor.parent = current_node
-                    neighbor.h = neighbor.h or heuristic(neighbor.pos, end.pos)
-                    neighbor.g = g_score
-                    neighbor.f = neighbor.g + neighbor.h
+                if not been_visited or g_score < g[neighbor]:
+                    visited[neighbor] = True
+                    parent[neighbor] = current_node
+                    h[neighbor] = h[neighbor] or heuristic(neighbor.pos, end.pos)
+                    g[neighbor] = g_score
+                    f[neighbor] = g[neighbor] + h[neighbor]
 
                     if been_visited:
                         open_heap =  [(score, value) for score, value in open_heap if value != neighbor]
 
-                    heappush(open_heap, neighbor.get_heap_value())
+                    heappush(open_heap, (f[neighbor], neighbor))
 
         return []

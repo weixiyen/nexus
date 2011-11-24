@@ -1,9 +1,9 @@
 from operator import itemgetter
-import random
 from timer import Timer
-from map import Map
+import random
 import ability
 from sprite import Sprite
+from map import Map
 
 LEVEL = {}
 
@@ -48,6 +48,10 @@ class Entity(object):
         self._mp_regen_timer = Timer(500)
 
         self.instance.add_entity(self)
+
+    @property
+    def position(self):
+        return self.x, self.y
 
     def set_level(self, level=1):
         self.level = level
@@ -149,16 +153,16 @@ class Entity(object):
         if not target.is_alive():
             self.set_target(None)
         elif self.instance.iteration_counter % 5 and not isinstance(self, PlayerEntity):
-            if self.instance.map.get_distance(self, target) > self.stats['aggro_radius'] * 8:
+            if Map.get_distance(self.position, target.position) > self.stats['aggro_radius'] * 8:
                 self.set_target(None)
 
                 if isinstance(self, MovableEntity):
                     self.stop_movement()
 
                 self.instance.logger.debug('Lost Aggro %r -> %r' % (self, target))
-        elif isinstance(self, MovableEntity) and self.instance.map.get_distance(self, target) > 1:
+        elif isinstance(self, MovableEntity) and Map.get_distance(self.position, target.position) > 1:
             self.move_to(target)
-            self._execute_movement_queue(True)
+            self._execute_movement(True)
         elif self._attack_timer.is_ready():
             self._execute_attack(target)
 
@@ -182,7 +186,7 @@ class Entity(object):
             if isinstance(entity, ParticleEntity):
                 continue
 
-            distance = self.instance.map.get_distance(self, entity)
+            distance = Map.get_distance(self.position, entity.position)
 
             if distance <= radius:
                 entities.append((distance, entity))
@@ -202,7 +206,7 @@ class Entity(object):
             if entity.faction == self.faction:
                 yield entity
 
-    def get_entities_at(self, coordinates, radius):
+    def get_entities_at(self, position, radius):
         for entity in self.instance.entities:
             if entity == self:
                 continue
@@ -213,11 +217,11 @@ class Entity(object):
             if isinstance(entity, ParticleEntity):
                 continue
 
-            if self.instance.map.get_distance(coordinates, entity) <= radius:
+            if Map.get_distance(position, entity.position) <= radius:
                 yield entity
 
-    def get_enemies_at(self, coordinates, radius):
-        for entity in self.get_entities_at(coordinates, radius):
+    def get_enemies_at(self, position, radius):
+        for entity in self.get_entities_at(position, radius):
             if entity.faction != self.faction:
                 yield entity
 
@@ -282,7 +286,7 @@ class Entity(object):
             'level': self.level
         })
 
-        # incase we earned more then we need
+        # in case we earned more then we need
         self.increase_experience(0)
 
     def use_mp(self, amt):
@@ -329,7 +333,7 @@ class MovableEntity(Entity):
     def __init__(self, *args, **kwargs):
         Entity.__init__(self, *args, **kwargs)
 
-        self._movement_queue = []
+        self._movement = None
         self.set_movement_speed(self.stats['movement_speed'])
 
     def _move(self, x, y):
@@ -341,19 +345,17 @@ class MovableEntity(Entity):
         self._move(entity.x, entity.y)
 
     def move(self, x, y):
-        self._movement_queue = self.instance.map.find_path([self.x, self.y], [x, y], not isinstance(self, ParticleEntity))
+        movement = self.instance.map.find_path([self.x, self.y], [x, y], not isinstance(self, ParticleEntity))
+        self._movement = movement if movement else None
 
     def move_to(self, entity):
         self.move(entity.x, entity.y)
 
-    def _next_move(self):
-        return self._movement_queue.pop()
-
     def is_moving(self):
-        return len(self._movement_queue) != 0
+        return self._movement is not None
 
     def stop_movement(self):
-        self._movement_queue = []
+        self._movement = None
 
     def set_movement_speed(self, movement_speed):
         self.movement_speed = movement_speed
@@ -363,20 +365,20 @@ class MovableEntity(Entity):
 
         self._movement_timer = Timer(movement_speed * 100)
 
-    def _execute_movement_queue(self, ignore_atk=False):
+    def _execute_movement(self, ignore_atk=False):
         if self.is_moving() and self._movement_timer.is_ready():
-            if not ignore_atk and self.is_attacking() and self.instance.map.get_distance(self, self.target) > 2:
+            if not ignore_atk and self.is_attacking() and Map.get_distance(self.position, self.target.position) > 2:
                 self.move_to(self.target)
 
-            try:
-                self._move(*self._next_move())
-            except IndexError:
-                pass
+            self._move(*self._movement.pop())
+
+            if not self._movement:
+                self._movement = None
 
             raise StopIteration
 
     def next_iteration(self):
-        self._execute_movement_queue()
+        self._execute_movement()
         Entity.next_iteration(self)
 
 class PlayerEntity(MovableEntity):
@@ -400,11 +402,11 @@ class PlayerEntity(MovableEntity):
 
         self.emit('name-change', self.id, name)
 
-    def ability(self, action, target_id, coordinates):
+    def ability(self, action, target_id, position):
         target = self.instance.get_entity(target_id)
 
         if action == 1 and self.use_mp(10): # aoe
-            ability.aoe(self, coordinates)
+            ability.aoe(self, position)
         elif action == 2 and self.use_mp(5): # slow
             ability.slow(target)
         elif action == 3 and self.use_mp(15): # haste myself
@@ -428,6 +430,7 @@ class MonsterEntity(MovableEntity):
     def __init__(self, *args, **kwargs):
         MovableEntity.__init__(self, *args, **kwargs)
 
+        self._patrol = self.instance.map.get_positions(self.x, self.y, self.stats['patrol_radius'])
         self._patrol_timer = Timer(10000, True)
 
     def aggro(self):
@@ -450,29 +453,7 @@ class MonsterEntity(MovableEntity):
             self.aggro()
 
         if not self.is_moving() and self._patrol_timer.is_ready():
-            if Map.get_distance((self.x, self.y), self._home) > self.stats['patrol_radius']:
-                x, y = self._home
-            else:
-                x = self.x
-                y = self.y
-
-                if random.randint(0, 1):
-                    x += random.randint(-self.stats['patrol_radius'], self.stats['patrol_radius'])
-                else:
-                    y += random.randint(-self.stats['patrol_radius'], self.stats['patrol_radius'])
-
-                if x < 0:
-                    x = self.instance.map.width - 1
-                elif x > self.instance.map.width - 1:
-                    x = 0
-
-                if y < 0:
-                    y = self.instance.map.height - 1
-                elif y > self.instance.map.height - 1:
-                    y = 0
-
-            self.move(x, y)
-
+            self.move(*random.choice(self._patrol))
             self.instance.logger.debug('Moving %r' % self)
 
 class StationaryMonsterEntity(Entity):
@@ -514,7 +495,7 @@ class ParticleEntity(MovableEntity):
 
         if not target.is_alive():
             self.suicide()
-        elif self.instance.map.get_distance(self, target) > 0:
+        elif Map.get_distance(self.position, target.position) > 0:
             target_coords = (target.x, target.y)
 
             if self._target_coords != target_coords:
@@ -525,7 +506,7 @@ class ParticleEntity(MovableEntity):
                 if not self.is_moving():
                     self.suicide()
                 else:
-                    self._execute_movement_queue(True)
+                    self._execute_movement(True)
         else:
             target.damage_taken(self.parent, self.parent.stats['attack'])
             self.suicide()

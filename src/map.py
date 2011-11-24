@@ -1,4 +1,4 @@
-import math
+from math import sqrt, ceil
 from graph import Graph
 
 class Map(object):
@@ -11,7 +11,7 @@ class Map(object):
         for i in range(height):
             self._data.append([0] * width)
 
-        v = int(math.ceil(width / 2.0))
+        v = int(ceil(width / 2.0))
 
         for y in xrange(v):
             for x in xrange(v):
@@ -27,9 +27,11 @@ class Map(object):
 
         self._graph = Graph(self)
 
+        self.find_path = self._graph.search
+
     def block(self, x, y, width=1, height=1):
-        width = int(math.ceil(width / 32.0 / 2.0))
-        height = int(math.ceil(height / 16.0 / 2.0))
+        width = int(ceil(width / 32.0 / 2.0))
+        height = int(ceil(height / 16.0 / 2.0))
 
         for i in xrange(height):
             for j in xrange(width):
@@ -53,21 +55,25 @@ class Map(object):
     def is_walkable(self, x, y):
         return self[y][x] == 0
 
-    def find_path(self, from_, to, walkable_only=True):
-        return self._graph.search(from_, to, walkable_only)
+    def get_positions(self, x, y, radius=1):
+        nodes = []
+
+        def add_node(node):
+            if node in nodes or self.get_distance((x, y), node.pos) > radius:
+                return
+
+            nodes.append(node)
+            map(add_node, node.get_neigbhors())
+
+        add_node(self._graph.get_node(x, y))
+
+        return [node.pos for node in nodes]
 
     @staticmethod
     def get_distance(from_, to):
-        if not isinstance(from_, (list, tuple)):
-            from_ = (from_.x, from_.y)
-
-        if not isinstance(to, (list, tuple)):
-            to = (to.x, to.y)
-
-        xd = to[0] - from_[0]
-        yd = to[1] - from_[1]
-
-        return math.sqrt(xd * xd + yd * yd)
+        dx = to[0] - from_[0]
+        dy = to[1] - from_[1]
+        return sqrt(dx * dx + dy * dy)
 
     def __getitem__(self, item):
         return self._data[item]
