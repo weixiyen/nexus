@@ -2,7 +2,7 @@ import Image
 import os
 import random
 
-SPRITE_PATH = os.path.join(os.path.dirname(__file__), '../public/img')
+SPRITE_PATH = os.path.join(os.path.dirname(__file__), '../../public/img')
 CACHE = {}
 
 class Sprite(object):

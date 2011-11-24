@@ -1,6 +1,6 @@
-from entity import Entity, MonsterEntity, StationaryMonsterEntity, ParticleEntity
-from timer import Timer
-from sprite import Sprite
+from venom.entity import Entity, MonsterEntity, StationaryMonsterEntity, ParticleEntity
+from venom.timer import Timer
+from venom.sprite import Sprite
 
 class Minion(MonsterEntity):
     sprite = Sprite('character/robot.png', 48, 45)

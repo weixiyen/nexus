@@ -1,4 +1,4 @@
-import buff
+from venom import buff
 
 def aoe(self, position):
     targets = []

@@ -4,7 +4,7 @@ import tornado.options
 import os
 import tornadio2
 import uuid
-from instance import Instance
+import venom
 
 ROOT_PATH = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(ROOT_PATH, '../public')
@@ -25,7 +25,7 @@ class IndexHandler(BaseHandler):
 
 class SocketConnection(tornadio2.conn.SocketConnection):
     def on_open(self, request):
-        self.instance = Instance.get(request.get_argument('instance'))
+        self.instance = venom.Instance.get(request.get_argument('instance'))
 
         self.uid = request.get_cookie('uid').value
         self.player = self.instance.add_player(self, request.get_argument('name'))

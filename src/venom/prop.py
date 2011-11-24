@@ -1,4 +1,4 @@
-from sprite import Sprite
+from venom.sprite import Sprite
 
 class Prop(object):
     id = 0

@@ -4,11 +4,10 @@ import tornado.ioloop
 import datetime
 import simplejson
 
-from map import Map
-from entity import Entity, PlayerEntity
-from sprite import Sprite
-import mob
-import prop
+from venom.map import Map
+from venom.entity import Entity, PlayerEntity
+from venom.sprite import Sprite
+from venom import mob, prop
 
 FPS = 60
 

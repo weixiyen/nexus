@@ -1,8 +1,9 @@
-from timer import Timer
+from venom.timer import Timer
+from venom import ability
+from venom.sprite import Sprite
+from venom.map import Map
+
 import random
-import ability
-from sprite import Sprite
-from map import Map
 
 LEVEL = {}
 

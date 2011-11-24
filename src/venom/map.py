@@ -1,5 +1,5 @@
 from math import sqrt, ceil
-from graph import Graph
+from venom.graph import Graph
 
 class Map(object):
     def __init__(self, width, height):
