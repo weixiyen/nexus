@@ -74,7 +74,7 @@ class Entity(object):
             'attack': 0,
             'attack_speed': 5,
             'movement_speed': 4,
-            'aggro_radius': 3,
+            'aggro_radius': 4,
             'patrol_radius': 8,
             'respawn': True
         }
@@ -436,10 +436,7 @@ class MonsterEntity(MovableEntity):
         self._patrol_timer = Timer(10000, True)
 
     def aggro(self):
-        if self.is_attacking():
-            return
-
-        if self.instance.iteration_counter % 60:
+        if self.is_attacking() or self.instance.iteration_counter % 10:
             return
 
         try:
@@ -463,10 +460,7 @@ class MonsterEntity(MovableEntity):
 
 class StationaryMonsterEntity(Entity):
     def aggro(self):
-        if self.is_attacking():
-            return
-
-        if self.instance.iteration_counter % 30:
+        if self.is_attacking() or self.instance.iteration_counter % 10:
             return
 
         try:
