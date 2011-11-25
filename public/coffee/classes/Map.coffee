@@ -7,6 +7,8 @@ TILE_H = 176
 BUFFER = 1 # for rendering tiles
 RENDER_INTERVAL = 8
 
+DEBUG = false
+
 class @Map
 
   constructor: (options) ->
@@ -35,7 +37,12 @@ class @Map
     @listenToEvents()
     @setUpTiles()
 
-  renderGraph: ->
+  debug: ->
+    if DEBUG == true
+      DEBUG = false
+      @$canvas.find('.collision-block').remove()
+      return false
+    DEBUG = true
     blocks = []
     yMax = @graph.length
     xMax = @graph[0].length
@@ -43,9 +50,9 @@ class @Map
       for x in [0...xMax]
         if @graph[y][x] == 2
           blocks.push(@getCollisionBlock(x, y))
-    game.$canvas.find('.collision-block').remove().append.apply(game.$canvas, blocks)
+    @$canvas.find('.collision-block').remove().append.apply(@$canvas, blocks)
     console.log blocks.length + ' blocks rendered'
-    return null
+    return true
 
   getCollisionBlock: (x, y)->
     el = $ '<div/>'
@@ -74,10 +81,10 @@ class @Map
   listenToEvents: ->
     @$canvas.on 'click', (e)=>
       game.moveUser(@getMouseX(), @getMouseY())
-      if window.DEBUG == true
+      if DEBUG == true
         x = Math.round(@mouseOffsetX / GRID_W)
         y = Math.round(@mouseOffsetY / GRID_H)
-        map.$canvas.append(@getCollisionBlock(x, y))
+        @$canvas.append(@getCollisionBlock(x, y))
 
 
     @$canvas.on 'mousemove', (e)=>
@@ -138,7 +145,6 @@ class @Map
     y2 = Math.ceil(topEnd / TILE_H) + BUFFER
 
     purgeIds = []
-    propPurgeIds = []
     for id, stub of @visibleTiles
       pieces = stub.split('-')
       x = pieces[1]
@@ -148,10 +154,9 @@ class @Map
         delete @visibleTiles[id]
         continue if !(props=@cachedProps[id])
         for prop in props
-          propPurgeIds.push('#'+prop.elementId)
+          purgeIds.push('#'+prop.elementId)
 
-    $tilesToRender = []
-    $propsToRender = []
+    $objectsToRender = []
     for y in [y1...y2]
       for x in [x1...x2]
         txy = 't-'+x+'-'+y
@@ -159,16 +164,13 @@ class @Map
         continue if @visibleTiles[txy]
 
         @visibleTiles[txy] = txy
-        $tilesToRender.push(@cachedFragments[txy])
+        $objectsToRender.push(@cachedFragments[txy])
         continue if !(props=@cachedProps[txy])
         for prop in props
-          $propsToRender.push(prop.$el)
+          $objectsToRender.push(prop.$el)
 
-    @$canvas.append.apply(@$canvas,$tilesToRender) if $tilesToRender.length > 0
+    @$canvas.append.apply(@$canvas,$objectsToRender) if $objectsToRender.length > 0
     @$canvas.find(purgeIds.join(',')).remove() if purgeIds.length > 0
-
-    game.$canvas.append.apply(game.$canvas,$propsToRender) if $propsToRender.length > 0
-    game.$canvas.find(propPurgeIds.join(',')).remove() if propPurgeIds.length > 0
 
     return null
 

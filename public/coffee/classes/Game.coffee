@@ -7,7 +7,6 @@ class @Game
   UI_HEIGHT = 50 #height of bottom interface used to center user correctly
 
   constructor: (options)->
-    @$canvas = options.$canvas
     @loopItems = {}
     @entities = {}
     @props = {}
@@ -22,18 +21,6 @@ class @Game
       up: false
       down: false
     @beginLoop()
-
-  hide: ->
-    window.DEBUG = true
-    @$canvas.hide()
-
-  show: ->
-    window.DEBUG = false
-    @$canvas.show()
-
-  showBlocks: ->
-    @show()
-    map.renderGraph()
 
   isUserId: (id)->
     return id == @userId
@@ -50,7 +37,6 @@ class @Game
     gameLoop()
 
   reset: ->
-    @$canvas.empty()
     @entities = {}
     @props = {}
 
@@ -58,7 +44,6 @@ class @Game
     style =
       left: @left
       top: @top
-    @$canvas.css(style)
     map.renderOffset(style)
 
   setUserId: (entityId)->
@@ -99,7 +84,7 @@ class @Game
     if entity.hasTarget() then entity.aggro(entity.target)
     @entities[STUB+entity.id] = entity
 
-    @addToCanvas(entity.$el)
+    @addToMap(entity.$el)
     if isUser then @userLoaded()
 
   getEntity: (id)->
@@ -125,8 +110,6 @@ class @Game
       prop = new window[propData.kind](propData)
     if prop == null then return
     @props[PROP+propData.id] = prop
-
-    #@addToCanvas(prop.$el)
 
   removeEntity: (entityId)->
     @entities[STUB+entityId].remove()
@@ -202,8 +185,8 @@ class @Game
     events.userAttack(attackType, targetId, mouseCoords)
     interface.releaseAbilityIcon(attackType)
 
-  addToCanvas: ($element)->
-    @$canvas.append($element)
+  addToMap: ($element)->
+    map.$canvas.append($element)
 
   addLoopItem: (loopId, frequency, fn) ->
     @loopItems[loopId] =

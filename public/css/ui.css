@@ -28,59 +28,53 @@ img {
   position: absolute;
   z-index: 100;
   cursor: pointer; }
-
-.ui-game {
-  position: absolute;
-  z-index: 1000;
-  height: 0;
-  width: 0; }
-  .ui-game .prop {
+  .ui-map .prop {
     position: absolute; }
-  .ui-game .entity {
+  .ui-map .entity {
     position: absolute; }
-    .ui-game .entity .body {
+    .ui-map .entity .body {
       position: absolute; }
-    .ui-game .entity.user:hover, .ui-game .entity.player:hover, .ui-game .entity.unit:hover {
+    .ui-map .entity.user:hover, .ui-map .entity.player:hover, .ui-map .entity.unit:hover {
       cursor: pointer; }
-      .ui-game .entity.user:hover .name, .ui-game .entity.player:hover .name, .ui-game .entity.unit:hover .name {
+      .ui-map .entity.user:hover .name, .ui-map .entity.player:hover .name, .ui-map .entity.unit:hover .name {
         color: #6cbfff; }
-      .ui-game .entity.user:hover .name.red, .ui-game .entity.player:hover .name.red, .ui-game .entity.unit:hover .name.red {
+      .ui-map .entity.user:hover .name.red, .ui-map .entity.player:hover .name.red, .ui-map .entity.unit:hover .name.red {
         color: #6cbfff; }
-    .ui-game .entity.user.targeted, .ui-game .entity.player.targeted, .ui-game .entity.unit.targeted {
+    .ui-map .entity.user.targeted, .ui-map .entity.player.targeted, .ui-map .entity.unit.targeted {
       cursor: pointer; }
-      .ui-game .entity.user.targeted .name, .ui-game .entity.player.targeted .name, .ui-game .entity.unit.targeted .name {
+      .ui-map .entity.user.targeted .name, .ui-map .entity.player.targeted .name, .ui-map .entity.unit.targeted .name {
         color: #6cbfff; }
-      .ui-game .entity.user.targeted .name.red, .ui-game .entity.player.targeted .name.red, .ui-game .entity.unit.targeted .name.red {
+      .ui-map .entity.user.targeted .name.red, .ui-map .entity.player.targeted .name.red, .ui-map .entity.unit.targeted .name.red {
         color: #6cbfff; }
-    .ui-game .entity.user .name {
+    .ui-map .entity.user .name {
       color: white;
       text-shadow: black 0 0 4px;
       font: bold 11px Arial;
       width: 100px;
       text-align: center;
       position: absolute; }
-    .ui-game .entity.player .name {
+    .ui-map .entity.player .name {
       color: #aecfff;
       text-shadow: black 0 0 4px;
       font: bold 11px Arial;
       width: 100px;
       text-align: center;
       position: absolute; }
-    .ui-game .entity.unit .name {
+    .ui-map .entity.unit .name {
       color: yellow;
       text-shadow: black 0 0 4px;
       font: bold 11px Arial;
       width: 100px;
       text-align: center;
       position: absolute; }
-    .ui-game .entity.unit .name.red {
+    .ui-map .entity.unit .name.red {
       color: #ff9a8a; }
-    .ui-game .entity .bar {
+    .ui-map .entity .bar {
       background: #333333;
       position: absolute;
       border: 1px solid #333333;
       width: 50px; }
-      .ui-game .entity .bar .hp {
+      .ui-map .entity .bar .hp {
         height: 5px;
         background: #adff2f;
         max-width: 100%;

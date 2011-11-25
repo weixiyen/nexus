@@ -8,7 +8,6 @@
     PAN_DIST = 15;
     UI_HEIGHT = 50;
     function Game(options) {
-      this.$canvas = options.$canvas;
       this.loopItems = {};
       this.entities = {};
       this.props = {};
@@ -25,18 +24,6 @@
       };
       this.beginLoop();
     }
-    Game.prototype.hide = function() {
-      window.DEBUG = true;
-      return this.$canvas.hide();
-    };
-    Game.prototype.show = function() {
-      window.DEBUG = false;
-      return this.$canvas.show();
-    };
-    Game.prototype.showBlocks = function() {
-      this.show();
-      return map.renderGraph();
-    };
     Game.prototype.isUserId = function(id) {
       return id === this.userId;
     };
@@ -62,7 +49,6 @@
       return gameLoop();
     };
     Game.prototype.reset = function() {
-      this.$canvas.empty();
       this.entities = {};
       return this.props = {};
     };
@@ -72,7 +58,6 @@
         left: this.left,
         top: this.top
       };
-      this.$canvas.css(style);
       return map.renderOffset(style);
     };
     Game.prototype.setUserId = function(entityId) {
@@ -127,7 +112,7 @@
         entity.aggro(entity.target);
       }
       this.entities[STUB + entity.id] = entity;
-      this.addToCanvas(entity.$el);
+      this.addToMap(entity.$el);
       if (isUser) {
         return this.userLoaded();
       }
@@ -279,8 +264,8 @@
       events.userAttack(attackType, targetId, mouseCoords);
       return interface.releaseAbilityIcon(attackType);
     };
-    Game.prototype.addToCanvas = function($element) {
-      return this.$canvas.append($element);
+    Game.prototype.addToMap = function($element) {
+      return map.$canvas.append($element);
     };
     Game.prototype.addLoopItem = function(loopId, frequency, fn) {
       return this.loopItems[loopId] = {

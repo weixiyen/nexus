@@ -1,10 +1,7 @@
 (function() {
-  this.DEBUG = false;
   this.$document = $(document);
   this.$window = $(window);
-  this.game = new Game({
-    $canvas: $('#game')
-  });
+  this.game = new Game;
   this.map = new Map({
     $canvas: $('#map')
   });
@@ -123,14 +120,14 @@
   $document.on('contextmenu', function(e) {
     return e.preventDefault();
   });
-  game.$canvas.on('click', '.entity', function(e) {
+  map.$canvas.on('click', '.entity', function(e) {
     var entity;
     e.stopPropagation();
     e.preventDefault();
     entity = $(this).data('entity');
     return game.setUserTarget(entity.id);
   });
-  game.$canvas.on('dblclick', '.entity', function(e) {
+  map.$canvas.on('dblclick', '.entity', function(e) {
     var entity;
     e.preventDefault();
     e.stopPropagation();
@@ -138,7 +135,7 @@
     game.setUserTarget(entity.id);
     return events.userAttack(0, entity.id, [map.getMouseCoords()]);
   });
-  game.$canvas.on('contextmenu', '.entity', function(e) {
+  map.$canvas.on('contextmenu', '.entity', function(e) {
     e.preventDefault();
     e.stopPropagation();
     return $(this).trigger('dblclick');

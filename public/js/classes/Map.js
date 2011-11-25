@@ -1,5 +1,5 @@
 (function() {
-  var BUFFER, GRID_H, GRID_W, RENDER_INTERVAL, TILE_H, TILE_W;
+  var BUFFER, DEBUG, GRID_H, GRID_W, RENDER_INTERVAL, TILE_H, TILE_W;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   GRID_W = 32;
   GRID_H = 16;
@@ -7,6 +7,7 @@
   TILE_H = 176;
   BUFFER = 1;
   RENDER_INTERVAL = 8;
+  DEBUG = false;
   this.Map = (function() {
     function Map(options) {
       this.render = __bind(this.render, this);      this.$canvas = options.$canvas;
@@ -33,8 +34,14 @@
       this.listenToEvents();
       return this.setUpTiles();
     };
-    Map.prototype.renderGraph = function() {
+    Map.prototype.debug = function() {
       var blocks, x, xMax, y, yMax;
+      if (DEBUG === true) {
+        DEBUG = false;
+        this.$canvas.find('.collision-block').remove();
+        return false;
+      }
+      DEBUG = true;
       blocks = [];
       yMax = this.graph.length;
       xMax = this.graph[0].length;
@@ -45,9 +52,9 @@
           }
         }
       }
-      game.$canvas.find('.collision-block').remove().append.apply(game.$canvas, blocks);
+      this.$canvas.find('.collision-block').remove().append.apply(this.$canvas, blocks);
       console.log(blocks.length + ' blocks rendered');
-      return null;
+      return true;
     };
     Map.prototype.getCollisionBlock = function(x, y) {
       var el;
@@ -80,10 +87,10 @@
       this.$canvas.on('click', __bind(function(e) {
         var x, y;
         game.moveUser(this.getMouseX(), this.getMouseY());
-        if (window.DEBUG === true) {
+        if (DEBUG === true) {
           x = Math.round(this.mouseOffsetX / GRID_W);
           y = Math.round(this.mouseOffsetY / GRID_H);
-          return map.$canvas.append(this.getCollisionBlock(x, y));
+          return this.$canvas.append(this.getCollisionBlock(x, y));
         }
       }, this));
       return this.$canvas.on('mousemove', __bind(function(e) {
@@ -146,7 +153,7 @@
       return this.$canvas.append($element);
     };
     Map.prototype.render = function() {
-      var $propsToRender, $tilesToRender, id, imgpath, left, leftEnd, pieces, prop, propPurgeIds, props, purgeIds, stub, top, topEnd, txy, x, x1, x2, y, y1, y2, _i, _j, _len, _len2, _ref, _ref2;
+      var $objectsToRender, id, imgpath, left, leftEnd, pieces, prop, props, purgeIds, stub, top, topEnd, txy, x, x1, x2, y, y1, y2, _i, _j, _len, _len2, _ref, _ref2;
       left = Math.abs(this.left);
       top = Math.abs(this.top);
       leftEnd = left + this.clientX;
@@ -156,7 +163,6 @@
       x2 = Math.ceil(leftEnd / TILE_W) + BUFFER;
       y2 = Math.ceil(topEnd / TILE_H) + BUFFER;
       purgeIds = [];
-      propPurgeIds = [];
       _ref = this.visibleTiles;
       for (id in _ref) {
         stub = _ref[id];
@@ -171,12 +177,11 @@
           }
           for (_i = 0, _len = props.length; _i < _len; _i++) {
             prop = props[_i];
-            propPurgeIds.push('#' + prop.elementId);
+            purgeIds.push('#' + prop.elementId);
           }
         }
       }
-      $tilesToRender = [];
-      $propsToRender = [];
+      $objectsToRender = [];
       for (y = y1; y1 <= y2 ? y < y2 : y > y2; y1 <= y2 ? y++ : y--) {
         for (x = x1; x1 <= x2 ? x < x2 : x > x2; x1 <= x2 ? x++ : x--) {
           txy = 't-' + x + '-' + y;
@@ -187,27 +192,21 @@
             continue;
           }
           this.visibleTiles[txy] = txy;
-          $tilesToRender.push(this.cachedFragments[txy]);
+          $objectsToRender.push(this.cachedFragments[txy]);
           if (!(props = this.cachedProps[txy])) {
             continue;
           }
           for (_j = 0, _len2 = props.length; _j < _len2; _j++) {
             prop = props[_j];
-            $propsToRender.push(prop.$el);
+            $objectsToRender.push(prop.$el);
           }
         }
       }
-      if ($tilesToRender.length > 0) {
-        this.$canvas.append.apply(this.$canvas, $tilesToRender);
+      if ($objectsToRender.length > 0) {
+        this.$canvas.append.apply(this.$canvas, $objectsToRender);
       }
       if (purgeIds.length > 0) {
         this.$canvas.find(purgeIds.join(',')).remove();
-      }
-      if ($propsToRender.length > 0) {
-        game.$canvas.append.apply(game.$canvas, $propsToRender);
-      }
-      if (propPurgeIds.length > 0) {
-        game.$canvas.find(propPurgeIds.join(',')).remove();
       }
       return null;
     };

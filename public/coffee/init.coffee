@@ -1,10 +1,7 @@
-@DEBUG = false
-
 @$document = $(document)
 @$window = $(window)
 
 @game = new Game
-  $canvas: $('#game')
 
 @map = new Map
   $canvas: $('#map')
@@ -119,20 +116,20 @@ $document.on 'keyup', (e)->
 $document.on 'contextmenu', (e)->
   e.preventDefault()
 
-game.$canvas.on 'click', '.entity', (e)->
+map.$canvas.on 'click', '.entity', (e)->
   e.stopPropagation()
   e.preventDefault()
   entity = $(@).data('entity')
   game.setUserTarget(entity.id)
 
-game.$canvas.on 'dblclick', '.entity', (e)->
+map.$canvas.on 'dblclick', '.entity', (e)->
   e.preventDefault()
   e.stopPropagation()
   entity = $(@).data('entity')
   game.setUserTarget(entity.id)
   events.userAttack(0, entity.id, [map.getMouseCoords()])
 
-game.$canvas.on 'contextmenu', '.entity', (e)->
+map.$canvas.on 'contextmenu', '.entity', (e)->
   e.preventDefault()
   e.stopPropagation()
   $(@).trigger('dblclick')
