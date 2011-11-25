@@ -1,32 +1,36 @@
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
   this.Sprite = (function() {
+
     function Sprite(opts) {
       this.id = 'anim:' + opts.id;
       this.el = opts.el;
-      this.counter = 1;
+      this.index0 = opts.index0 || 1;
+      this.counter = this.index0;
     }
+
     Sprite.prototype.start = function(queue, skip) {
       var len;
+      var _this = this;
       len = queue.length;
-      return game.addLoopItem(this.id, skip, __bind(function() {
-        this.el.css({
-          'background-position': queue[this.counter]
+      return game.addLoopItem(this.id, skip, function() {
+        _this.el.css({
+          'background-position': queue[_this.counter]
         });
-        this.counter += 1;
-        if (this.counter === len) {
-          return this.counter = 1;
-        }
-      }, this));
+        _this.counter += 1;
+        if (_this.counter === len) return _this.counter = _this.index0;
+      });
     };
+
     Sprite.prototype.set = function(position) {
       return this.el.css({
         'background-position': position
       });
     };
+
     Sprite.prototype.stop = function() {
       return game.removeLoopItem(this.id);
     };
+
     return Sprite;
+
   })();
-}).call(this);

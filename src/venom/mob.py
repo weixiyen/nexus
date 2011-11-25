@@ -14,7 +14,7 @@ class Tower(StationaryMonsterEntity):
             kind=TowerAttack,
             parent=self,
             respawn=False,
-            sprite=Sprite('particle/bolt-%s.png' % self.faction, width=33, height=33),
+            sprite=Sprite('projectile/bolt-%s.png' % self.faction, walk=3),
         )
 
         particle.set_target(target)

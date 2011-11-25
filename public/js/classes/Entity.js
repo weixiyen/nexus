@@ -43,7 +43,7 @@
       this.type = 'unit';
       if (this.animate['walk']) {
         this.anim = {};
-        _ref = ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se'];
+        _ref = ['w', 'sw', 's', 'se', 'e', 'ne', 'n', 'nw'];
         for (i = 0, _len = _ref.length; i < _len; i++) {
           direction = _ref[i];
           this.anim[direction] = [];
@@ -298,6 +298,7 @@
       this.sprite = new Sprite({
         id: this.id,
         el: this.$elBody,
+        index0: this.animate.stand,
         skip: this.animationSkip
       });
       this.faceRandomDirection();
@@ -494,16 +495,6 @@
       TowerAttack.__super__.constructor.apply(this, arguments);
       this.animationSkip = 2;
       this.suppressInfo = true;
-      this.anim = {
-        n: ["0 -198px", "-33px -198px", "-66px -198px"],
-        s: ["0 -66px", "-33px -66px", "-66px -66px"],
-        w: ["0 0", "-33px 0", "-66px 0"],
-        e: ["0 -132px", "-33px -132px", "-66px -132px"],
-        ne: ["0 -165px", "-33px -165px", "-66px -165px"],
-        se: ["0 -99px", "-33px -99px", "-66px -99px"],
-        nw: ["0 -231px", "-33px -231px", "-66px -231px"],
-        sw: ["0 -33px", "-33px -33px", "-66px -33px"]
-      };
       this.create();
       this.startMoving();
     }
@@ -519,40 +510,5 @@
     return TowerAttack;
 
   })();
-
-  /*
-  class @User extends MovableEntity
-    constructor: (entity)->
-      super
-      @type = 'user'
-      @width = 40
-      @height = 64
-      @imgurl = IMGPATH + 'sprite_user.png'
-      @animationSkip = 8
-      @anim =
-        w: [
-          "0 0",
-          "-50px 0",
-          "-100px 0"
-          ]
-        n: [
-          "-150px 0",
-          "-200px 0",
-          "-250px 0"
-          ]
-        s: [
-          "-300px 0",
-          "-350px 0",
-          "-400px 0"
-          ]
-        e: [
-          "-450px 0",
-          "-500px 0",
-          "-550px 0"
-          ]
-  
-      @create()
-      @startMoving()
-  */
 
 }).call(this);

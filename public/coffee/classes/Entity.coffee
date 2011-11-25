@@ -36,7 +36,7 @@ class @Entity
     if @animate['walk']
       @anim = {}
 
-      for direction, i in ['nw', 'n', 'ne', 'w', 'e', 'sw' ,'s' ,'se']
+      for direction, i in ['w', 'sw', 's', 'se', 'e', 'ne', 'n' , 'nw']
         @anim[direction] = []
 
         for frame in [0...@animate['walk'] + @animate['stand']]
@@ -245,6 +245,7 @@ class @MovableEntity extends Entity
     @sprite = new Sprite
       id: @id
       el: @$elBody
+      index0: @animate.stand
       skip: @animationSkip
     @faceRandomDirection()
     game.addLoopItem 'unit:'+@id+':move', @speed, =>
@@ -393,49 +394,6 @@ class @TowerAttack extends MovableEntity
     super
     @animationSkip = 2
     @suppressInfo = true
-
-    @anim =
-      n: [
-        "0 -198px",
-        "-33px -198px",
-        "-66px -198px"
-        ]
-      s: [
-        "0 -66px",
-        "-33px -66px",
-        "-66px -66px"
-        ]
-      w: [
-        "0 0",
-        "-33px 0",
-        "-66px 0"
-        ]
-      e: [
-        "0 -132px",
-        "-33px -132px",
-        "-66px -132px"
-        ]
-      ne: [
-        "0 -165px",
-        "-33px -165px",
-        "-66px -165px"
-        ]
-      se: [
-        "0 -99px",
-        "-33px -99px",
-        "-66px -99px"
-        ]
-      nw: [
-        "0 -231px",
-        "-33px -231px",
-        "-66px -231px"
-        ]
-      sw: [
-        "0 -33px",
-        "-33px -33px",
-        "-66px -33px"
-        ]
-
     @create()
     @startMoving()
 
@@ -444,39 +402,3 @@ class @TowerAttack extends MovableEntity
 
   aggro: ->
     return null
-
-###
-class @User extends MovableEntity
-  constructor: (entity)->
-    super
-    @type = 'user'
-    @width = 40
-    @height = 64
-    @imgurl = IMGPATH + 'sprite_user.png'
-    @animationSkip = 8
-    @anim =
-      w: [
-        "0 0",
-        "-50px 0",
-        "-100px 0"
-        ]
-      n: [
-        "-150px 0",
-        "-200px 0",
-        "-250px 0"
-        ]
-      s: [
-        "-300px 0",
-        "-350px 0",
-        "-400px 0"
-        ]
-      e: [
-        "-450px 0",
-        "-500px 0",
-        "-550px 0"
-        ]
-
-    @create()
-    @startMoving()
-
-###
