@@ -2,6 +2,7 @@ from venom.timer import Timer
 from venom import ability
 from venom.sprite import Sprite
 from venom.map import Map
+import venom
 
 import random
 
@@ -131,6 +132,8 @@ class Entity(object):
         if self.is_alive():
             self.emit('target', self.id, target.id if target else None)
 
+        venom.logger.debug('Targeting %r => %r' % (self, self.target))
+
     def apply_buff(self, buff_type, source=None, duration=5000):
         for buff in self.buffs:
             if isinstance(buff, buff_type):
@@ -159,7 +162,7 @@ class Entity(object):
                 if isinstance(self, MovableEntity):
                     self.stop_movement()
 
-                self.instance.logger.debug('Lost Aggro %r -> %r' % (self, target))
+                venom.logger.debug('Lost Aggro %r => %r' % (self, target))
         elif isinstance(self, MovableEntity) and Map.get_distance(self.position, target.position) > 1:
             self.move_to(target)
             self._execute_movement(True)
@@ -171,7 +174,8 @@ class Entity(object):
 
     def _execute_attack(self, target):
         if target.damage_taken(self, self.stats['attack']):
-            self.instance.logger.debug('Attacking %r -> %r' % (self, target))
+            return
+            venom.logger.debug('Attacking %r => %r' % (self, target))
 
     def get_nearby_entities(self, radius):
         entities = []
@@ -237,7 +241,7 @@ class Entity(object):
 
             if random.randint(1, 10) == 5:
                 damage *= 2
-                self.instance.logger.debug('Critical!')
+                venom.logger.debug('Critical!')
                 critcal = True
 
             self.hp -= damage
@@ -256,7 +260,7 @@ class Entity(object):
                 if from_ and isinstance(from_, PlayerEntity):
                     from_.increase_experience(self.level * 50)
 
-                self.instance.logger.debug('Killed %r' % self)
+                venom.logger.debug('%r Died' % self)
                 self.emit('death', self.id)
 
             return True
@@ -443,7 +447,6 @@ class MonsterEntity(MovableEntity):
         try:
             self.set_target(self.get_nearby_enemies(self.stats['aggro_radius']).next())
             self.move_to(self.target)
-            self.instance.logger.debug('Targeting %r' % self.target)
         except StopIteration:
             pass
 
@@ -457,7 +460,7 @@ class MonsterEntity(MovableEntity):
 
         if not self.is_moving() and self._patrol_timer.is_ready():
             self.move(*random.choice(self._patrol))
-            self.instance.logger.debug('Moving %r' % self)
+            venom.logger.debug('Patrolling %r' % self)
 
 class StationaryMonsterEntity(Entity):
     def aggro(self):
@@ -466,7 +469,6 @@ class StationaryMonsterEntity(Entity):
 
         try:
             self.set_target(self.get_nearby_enemies(self.stats['aggro_radius']).next())
-            self.instance.logger.debug('Targeting %r' % self.target)
         except StopIteration:
             if self.target:
                 self.set_target(None)

@@ -1,5 +1,4 @@
 import random
-import logging
 import tornado.ioloop
 import datetime
 import simplejson
@@ -8,6 +7,7 @@ from venom.map import Map
 from venom.entity import Entity, PlayerEntity
 from venom.sprite import Sprite
 from venom import mob, prop
+import venom
 
 FPS = 60
 
@@ -30,9 +30,6 @@ class Instance(object):
         self._emit_buffer = []
 
         self.iteration_counter = 0
-
-        self.logger = logging.getLogger('instance:%d' % self.id)
-#        self.logger.setLevel(logging.DEBUG)
 
     @classmethod
     def get(cls, instance_id):
@@ -80,12 +77,12 @@ class Instance(object):
     def start(self):
         if not self.running:
             self.running = True
-            self.logger.debug('Starting')
+            venom.logger.debug('Starting %r' % self)
             self.next_iteration()
 
     def stop(self):
         self.running = False
-        self.logger.debug('Stopping')
+        venom.logger.debug('Stopping  %r' % self)
 
     def serialize(self):
         return {
@@ -165,7 +162,7 @@ class Instance(object):
 
         mob = kind(self, name, x, y, **kwargs)
 
-        self.logger.debug('Spawning %r' % mob)
+        venom.logger.debug('Spawning %r' % mob)
 
         return mob
 
@@ -197,7 +194,7 @@ class Instance(object):
 
         prop_ = kind(self, x=x, y=y, **kwargs)
 
-        self.logger.debug('Placing %r' % prop_)
+        venom.logger.debug('Placing %r' % prop_)
 
         return prop_
 
