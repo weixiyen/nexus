@@ -16,7 +16,7 @@
       },
       search: function(grid, start, end, heuristic) {
           astar.init(grid);
-          heuristic = heuristic || astar.manhattan;
+          heuristic = heuristic || astar.euclidean;
 
   		var openHeap = new BinaryHeap(function(node){return node.f;});
   		openHeap.push(start);
@@ -90,6 +90,11 @@
           var d2 = Math.abs (pos1.y - pos0.y);
           return d1 + d2;
       },
+      euclidean: function(pos0, pos1) {
+          var d1 = pos1.x - pos0.x;
+          var d2 = pos1.y - pos0.y;
+          return Math.sqrt(d1 * d1 + d2 * d2);
+      },
       neighbors: function(grid, node) {
           var ret = [];
   	    var x = node.x;
@@ -107,6 +112,18 @@
   	    if(grid[x] && grid[x][y+1]) {
   		    ret.push(grid[x][y+1]);
   	    }
+        if( grid[x-1] && grid[x-1][y-1] ) {
+            ret.push(grid[x-1][y-1])
+        }
+        if( grid[x-1] && grid[x-1][y+1] ) {
+            ret.push(grid[x-1][y+1])
+        }
+        if( grid[x+1] && grid[x+1][y-1] ) {
+            ret.push(grid[x+1][y-1])
+        }
+        if( grid[x+1] && grid[x+1][y+1] ) {
+            ret.push(grid[x+1][y+1])
+        }
   	    return ret;
       }
   };
