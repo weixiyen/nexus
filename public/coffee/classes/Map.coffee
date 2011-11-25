@@ -1,5 +1,5 @@
 GRID_W = 32
-GRID_H = 16
+GRID_H = 32
 
 TILE_W = 302
 TILE_H = 176
