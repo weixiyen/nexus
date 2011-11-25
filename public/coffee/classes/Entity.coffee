@@ -37,12 +37,10 @@ class @Entity
       @anim = {}
 
       for direction, i in ['nw', 'n', 'ne', 'w', 'e', 'sw' ,'s' ,'se']
-        frames = @animate['walk'] + @animate['stand']
+        @anim[direction] = []
 
-        @anim[direction] = directions = []
-
-        for frame in [0...frames]
-          directions.push("-#{frame * @width}px -#{i * @height}px")
+        for frame in [0...@animate['walk'] + @animate['stand']]
+          @anim[direction].push("-#{frame * @width}px -#{i * @height}px")
 
   isAlive: ->
     return @hp > 0

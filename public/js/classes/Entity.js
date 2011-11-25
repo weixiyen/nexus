@@ -18,7 +18,7 @@
     STUB = 'ent-';
 
     function Entity(data) {
-      var direction, directions, frame, frames, i, _len, _ref;
+      var direction, frame, i, _len, _ref, _ref2;
       this.id = data.id;
       this.hp = data.hp;
       this.mp = data.mp;
@@ -46,10 +46,9 @@
         _ref = ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se'];
         for (i = 0, _len = _ref.length; i < _len; i++) {
           direction = _ref[i];
-          frames = this.animate['walk'] + this.animate['stand'];
-          this.anim[direction] = directions = [];
-          for (frame = 0; 0 <= frames ? frame < frames : frame > frames; 0 <= frames ? frame++ : frame--) {
-            directions.push("-" + (frame * this.width) + "px -" + (i * this.height) + "px");
+          this.anim[direction] = [];
+          for (frame = 0, _ref2 = this.animate['walk'] + this.animate['stand']; 0 <= _ref2 ? frame < _ref2 : frame > _ref2; 0 <= _ref2 ? frame++ : frame--) {
+            this.anim[direction].push("-" + (frame * this.width) + "px -" + (i * this.height) + "px");
           }
         }
       }

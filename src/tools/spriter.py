@@ -40,6 +40,7 @@ def make_sprite(directory):
 
     for i, direction, in enumerate(meow):
         frames = directions[direction]
+        frames.sort()
 
         for j, im in frames:
             left = max_width * j + ((max_width - im.size[0]) / 2)
