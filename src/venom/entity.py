@@ -339,14 +339,19 @@ class MovableEntity(Entity):
     def _move(self, x, y):
         self.x = x
         self.y = y
-        self.emit('move', self.id, x, y)
 
     def _move_to(self, entity):
         self._move(entity.x, entity.y)
 
     def move(self, x, y):
         movement = self.instance.map.find_path([self.x, self.y], [x, y], not isinstance(self, ParticleEntity))
-        self._movement = movement if movement else None
+
+        if movement:
+            self._movement = movement
+            self.emit('move', self.id, x, y)
+        else:
+            self._movement = None
+            self.emit('move', self.id, self.x, self.y)
 
     def move_to(self, entity):
         self.move(entity.x, entity.y)
@@ -356,6 +361,7 @@ class MovableEntity(Entity):
 
     def stop_movement(self):
         self._movement = None
+        self.emit('move', self.id, self.x, self.y)
 
     def set_movement_speed(self, movement_speed):
         self.movement_speed = movement_speed
