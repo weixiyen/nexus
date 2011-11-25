@@ -1,5 +1,6 @@
-from math import sqrt, ceil
+from math import ceil
 from venom.graph import Graph
+from venom.heuristic import euclidean
 
 EMPTY = 0
 BLANK = 1
@@ -75,13 +76,9 @@ class Map(object):
         return [node.position for node in nodes]
 
     @staticmethod
-    def distance(from_, to):
-        """Computes the Euclidean distance."""
-
-        dx = to[0] - from_[0]
-        dy = to[1] - from_[1]
-
-        return sqrt(dx * dx + dy * dy)
+    def distance(start, end):
+        """Returns the Euclidean distance."""
+        return euclidean(start, end)
 
     def serialize(self):
         return self._grid

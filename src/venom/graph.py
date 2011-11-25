@@ -1,14 +1,8 @@
 from heapq import heappop, heappush
 from collections import defaultdict
+from venom import heuristic
 
-DX = [1, 1, 0, -1, -1, -1, 0, 1]
-DY = [0, 1, 1, 1, 0, -1, -1, -1]
-
-def manhatton(start, end):
-    x1, y1 = start
-    x2, y2 = end
-
-    return abs(x2 - x1) + abs(y2 - y1)
+DIRECTIONS = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
 
 class Node(object):
     def __init__(self, graph, x, y, type_):
@@ -20,22 +14,20 @@ class Node(object):
         self.type = type_
 
     def is_walkable(self):
-        return self.type == 0
+        """Return True if current node is empty."""
+
+        return not self.type
 
     def get_neigbhors(self, walkable_only=True):
-        ret = []
+        """Returns neighbors of current node."""
+
+        neigbhors = []
 
         x = self.x
         y = self.y
 
-        for i in range(8):
-            x2 = x + DX[i]
-            y2 = y + DY[i]
-
-            if x2 < 0 or y2 < 0:
-                continue
-
-            node = self.graph.get_node(x + DX[i], y + DY[i])
+        for dx, dy in DIRECTIONS:
+            node = self.graph.get_node(x + dx, y + dy)
 
             if node is None:
                 continue
@@ -43,9 +35,9 @@ class Node(object):
             if walkable_only and not node.is_walkable():
                 continue
 
-            ret.append(node)
+            neigbhors.append(node)
 
-        return ret
+        return neigbhors
 
 class Graph(object):
     def __init__(self, grid):
@@ -64,6 +56,8 @@ class Graph(object):
         return self.nodes.__iter__()
 
     def get_node(self, x, y):
+        """Returns node at (x,y)"""
+
         if (0 <= x < self.grid.width) and (0 <= y < self.grid.height):
             try:
                 return self.nodes[y][x]
@@ -72,7 +66,11 @@ class Graph(object):
 
         return None
 
-    def search(self, start, end, walkable_only=True, heuristic=manhatton):
+    def search(self, start, end, walkable_only=True, heuristic=heuristic.euclidean):
+        """Performs the A* algorithm from start to end on the current graph.
+        If walkable_only is False then collisions are not considered.
+        """
+
         start = self.get_node(*start)
         end = self.get_node(*end)
 
@@ -86,20 +84,20 @@ class Graph(object):
         closed = defaultdict(lambda: False)
         parent = defaultdict(lambda: None)
 
-        open_heap = []
-        heappush(open_heap, (f[start], start))
+        heap = []
+        heappush(heap, (f[start], start))
 
-        while open_heap:
-            _, current_node = heappop(open_heap)
+        while heap:
+            _, current_node = heappop(heap)
 
             if current_node == end:
-                ret = []
+                path = []
 
                 while parent[current_node]:
-                    ret.append([current_node.x, current_node.y])
+                    path.append([current_node.x, current_node.y])
                     current_node = parent[current_node]
 
-                return ret
+                return path
 
             closed[current_node] = True
 
@@ -111,15 +109,17 @@ class Graph(object):
                 been_visited = visited[neighbor]
 
                 if not been_visited or g_score < g[neighbor]:
+                    h_score = h[neighbor] or heuristic(neighbor.position, end.position)
+
                     visited[neighbor] = True
                     parent[neighbor] = current_node
-                    h[neighbor] = h[neighbor] or heuristic(neighbor.position, end.position)
+                    h[neighbor] = h_score
                     g[neighbor] = g_score
-                    f[neighbor] = g[neighbor] + h[neighbor]
+                    f[neighbor] = f_score = g_score + h_score
 
                     if been_visited:
-                        open_heap =  [(score, value) for score, value in open_heap if value != neighbor]
+                        heap = [(score, node) for score, node in heap if node != neighbor]
 
-                    heappush(open_heap, (f[neighbor], neighbor))
+                    heappush(heap, (f_score, neighbor))
 
         return []
