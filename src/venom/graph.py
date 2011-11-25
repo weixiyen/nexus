@@ -16,7 +16,7 @@ class Node(object):
         self.data = {}
         self.x = x
         self.y = y
-        self.pos = [x, y]
+        self.position = (x, y)
         self.type = type_
 
     def is_walkable(self):
@@ -113,7 +113,7 @@ class Graph(object):
                 if not been_visited or g_score < g[neighbor]:
                     visited[neighbor] = True
                     parent[neighbor] = current_node
-                    h[neighbor] = h[neighbor] or heuristic(neighbor.pos, end.pos)
+                    h[neighbor] = h[neighbor] or heuristic(neighbor.position, end.position)
                     g[neighbor] = g_score
                     f[neighbor] = g[neighbor] + h[neighbor]
 

@@ -43,12 +43,12 @@ class Instance(object):
             instance = Instance(instance_id)
             _instances[instance_id] = instance
 
-            for i in xrange(50):
-                instance.spawn('Minion',  kind=mob.Minion, hp=50, attack=1)
-
             for i in xrange(25):
                 instance.place(kind=prop.Tree)
                 instance.place(kind=prop.Rock)
+
+            for i in xrange(50):
+                instance.spawn('Minion',  kind=mob.Minion, hp=50, attack=1)
 
             # Team Blue
             instance.spawn('Nexus', x=14, y=117, faction='blue', kind=mob.Nexus, sprite='structure/base1.png', hp=1000)

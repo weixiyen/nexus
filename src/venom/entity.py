@@ -156,14 +156,14 @@ class Entity(object):
         if not target.is_alive():
             self.set_target(None)
         elif self.instance.iteration_counter % 5 and not isinstance(self, PlayerEntity):
-            if Map.get_distance(self.position, target.position) > self.stats['aggro_radius'] * 8:
+            if Map.distance(self.position, target.position) > self.stats['aggro_radius'] * 8:
                 self.set_target(None)
 
                 if isinstance(self, MovableEntity):
                     self.stop_movement()
 
                 venom.logger.debug('Lost Aggro %r => %r' % (self, target))
-        elif isinstance(self, MovableEntity) and Map.get_distance(self.position, target.position) > 1:
+        elif isinstance(self, MovableEntity) and Map.distance(self.position, target.position) > 1:
             self.move_to(target)
             self._execute_movement(True)
         elif self._attack_timer.is_ready():
@@ -173,9 +173,7 @@ class Entity(object):
                 self.set_target(None)
 
     def _execute_attack(self, target):
-        if target.damage_taken(self, self.stats['attack']):
-            return
-            venom.logger.debug('Attacking %r => %r' % (self, target))
+        target.damage_taken(self, self.stats['attack'])
 
     def get_nearby_entities(self, radius):
         entities = []
@@ -190,7 +188,7 @@ class Entity(object):
             if isinstance(entity, ParticleEntity):
                 continue
 
-            distance = Map.get_distance(self.position, entity.position)
+            distance = Map.distance(self.position, entity.position)
 
             if distance <= radius:
                 entities.append((distance, entity))
@@ -221,7 +219,7 @@ class Entity(object):
             if isinstance(entity, ParticleEntity):
                 continue
 
-            if Map.get_distance(position, entity.position) <= radius:
+            if Map.distance(position, entity.position) <= radius:
                 yield entity
 
     def get_enemies_at(self, position, radius):
@@ -371,7 +369,7 @@ class MovableEntity(Entity):
 
     def _execute_movement(self, ignore_atk=False):
         if self.is_moving() and self._movement_timer.is_ready():
-            if not ignore_atk and self.is_attacking() and Map.get_distance(self.position, self.target.position) > 2:
+            if not ignore_atk and self.is_attacking() and Map.distance(self.position, self.target.position) > 2:
                 self.move_to(self.target)
 
                 if not self.is_moving():
@@ -437,7 +435,7 @@ class MonsterEntity(MovableEntity):
     def __init__(self, *args, **kwargs):
         MovableEntity.__init__(self, *args, **kwargs)
 
-        self._patrol = self.instance.map.get_positions(self.x, self.y, self.stats['patrol_radius'])
+        self._patrol = self.instance.map.get_points_in_radius(self.x, self.y, self.stats['patrol_radius'])
         self._patrol_timer = Timer(10000, True)
 
     def aggro(self):
@@ -500,7 +498,7 @@ class ParticleEntity(MovableEntity):
 
         if not target.is_alive():
             self.suicide()
-        elif Map.get_distance(self.position, target.position) > 0:
+        elif Map.distance(self.position, target.position) > 0:
             target_coords = (target.x, target.y)
 
             if self._target_coords != target_coords:

@@ -17,7 +17,7 @@ class Prop(object):
 
         self.sprite = sprite if isinstance(sprite, Sprite) else Sprite(sprite)
 
-        self.instance.map.block(x, y, self.sprite.width, self.sprite.height)
+        self.instance.map.add_collision(x, y, self.sprite.width, self.sprite.height / 1.8)
         self.instance.add_prop(self)
 
     def __str__(self):

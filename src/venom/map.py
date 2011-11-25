@@ -1,15 +1,20 @@
 from math import sqrt, ceil
 from venom.graph import Graph
 
+EMPTY = 0
+BLANK = 1
+OBJECT = 2
+
 class Map(object):
-    def __init__(self, width, height):
+    def __init__(self, width, height, scale=32):
         self.width = width
         self.height = height
+        self.scale = scale
 
-        self._data = []
+        self._grid = []
 
         for i in range(height):
-            self._data.append([0] * width)
+            self._grid.append([0] * width)
 
         v = int(ceil(width / 2.0))
 
@@ -20,46 +25,46 @@ class Map(object):
                 if x < 0:
                     break
 
-                self._data[y][x] = 1
-                self._data[-y][x] = 1
-                self._data[y][-x] = 1
-                self._data[-y][-x] = 1
+                self._grid[y][x] = BLANK
+                self._grid[y][-x] = BLANK
+                self._grid[-y][x] = BLANK
+                self._grid[-y][-x] = BLANK
 
         self._graph = Graph(self)
 
         self.find_path = self._graph.search
 
-    def block(self, x, y, width=1, height=1):
-        width = int(ceil(width / 32.0 / 2.0))
-        height = int(ceil(height / 16.0 / 2.0))
+    def __getitem__(self, item):
+        return self._grid[item]
+
+    def add_collision(self, x, y, width=1, height=1):
+        """Add collisions to the grid originating from the bottom center of (x,y)."""
+
+        width = int(ceil(width / (self.scale * 1.0) / 1.8))
+        height = int(ceil(height / (self.scale * 0.5)))
+
+        graph = self._graph
 
         for i in xrange(height):
             for j in xrange(width):
-                node = self._graph.get_node(x + j, y - i)
+                for node in [graph.get_node(x - j, y - i), graph.get_node(x + j, y - i)]:
+                    if not node:
+                        continue
 
-                if not node:
-                    continue
-
-                node.type = 2
-                self._data[y - i][x + j] = 2
-
-            for j in xrange(width):
-                node = self._graph.get_node(x - j, y - i)
-
-                if not node:
-                    continue
-
-                node.type = 2
-                self._data[y - i][x - j] = 2
+                    node.type = self._grid[node.y][node.x] = OBJECT
 
     def is_walkable(self, x, y):
-        return self[y][x] == 0
+        """Returns whether or not (x,y) is empty."""
 
-    def get_positions(self, x, y, radius=1):
+        return self[y][x] == EMPTY
+
+    def get_points_in_radius(self, x, y, radius=1):
+        """Returns all possible points within a radius originating from (x,y)."""
+
         nodes = []
 
         def add_node(node):
-            if node in nodes or self.get_distance((x, y), node.pos) > radius:
+            if node in nodes or self.distance((x, y), node.position) > radius:
                 return
 
             nodes.append(node)
@@ -67,16 +72,16 @@ class Map(object):
 
         add_node(self._graph.get_node(x, y))
 
-        return [node.pos for node in nodes]
+        return [node.position for node in nodes]
 
     @staticmethod
-    def get_distance(from_, to):
+    def distance(from_, to):
+        """Computes the Euclidean distance."""
+
         dx = to[0] - from_[0]
         dy = to[1] - from_[1]
+
         return sqrt(dx * dx + dy * dy)
 
-    def __getitem__(self, item):
-        return self._data[item]
-
     def serialize(self):
-        return self._data
+        return self._grid
