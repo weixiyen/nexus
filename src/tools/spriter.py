@@ -31,7 +31,16 @@ def make_sprite(directory):
 
     sprite = Image.new('RGBA', (max_width * len(directions['north']), max_height * len(directions)))
 
-    for i, frames, in enumerate(directions.values()):
+    meow = [
+        'northwest', 'north', 'northeast',
+        'west',
+        'east',
+        'southwest', 'south', 'southeast',
+    ]
+
+    for i, direction, in enumerate(meow):
+        frames = directions[direction]
+
         for j, im in frames:
             left = max_width * j + ((max_width - im.size[0]) / 2)
             top = max_height * i + ((max_height - im.size[1]) / 2)

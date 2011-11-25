@@ -3,7 +3,7 @@ from venom.timer import Timer
 from venom.sprite import Sprite
 
 class Minion(MonsterEntity):
-    sprite = Sprite('character/robot.png', 48, 45)
+    sprite = Sprite('character/robot.png', walk=6, stand=1)
 
 class Tower(StationaryMonsterEntity):
     def _execute_attack(self, target):

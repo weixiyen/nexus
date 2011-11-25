@@ -63,7 +63,7 @@ class Instance(object):
             x, y = (168, 107)
             faction = 'pink'
 
-        player = self.spawn(name, x, y, uid=conn.uid, faction=faction, kind=PlayerEntity, sprite=Sprite('character/ryu.png', 28, 50), **kwargs)
+        player = self.spawn(name, x, y, uid=conn.uid, faction=faction, kind=PlayerEntity, sprite=Sprite('character/cray.png', walk=6, stand=1), **kwargs)
         player.connections.add(conn)
 
         self.players.add(player)

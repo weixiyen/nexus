@@ -20,6 +20,7 @@ class @Entity
     @width = data.sprite.width
     @height = data.sprite.height
     @imgurl = IMGPATH + data.sprite.src
+    @animate = data.sprite.animate
     @x = data.x
     @y = data.y
     @left = @x * GRID_W
@@ -31,6 +32,17 @@ class @Entity
 
     @target = data.target or null
     @type = 'unit'
+
+    if @animate['walk']
+      @anim = {}
+
+      for direction, i in ['nw', 'n', 'ne', 'w', 'e', 'sw' ,'s' ,'se']
+        frames = @animate['walk'] + @animate['stand']
+
+        @anim[direction] = directions = []
+
+        for frame in [0...frames]
+          directions.push("-#{frame * @width}px -#{i * @height}px")
 
   isAlive: ->
     return @hp > 0
@@ -352,164 +364,14 @@ class @Minion extends MovableEntity
   constructor: (entity)->
     super
     @animationSkip = 8
-
-    @anim =
-      n: [
-        "-50px 0",
-        "-716px 0",
-        "-776px 0",
-        "-836px 0",
-        "-896px 0",
-        "-956px 0",
-        "-1016px 0"
-        ]
-      s: [
-        "-207px 0"
-        "-1766px 0",
-        "-1824px 0",
-        "-1883px 0",
-        "-1941px 0",
-        "-1999px 0",
-        "-2058px 0"
-        ]
-      w: [
-        "-360px 0",
-        "-2752px 0",
-        "-2803px 0",
-        "-2859px 0",
-        "-2910px 0",
-        "-2959px 0",
-        "-3009px 0"
-        ]
-      e: [
-        "0 0",
-        "-410px 0",
-        "-461px 0",
-        "-517px 0",
-        "-568px 0",
-        "-617px 0",
-        "-667px 0"
-        ]
-      ne: [
-        "-107px 0",
-        "-1076px 0",
-        "-1132px 0",
-        "-1184px 0",
-        "-1239px 0",
-        "-1299px 0",
-        "-1362px 0"
-        ]
-      se: [
-        "-264px 0",
-        "-2116px 0",
-        "-2171px 0",
-        "-2231px 0",
-        "-2286px 0",
-        "-2335px 0",
-        "-2384px 0"
-        ]
-      nw: [
-        "-157px 0",
-        "-1421px 0",
-        "-1477px 0",
-        "-1529px 0",
-        "-1584px 0",
-        "-1644px 0",
-        "-1707px 0"
-        ]
-      sw: [
-        "-312px 0",
-        "-2434px 0",
-        "-2489px 0",
-        "-2549px 0",
-        "-2604px 0",
-        "-2653px 0",
-        "-2702px 0"
-        ]
-
     @create()
     @startMoving()
-
 
 class @PlayerEntity extends MovableEntity
   constructor: (entity)->
     super
     @type = 'user'
     @animationSkip = 4
-    @anim =
-      n: [
-        "-63px 0",
-        "-482px 0",
-        "-515px 0",
-        "-548px 0",
-        "-581px 0",
-        "-614px 0",
-        "-647px 0"
-        ]
-      s: [
-        "-155px 0",
-        "-1090px 0",
-        "-1122px 0",
-        "-1155px 0",
-        "-1188px 0",
-        "-1220px 0",
-        "-1253px 0"
-        ]
-      w: [
-        "-253px 0",
-        "-1696px 0",
-        "-1733px 0",
-        "-1766px 0",
-        "-1797px 0",
-        "-1833px 0",
-        "-1865px 0"
-        ]
-      e: [
-        "0 0",
-        "-282px 0",
-        "-319px 0",
-        "-352px 0",
-        "-383px 0",
-        "-419px 0",
-        "-451px 0"
-        ]
-      ne: [
-        "-97px 0",
-        "-680px 0",
-        "-717px 0",
-        "-749px 0",
-        "-783px 0",
-        "-821px 0",
-        "-853px 0"
-        ]
-      se: [
-        "-189px 0",
-        "-1286px 0",
-        "-1322px 0",
-        "-1355px 0",
-        "-1389px 0",
-        "-1425px 0",
-        "-1459px 0"
-        ]
-      nw: [
-        "-126px 0",
-        "-885px 0",
-        "-922px 0",
-        "-954px 0",
-        "-988px 0",
-        "-1026px 0",
-        "-1058px 0"
-        ]
-      sw: [
-        "-221px 0",
-        "-1491px 0",
-        "-1527px 0",
-        "-1560px 0",
-        "-1594px 0",
-        "-1630px 0",
-        "-1664px 0"
-        ]
-
     @create()
     @startMoving()
 
@@ -519,81 +381,6 @@ class @User extends MovableEntity
     super
     @type = 'user'
     @animationSkip = 4
-    @anim =
-      n: [
-        "-63px 0",
-        "-482px 0",
-        "-515px 0",
-        "-548px 0",
-        "-581px 0",
-        "-614px 0",
-        "-647px 0"
-        ]
-      s: [
-        "-155px 0",
-        "-1090px 0",
-        "-1122px 0",
-        "-1155px 0",
-        "-1188px 0",
-        "-1220px 0",
-        "-1253px 0"
-        ]
-      w: [
-        "-253px 0",
-        "-1696px 0",
-        "-1733px 0",
-        "-1766px 0",
-        "-1797px 0",
-        "-1833px 0",
-        "-1865px 0"
-        ]
-      e: [
-        "0 0",
-        "-282px 0",
-        "-319px 0",
-        "-352px 0",
-        "-383px 0",
-        "-419px 0",
-        "-451px 0"
-        ]
-      ne: [
-        "-97px 0",
-        "-680px 0",
-        "-717px 0",
-        "-749px 0",
-        "-783px 0",
-        "-821px 0",
-        "-853px 0"
-        ]
-      se: [
-        "-189px 0",
-        "-1286px 0",
-        "-1322px 0",
-        "-1355px 0",
-        "-1389px 0",
-        "-1425px 0",
-        "-1459px 0"
-        ]
-      nw: [
-        "-126px 0",
-        "-885px 0",
-        "-922px 0",
-        "-954px 0",
-        "-988px 0",
-        "-1026px 0",
-        "-1058px 0"
-        ]
-      sw: [
-        "-221px 0",
-        "-1491px 0",
-        "-1527px 0",
-        "-1560px 0",
-        "-1594px 0",
-        "-1630px 0",
-        "-1664px 0"
-        ]
-
-
     @create()
     @startMoving()
     @setupInterface()
