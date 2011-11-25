@@ -7,8 +7,8 @@ class @GameEvents
 
     @events = {}
 
-    @socket.on 'instructions', (instructions) =>
-      instructions = JSON.parse(instructions)
+    @socket.on 'instructions', (data) =>
+      {timestamp, instructions} = JSON.parse(data)
 
       for instruction in instructions
         [event, data] = instruction

@@ -1,6 +1,7 @@
 import tornado.ioloop
 import datetime
 import simplejson
+from time import time
 
 from venom.map import Map
 from venom.entity import Entity, PlayerEntity
@@ -43,9 +44,11 @@ class Instance(object):
 
     def serialize(self):
         return {
+            'timestamp': int(time() * 1000),
             'map': self.map.serialize(),
             'entities': [entity.serialize() for entity in self.entities if entity.is_alive()],
-            'props': [prop.serialize() for prop in self.props]
+            'props': [prop.serialize() for prop in self.props],
+
         }
 
     def add_player(self, conn, name, **kwargs):
@@ -89,7 +92,10 @@ class Instance(object):
 
     def flush(self):
         if self._emit_buffer:
-            buffer = simplejson.dumps(self._emit_buffer)
+            buffer = simplejson.dumps({
+                'timestamp': int(time() * 1000),
+                'instructions': self._emit_buffer,
+            })
 
             for player in self.players:
                 for conn in player.connections:
