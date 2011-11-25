@@ -46,14 +46,14 @@ class Slow(Buff):
         return hasattr(self.entity, 'move')
 
     def apply(self):
-        self.entity.set_movement_speed(self.entity.movement_speed * 4)
+        self.entity.set_movement_speed(self.entity.movement_speed * 4.0)
 
     def complete(self):
         self.entity.set_movement_speed(self.entity.stats['movement_speed'])
 
 class Haste(Slow):
     def apply(self):
-        self.entity.set_movement_speed(self.entity.movement_speed / 4)
+        self.entity.set_movement_speed(self.entity.movement_speed / 4.0)
 
 class Poison(Buff):
     def tick(self):
