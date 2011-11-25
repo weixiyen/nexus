@@ -5,9 +5,49 @@ import os
 import tornadio2
 import uuid
 import venom
+from venom import prop, mob
 
 ROOT_PATH = os.path.dirname(__file__)
 STATIC_PATH = os.path.join(ROOT_PATH, '../public')
+
+_instance = None
+
+def _get_instance():
+    global _instance
+
+    if _instance is None:
+        instance = _instance = venom.Instance(188, 219)
+
+        for i in xrange(25):
+            instance.place(kind=prop.Tree)
+            instance.place(kind=prop.Rock)
+
+        for i in xrange(50):
+            instance.spawn('Minion',  kind=mob.Minion, hp=50, attack=1)
+
+        # Team Blue
+        instance.spawn('Nexus', x=14, y=117, faction='blue', kind=mob.Nexus, sprite='structure/base1.png', hp=1000)
+        instance.spawn('Inhibitor', x=28, y=97,faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=200, attack=20)
+        instance.spawn('Inhibitor', x=34, y=112, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=200, attack=20)
+        instance.spawn('Inhibitor', x=28, y=127, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=200, attack=20)
+
+        instance.spawn('Turret', x=62, y=57, faction='blue',kind=mob.Tower, sprite='structure/tower1.png', hp=100, attack=15)
+        instance.spawn('Turret', x=62, y=112, faction='blue',kind=mob.Tower, sprite='structure/tower1.png', hp=100, attack=15)
+        instance.spawn('Turret', x=62, y=168, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=100, attack=15)
+
+        # Team Pink
+        instance.spawn('Nexus', x=174, y=117, faction='pink', kind=mob.Nexus, sprite='structure/base6.png',hp=1000)
+        instance.spawn('Inhibitor', x=160, y=97, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=200, attack=20)
+        instance.spawn('Inhibitor', x=154, y=112, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=200, attack=20)
+        instance.spawn('Inhibitor', x=160, y=127, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=200, attack=20)
+
+        instance.spawn('Turret', x=124, y=62, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=100, attack=15)
+        instance.spawn('Turret', x=124, y=121, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=100, attack=15)
+        instance.spawn('Turret', x=124, y=168, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=100, attack=15)
+
+        instance.start()
+
+    return _instance
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
@@ -25,7 +65,7 @@ class IndexHandler(BaseHandler):
 
 class SocketConnection(tornadio2.conn.SocketConnection):
     def on_open(self, request):
-        self.instance = venom.Instance.get(request.get_argument('instance'))
+        self.instance = _get_instance()
 
         self.uid = request.get_cookie('uid').value
         self.player = self.instance.add_player(self, request.get_argument('name'))

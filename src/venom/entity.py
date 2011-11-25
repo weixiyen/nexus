@@ -17,11 +17,9 @@ class Entity(object):
     id = 0
 
     def __init__(self, instance, name, x=0, y=0, sprite=None, faction=None, **stats):
-        Entity.id += 1
-
-        self.id = Entity.id
         self.instance = instance
 
+        self.id = Entity.id = Entity.id + 1
         self.name = name
         self.faction = faction
         self.x = x

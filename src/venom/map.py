@@ -1,4 +1,5 @@
 from math import ceil
+from random import randint
 from venom.graph import Graph
 from venom.heuristic import euclidean
 
@@ -58,6 +59,14 @@ class Map(object):
         """Returns whether or not (x,y) is empty."""
 
         return self[y][x] == EMPTY
+
+    def get_random_position(self):
+        while True:
+            x = randint(0, self.width - 1)
+            y = randint(0, self.height - 1)
+
+            if self.is_walkable(x, y):
+                return x, y
 
     def get_points_in_radius(self, x, y, radius=1):
         """Returns all possible points within a radius originating from (x,y)."""

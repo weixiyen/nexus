@@ -1,4 +1,3 @@
-import random
 import tornado.ioloop
 import datetime
 import simplejson
@@ -6,73 +5,31 @@ import simplejson
 from venom.map import Map
 from venom.entity import Entity, PlayerEntity
 from venom.sprite import Sprite
-from venom import mob, prop
+from venom import prop
 import venom
 
 FPS = 60
 
-_instances = {}
-
 class Instance(object):
-    def __init__(self, id):
-        self.id = id
+    id = 0
+
+    def __init__(self, width, height):
+        self.id = Instance.id = Instance.id + 1
 
         self._ioloop =  tornado.ioloop.IOLoop.instance()
-        self._delay = datetime.timedelta(milliseconds=1000 / FPS)
+        self._delay = datetime.timedelta(milliseconds=1000.0 / FPS)
+
         self.running = False
 
         self.players = set()
+        self.map = Map(width, height)
 
-        self.map = Map(188, 219)
         self._entities = {}
         self._props = {}
 
         self._emit_buffer = []
 
         self.iteration_counter = 0
-
-    @classmethod
-    def get(cls, instance_id):
-        global _instances
-
-        instance_id = int(instance_id or 1)
-
-        try:
-            return _instances[instance_id]
-        except KeyError:
-            instance = Instance(instance_id)
-            _instances[instance_id] = instance
-
-            for i in xrange(25):
-                instance.place(kind=prop.Tree)
-                instance.place(kind=prop.Rock)
-
-            for i in xrange(50):
-                instance.spawn('Minion',  kind=mob.Minion, hp=50, attack=1)
-
-            # Team Blue
-            instance.spawn('Nexus', x=14, y=117, faction='blue', kind=mob.Nexus, sprite='structure/base1.png', hp=1000)
-            instance.spawn('Inhibitor', x=28, y=97,faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=200, attack=20)
-            instance.spawn('Inhibitor', x=34, y=112, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=200, attack=20)
-            instance.spawn('Inhibitor', x=28, y=127, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=200, attack=20)
-
-            instance.spawn('Turret', x=62, y=57, faction='blue',kind=mob.Tower, sprite='structure/tower1.png', hp=100, attack=15)
-            instance.spawn('Turret', x=62, y=112, faction='blue',kind=mob.Tower, sprite='structure/tower1.png', hp=100, attack=15)
-            instance.spawn('Turret', x=62, y=168, faction='blue', kind=mob.Tower, sprite='structure/tower1.png', hp=100, attack=15)
-
-            # Team Pink
-            instance.spawn('Nexus', x=174, y=117, faction='pink', kind=mob.Nexus, sprite='structure/base6.png',hp=1000)
-            instance.spawn('Inhibitor', x=160, y=97, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=200, attack=20)
-            instance.spawn('Inhibitor', x=154, y=112, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=200, attack=20)
-            instance.spawn('Inhibitor', x=160, y=127, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=200, attack=20)
-
-            instance.spawn('Turret', x=124, y=62, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=100, attack=15)
-            instance.spawn('Turret', x=124, y=121, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=100, attack=15)
-            instance.spawn('Turret', x=124, y=168, faction='pink', kind=mob.Tower, sprite='structure/tower2.png', hp=100, attack=15)
-
-            instance.start()
-
-            return instance
 
     def start(self):
         if not self.running:
@@ -153,12 +110,7 @@ class Instance(object):
 
     def spawn(self, name, x=None, y=None, kind=Entity, **kwargs):
         if x is None or y is None:
-            while True:
-                x = random.randint(0, self.map.width - 1)
-                y = random.randint(0, self.map.height - 1)
-
-                if self.map.is_walkable(x, y):
-                    break
+            x, y = self.map.get_random_position()
 
         mob = kind(self, name, x, y, **kwargs)
 
@@ -185,12 +137,7 @@ class Instance(object):
 
     def place(self, x=None, y=None, kind=prop.Prop, **kwargs):
         if x is None or y is None:
-            while True:
-                x = random.randint(0, self.map.width - 1)
-                y = random.randint(0, self.map.height - 1)
-
-                if self.map.is_walkable(x, y):
-                    break
+            x, y = self.map.get_random_position()
 
         prop_ = kind(self, x=x, y=y, **kwargs)
 
