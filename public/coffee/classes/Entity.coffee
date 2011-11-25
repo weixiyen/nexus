@@ -2,7 +2,7 @@ IMGPATH = '/public/img/'
 
 GRID_W = 32
 GRID_H = 16
-STEP_X = 5
+STEP_X = 6
 STEP_Y = 3
 
 class @Entity
@@ -331,8 +331,6 @@ class @MovableEntity extends Entity
 
     if @curDir == null then return @standFacing(prevDir)
     skip = @animationSkip
-    if @curDir == 'down' || @curDir == 'up'
-      skip = Math.round(skip / 1.5)
     @sprite.start(@anim[@curDir], skip)
 
   moveTo: (x, y)->

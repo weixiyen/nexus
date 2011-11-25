@@ -1,6 +1,5 @@
 (function() {
   var abilities;
-
   abilities = [
     {
       attack: 1,
@@ -32,7 +31,6 @@
       mp: 5
     }
   ];
-
   /*
   {
     attack: 5,
@@ -43,22 +41,14 @@
     mp: 50
   }
   */
-
   this.Interface = (function() {
     var ABILITY_BAR_HEIGHT, CHAT_HEIGHT, CHAT_WIDTH, MINIMAP_HEIGHT, MINIMAP_WIDTH, XPBAR_HEIGHT;
-
     CHAT_WIDTH = 400;
-
     CHAT_HEIGHT = 150;
-
     MINIMAP_WIDTH = 200;
-
     MINIMAP_HEIGHT = 150;
-
     ABILITY_BAR_HEIGHT = 60;
-
     XPBAR_HEIGHT = 5;
-
     function Interface(options) {
       this.$canvas = options.$canvas;
       this.$abilities = this.$canvas.find('.abilities').first();
@@ -75,7 +65,6 @@
       this.addAbilityIcons();
       this.reload();
     }
-
     Interface.prototype.reload = function() {
       var midBarWidth, winHeight, winWidth;
       winWidth = $window.width();
@@ -109,7 +98,6 @@
         display: 'block'
       });
     };
-
     Interface.prototype.reloadUser = function() {
       var u;
       u = game.getUser();
@@ -117,7 +105,6 @@
       u.changeMp(0);
       return u.increaseExperience(0);
     };
-
     Interface.prototype.showUserDeath = function() {
       this.setHp(0);
       this.setMp(0);
@@ -125,33 +112,27 @@
       this.setName('Dead');
       return this.renderAbilityIconsByMp(0);
     };
-
     Interface.prototype.setHp = function(percent) {
       return this.$myHp.css({
         width: percent + '%'
       });
     };
-
     Interface.prototype.setMp = function(percent) {
       return this.$myMp.css({
         width: percent + '%'
       });
     };
-
     Interface.prototype.setXp = function(percent) {
       return this.$myXp.css({
         width: percent + '%'
       });
     };
-
     Interface.prototype.setName = function(name) {
       return this.$myName.html(name);
     };
-
     Interface.prototype.setLevel = function(level) {
       return this.$myLevel.html(level);
     };
-
     Interface.prototype.addAbilityIcons = function() {
       var abilityData, id, _i, _len, _results;
       _results = [];
@@ -163,7 +144,6 @@
       }
       return _results;
     };
-
     Interface.prototype.getAbilityIconFragment = function(data) {
       var bgPos, html, id, key, mp, name;
       id = data.attack;
@@ -174,38 +154,26 @@
       html = "<div class=\"ability\" id=\"abil-" + id + "\" title=\"" + name + " - " + mp + "MP\">\n  <div class=\"key\">" + key + "</div>\n  <div class=\"frame\"></div>\n  <div class=\"icon\" style=\"background-position:" + bgPos + "\"></div>\n</div>";
       return $(html);
     };
-
     Interface.prototype.pressAbilityIcon = function(id) {
       return this.$ability['abil-' + id].addClass('on');
     };
-
     Interface.prototype.releaseAbilityIcon = function(id) {
       return this.$ability['abil-' + id].removeClass('on');
     };
-
     Interface.prototype.renderAbilityIconsByMp = function(mp) {
       var ability, bgPos, id, _i, _len, _results;
       _results = [];
       for (_i = 0, _len = abilities.length; _i < _len; _i++) {
         ability = abilities[_i];
         id = ability.attack;
-        if (ability.mp > mp) {
-          bgPos = (-ability.bgIndex * 36) + 'px -36px';
-          _results.push(this.$ability['abil-' + id].addClass('off').find('.icon').first().css({
-            backgroundPosition: bgPos
-          }));
-        } else {
-          bgPos = (-ability.bgIndex * 36) + 'px 0';
-          _results.push(this.$ability['abil-' + id].removeClass('off').find('.icon').first().css({
-            backgroundPosition: bgPos
-          }));
-        }
+        _results.push(ability.mp > mp ? (bgPos = (-ability.bgIndex * 36) + 'px -36px', this.$ability['abil-' + id].addClass('off').find('.icon').first().css({
+          backgroundPosition: bgPos
+        })) : (bgPos = (-ability.bgIndex * 36) + 'px 0', this.$ability['abil-' + id].removeClass('off').find('.icon').first().css({
+          backgroundPosition: bgPos
+        })));
       }
       return _results;
     };
-
     return Interface;
-
   })();
-
 }).call(this);
