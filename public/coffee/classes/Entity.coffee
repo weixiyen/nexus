@@ -1,9 +1,9 @@
 IMGPATH = '/public/img/'
 
 GRID_W = 32
-GRID_H = 32
+GRID_H = 16
 STEP_X = 5
-STEP_Y = 5
+STEP_Y = 3
 
 class @Entity
   STUB = 'ent-'
@@ -331,6 +331,8 @@ class @MovableEntity extends Entity
 
     if @curDir == null then return @standFacing(prevDir)
     skip = @animationSkip
+    if @curDir == 'down' || @curDir == 'up'
+      skip = Math.round(skip / 1.5)
     @sprite.start(@anim[@curDir], skip)
 
   moveTo: (x, y)->
@@ -339,9 +341,7 @@ class @MovableEntity extends Entity
     @endTop = y * GRID_H - Math.round(@height / 2) + GRID_H * 2
 
   standFacing: (direction)->
-    game.addLoopItem 'unit:'+@id+':stop', @speed * 10, =>
-      @sprite.set(@anim[direction][0])
-      game.removeLoopItem('unit:'+@id+':stop')
+    @sprite.set(@anim[direction][0])
 
   faceRandomDirection: ->
     dirList = ['n','e','s','w','nw','ne','sw','se']
