@@ -1,31 +1,31 @@
 from contextlib import contextmanager
 
 class Entity(object):
-    """
-    Concept!
+    __slots__ = ['id', 'world', '_components', '_assembling']
 
-    entity = Entity(world) OR entity = world.entity()
-
-    with entity.assemble:
-        entity.install(Name)
-        entity.install(Movement)
-        entity.install(Position)
-        entity.install(Target)
-        entity.install(Patrol)
-        entity.install(Aggro)
-
-    """
-
-    __slots__ = ['world', '_id', '_components']
-
-    def __init__(self, world):
-        self.world = world
-        self._id = world.nextId()
+    def __init__(self, manager):
+        self.id = manager.next_id()
+        self.world = manager.world
         self._components = {}
+        self._assembling = False
 
-    @property
-    def id(self):
-        return self._id
+    def __repr__(self):
+        return '<%s: %d>' % (self.__class__.__name__, self.id)
+
+    def __getitem__(self, item):
+        return self._components[item]
+
+    def __getattr__(self, item):
+        try:
+            return self._components[item]
+        except KeyError:
+            return object.__getattribute__(self, item)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'components': {name: component.serialize() for name, component in self._components.items()}
+        }
 
     @property
     def exists(self):
@@ -34,16 +34,24 @@ class Entity(object):
 
     @contextmanager
     def assemble(self):
-        # lock
-        yield
-        # unlock
+        self._assembling = True
+        yield self
+        self._assembling = False
         # inform systems
 
+    def _component_name(self, component):
+        return component if isinstance(component, basestring) else component.name()
+
     def install(self, component, *args, **kwargs):
-        self._components[component] = component(*args, **kwargs)
+        assert self._assembling
+        self._components[self._component_name(component)] = component(self, *args, **kwargs)
 
     def uninstall(self, component):
-        del self._components[component]
+        assert self._assembling
+        del self._components[self._component_name(component)]
+
+    def has(self, component):
+        return self._component_name(component) in self._components
 
     def delete(self):
         """Delete the entity from its world. This removes all of its

@@ -10,19 +10,19 @@ class @Entity
   constructor: (data)->
     # entity stats
     @id = data.id
-    @hp = data.hp
-    @mp = data.mp
-    @kind = data.kind
-    @name = data.name
-    @level = data.level
-    @stats = data.stats
-    @experience = data.experience
-    @width = data.sprite.width
-    @height = data.sprite.height
-    @imgurl = IMGPATH + data.sprite.src
-    @animate = data.sprite.animate
-    @x = data.x
-    @y = data.y
+    @components = data.components
+
+    @hp = @components.health.current
+    @mp = @components.mana.current
+    @name = @components.name
+    @level = @components.level
+    @experience = @components.experience
+    @width = @components.sprite.width
+    @height = @components.sprite.height
+    @imgurl = IMGPATH + @components.sprite.src
+    @animate = @components.sprite.animate
+    @x = @components.position.x
+    @y = @components.position.y
     @left = @x * GRID_W
     @top = @y * GRID_H
     @sprite = null
@@ -30,7 +30,7 @@ class @Entity
     @hitsTaken = 0
     @zIndexAdjustment = 0
 
-    @target = data.target or null
+    @target = @components.target or null
     @type = 'unit'
 
     if @animate['walk']
@@ -151,7 +151,7 @@ class @Entity
 
   setHp: (hp)->
     @hp = hp
-    perc = Math.ceil(@hp / @stats.hp * 100)
+    perc = Math.ceil(@hp / @components.health.maximum * 100)
     @$elHp.css
       width: perc + '%'
 
@@ -162,7 +162,7 @@ class @Entity
 
   setMp: (mp)->
     @mp = mp
-    perc = Math.ceil(@mp / @stats.mp * 100)
+    perc = Math.ceil(@mp / @components.mana.maximum * 100)
     if !game.isUserId(@id) then return
     interface.setMp(perc)
     interface.renderAbilityIconsByMp(@mp)
@@ -174,7 +174,6 @@ class @Entity
     interface.setXp(perc)
 
   levelUp: (data)->
-    @stats = data.stats
     @experience = data.experience
     @increaseExperience(0)
     @setHp(data.hp)
@@ -235,7 +234,7 @@ class @Entity
 class @MovableEntity extends Entity
   constructor: (entity)->
     super
-    @speed = entity.movement_speed || 1
+    @speed = @components.movement.speed || 1
     @moving = false
     @endLeft = @left
     @endTop = @top

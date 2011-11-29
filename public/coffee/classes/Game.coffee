@@ -72,6 +72,10 @@ class @Game
       @addEntity entity
 
   addEntity: (entityData)->
+    entityData.kind = 'PlayerEntity'
+
+    console.log(entityData)
+
     isUser = false
     if @entitiesExist(entityData.id) then return
     entity = null
