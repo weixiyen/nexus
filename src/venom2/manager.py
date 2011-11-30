@@ -1,11 +1,39 @@
 import itertools
+import yaml
+import importlib
+import os
 from .entity import Entity
+from . import logger
+
+ARCHETYPES = 'config/archetypes.yaml'
 
 class EntityManager(object):
-    def __init__(self, world):
+    def __init__(self, world, archetypes=None):
         self.world = world
         self._id = itertools.count(1)
         self._entities = {}
+
+        if os.path.exists(ARCHETYPES):
+            from tornado import autoreload
+            autoreload.watch(ARCHETYPES)
+
+            with open(ARCHETYPES) as f:
+                self._archetypes = {}
+
+                for name, archetype in yaml.load(f.read()).items():
+                    components = {}
+
+                    for component, kwargs in archetype.items():
+                        pieces = component.split('.')
+                        module = importlib.import_module('.'.join(pieces[:-1]))
+
+                        try:
+                            components[getattr(module, pieces[-1])] = kwargs
+                        except Exception:
+                            logger.error('Unknown component "%s"' % component)
+                            exit(0)
+
+                    self._archetypes[name] = components
 
     def __getitem__(self, key):
         return self._entities.get(key)
@@ -21,8 +49,29 @@ class EntityManager(object):
         return self._id.next()
 
     def create(self, archetype=None):
-        entity = Entity(self)
+        entity = Entity(self, archetype=archetype)
+
+        if archetype:
+            with entity.assemble():
+                items = self._archetypes[archetype].items()
+
+                while items:
+                    component, kwargs = items.pop(0)
+
+                    try:
+                        if kwargs:
+                            entity.install(component, **kwargs)
+                        else:
+                            entity.install(component)
+                    except Exception as e:
+                        if len(items) > 0:
+                            items.append((component, kwargs))
+                        else:
+                            logger.error([component, kwargs])
+                            raise e
+
         self._entities[entity.id] = entity
+
         return entity
 
     def remove(self, key):

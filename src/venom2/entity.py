@@ -1,11 +1,12 @@
 from contextlib import contextmanager
 
 class Entity(object):
-    __slots__ = ['id', 'world', '_components', '_assembling']
+    __slots__ = ['id', 'world', '_archetype', '_components', '_assembling']
 
-    def __init__(self, manager):
+    def __init__(self, manager, archetype=None):
         self.id = manager.next_id()
         self.world = manager.world
+        self._archetype = archetype
         self._components = {}
         self._assembling = False
 
@@ -24,6 +25,7 @@ class Entity(object):
     def serialize(self):
         return {
             'id': self.id,
+            'archetype': self._archetype,
             'components': {name: component.serialize() for name, component in self._components.items()}
         }
 
@@ -44,7 +46,8 @@ class Entity(object):
 
     def install(self, component, *args, **kwargs):
         assert self._assembling
-        self._components[self._component_name(component)] = component(self, *args, **kwargs)
+        c = self._components[self._component_name(component)] = component(self)
+        c.initialize(*args, **kwargs)
 
     def uninstall(self, component):
         assert self._assembling

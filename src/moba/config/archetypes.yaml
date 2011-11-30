@@ -1,0 +1,75 @@
+Player:
+  moba.component.Name:
+  moba.component.Target:
+  venom2.component.Position:
+  moba.component.Health:
+    maximum: 1000
+  moba.component.Mana:
+    maximum: 1000
+  moba.component.Level:
+    level: 1
+  moba.component.Experience:
+    need: 1000
+  venom2.component.Movement:
+    speed: 2
+  venom2.component.Sprite:
+    src:
+      - 'character/nina.png'
+      - 'character/ryu.png'
+      - 'character/cray.png'
+    walk: 6
+    stand: 1
+
+Minion:
+  moba.component.Name:
+  venom2.component.Position:
+  moba.component.Health:
+  venom2.component.Movement:
+  moba.component.Target:
+#      Attack:
+#      Aggro:
+  venom2.component.Sprite:
+    src: 'character/robot.png'
+    walk: 6
+    stand: 1
+
+Nexus:
+  moba.component.Name:
+  venom2.component.Position:
+  venom2.component.Collision:
+  moba.component.Health:
+  moba.component.Target:
+#      Attack:
+  venom2.component.Sprite:
+    src: 'structure/base1.png'
+
+Turret:
+  moba.component.Name:
+  venom2.component.Position:
+  venom2.component.Collision:
+  moba.component.Health:
+  moba.component.Target:
+#      Attack:
+#      Aggro:
+  venom2.component.Sprite:
+    src: 'structure/tower1.png'
+
+Tree:
+  venom2.component.Position:
+  venom2.component.Collision:
+  venom2.component.Sprite:
+    src:
+      - 'prop/tree1.png'
+      - 'prop/tree2.png'
+      - 'prop/tree3.png'
+      - 'prop/tree4.png'
+
+Rock:
+  venom2.component.Position:
+  venom2.component.Collision:
+  venom2.component.Sprite:
+    src:
+      - 'prop/rock1.png'
+      - 'prop/rock2.png'
+      - 'prop/rock3.png'
+      - 'prop/rock4.png'

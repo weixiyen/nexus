@@ -6,6 +6,7 @@ class System(object):
 
     def __init__(self, manager):
         self.world = manager.world
+        self.io = manager.world.io
 
     def process_one(self, entity):
         self.process([entity])
@@ -25,4 +26,4 @@ class MovementSystem(System):
             if movement.ready():
                 position = entity.position
                 position.x, position.y = movement.queue.pop()
-                self.world.io.emit('move', entity.id, position.x, position.y)
+                self.io.emit('move', entity.id, position.x, position.y)

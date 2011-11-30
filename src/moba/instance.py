@@ -1,6 +1,6 @@
 import venom2
 from venom2.component import Position, Sprite, Movement
-from system import MovementSystem
+from venom2.system import MovementSystem
 from component import *
 
 _instance = None
@@ -12,6 +12,11 @@ class Instance(object):
         self.world = venom2.World(width, height)
         self.world.set_io_flush_callback(self._io_flush)
         self.world.step()
+
+        for archetype in ['Tree', 'Rock']:
+            for i in xrange(25):
+                tree = self.world.entities.create(archetype)
+                tree.position.set(*self.world.map.get_random_position())
 
         self.world.systems.install(MovementSystem)
 
@@ -51,18 +56,11 @@ class Instance(object):
         player = self.world.entities.create('Player')
 
         with player.assemble():
-            player.install(Name, name)
-            player.install(Health, 1000)
-            player.install(Mana, 1000)
-            player.install(Level, 5)
-            player.install(Experience, 1000)
             player.install(User, conn.uid)
             player.install(Faction, faction)
-            player.install(Position, x, y)
-            player.install(Movement, 2)
-            player.install(Target)
-            player.install(Sprite, 'character/ryu.png', walk=6, stand=1)
 
+        player.name.set(name)
+        player.position.set(x, y)
         player.user.connections.add(conn)
 
         self.players.add(player)

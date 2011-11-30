@@ -46,7 +46,7 @@ class SocketConnection(tornadio2.conn.SocketConnection):
     def move(self, position):
         if self.player.health.current: # is alive
             self.player.target.set(None)
-            self.player.movement.go(*position)
+            self.player.movement.move(*position)
 
     def on_message(self, message):
         pass

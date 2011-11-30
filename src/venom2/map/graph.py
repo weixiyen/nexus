@@ -1,6 +1,6 @@
 from heapq import heappop, heappush
 from collections import defaultdict
-from venom import heuristic
+from . import heuristic
 
 DIRECTIONS = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
 

@@ -1,7 +1,7 @@
 from venom2.component import Component
 
 class Name(Component):
-    def initialize(self, name):
+    def initialize(self, name=None):
         self.set(name)
 
     def serialize(self):
@@ -11,7 +11,7 @@ class Name(Component):
         self.name = name or 'Player %d' % self.entity.id
 
 class User(Component):
-    def initialize(self, uid):
+    def initialize(self, uid=None):
         self.id = uid
         self.connections = set()
 
@@ -31,7 +31,7 @@ class Faction(Component):
         return self.faction
 
 class Health(Component):
-    def initialize(self, maximum):
+    def initialize(self, maximum=0):
         self.current = maximum
         self.maximum = maximum
 
@@ -42,7 +42,7 @@ class Health(Component):
         }
 
 class Mana(Health):
-    def initialize(self, maximum):
+    def initialize(self, maximum=0):
         self.current = maximum
         self.maximum = maximum
 
@@ -53,14 +53,14 @@ class Mana(Health):
         }
 
 class Level(Component):
-    def initialize(self, level):
+    def initialize(self, level=0):
         self.level = level
 
     def serialize(self):
         return self.level
 
 class Experience(Component):
-    def initialize(self, need):
+    def initialize(self, need=0):
         self.have = 0
         self.need = need
 

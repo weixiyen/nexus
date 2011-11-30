@@ -9,13 +9,14 @@ class @Prop
     @id = data.id
     @elementId = STUB + @id
     @kind = data.kind
-    @x = data.x
-    @y = data.y
+    @x = data.components.position.x
+    @y = data.components.position.y
     @left = @x * GRID_W
     @top = @y * GRID_H
-    @width = data.sprite.width
-    @height = data.sprite.height
-    @imgurl = IMGPATH + data.sprite.src
+    @width = data.components.sprite.width
+    @height = data.components.sprite.height
+    @imgurl = IMGPATH + data.components.sprite.src
+    @create()
 
   create: ->
     if !@bgPos then @bgPos = '0 0'
@@ -33,13 +34,3 @@ class @Prop
         background: 'no-repeat url('+@imgurl+') '+ @bgPos
       data:
         prop: @
-
-class @Tree extends Prop
-  constructor: (data)->
-    super
-    @create()
-
-class @Rock extends Prop
-  constructor: (data)->
-    super
-    @create()

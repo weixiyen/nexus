@@ -93,9 +93,13 @@
       return _results;
     };
     Game.prototype.addEntity = function(entityData) {
-      var entity, isUser;
-      entityData.kind = 'PlayerEntity';
-      console.log(entityData);
+      var entity, isUser, _ref;
+      if (entityData.archetype === 'Player') {
+        entityData.kind = 'PlayerEntity';
+      }
+      if ((_ref = entityData.archetype) === 'Tree' || _ref === 'Rock') {
+        entityData.kind = 'Prop';
+      }
       isUser = false;
       if (this.entitiesExist(entityData.id)) {
         return;
@@ -110,7 +114,7 @@
       if (entity === null) {
         return;
       }
-      if (entity.hasTarget()) {
+      if (entity.kind !== 'Prop' && entity.hasTarget()) {
         entity.aggro(entity.target);
       }
       this.entities[STUB + entity.id] = entity;

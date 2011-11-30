@@ -72,9 +72,8 @@ class @Game
       @addEntity entity
 
   addEntity: (entityData)->
-    entityData.kind = 'PlayerEntity'
-
-    console.log(entityData)
+    entityData.kind = 'PlayerEntity' if entityData.archetype is 'Player'
+    entityData.kind = 'Prop' if entityData.archetype in ['Tree', 'Rock']
 
     isUser = false
     if @entitiesExist(entityData.id) then return
@@ -85,7 +84,7 @@ class @Game
     else if window.hasOwnProperty(entityData.kind)
       entity = new window[entityData.kind](entityData)
     if entity == null then return
-    if entity.hasTarget() then entity.aggro(entity.target)
+    if entity.kind != 'Prop' and entity.hasTarget() then entity.aggro(entity.target)
     @entities[STUB+entity.id] = entity
 
     @addToMap(entity.$el)

@@ -1,7 +1,7 @@
 from math import ceil
 from random import randint
-from venom.graph import Graph
-from venom.heuristic import euclidean
+from .graph import Graph
+from .heuristic import euclidean
 
 EMPTY = 0
 BLANK = 1
