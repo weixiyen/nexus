@@ -31,22 +31,26 @@ class SocketConnection(tornadio2.conn.SocketConnection):
         self.player = self.instance.add_player(self, request.get_argument('name'))
 
         state = self.instance.serialize()
-        state['me'] = self.player.id
+        state['me'] = self.player.entity.id
 
         self.emit('initialize', state)
 
     @tornadio2.event('attack')
     def attack(self, ability, target_id, position):
+        entity = self.player.entity
+
         if not ability:
-            self.player.target.set(target_id)
+            entity.target.set(target_id)
 #        else:
 #            self.player.ability(ability, target_id, position)
 
     @tornadio2.event('move')
     def move(self, position):
-        if self.player.health.current: # is alive
-            self.player.target.set(None)
-            self.player.movement.move(*position)
+        entity = self.player.entity
+
+        if entity.health.current: # is alive
+            entity.target.set(None)
+            entity.movement.move(*position)
 
     def on_message(self, message):
         pass

@@ -12,6 +12,8 @@ class Component(object):
 
     def __init__(self, entity):
         self.entity = entity
+        self.world = entity.world
+        self.io = self.world.io
 
     def __repr__(self):
         return '<Component: %s>' % self.__class__.__name__
@@ -42,17 +44,27 @@ class Position(Component):
 class Movement(Component):
     def initialize(self, speed=1):
         self._map = self.entity.world.map
+        self._timer = timer.Timer(speed * 100.0)
 
         self.speed = speed
         self.queue = None
 
-    def ready(self):
-        return self.queue and self.timer.is_ready()
+    def busy(self):
+        return not not self.queue
 
-    def move(self, x, y):
+    def ready(self):
+        return self.queue and self._timer.is_ready()
+
+    def stop(self):
+        self.queue = None
+
+    def move(self, x, y, offset=None):
         position = self.entity.position
-        self.timer = timer.Timer(self.speed * 100.0)
+
         self.queue = self._map.find_path((position.x, position.y), (x, y))
+
+        if offset:
+            self.queue = self.queue[offset:]
 
     def serialize(self):
         return {

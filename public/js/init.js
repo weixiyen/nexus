@@ -18,7 +18,6 @@
     map.setup(data.map);
     game.setUserId(data.me);
     game.addEntities(data.entities);
-    game.addProps(data.props);
     game.centerOnUser();
     return map.startRenderLoop();
   });

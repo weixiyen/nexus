@@ -17,10 +17,7 @@ class System(object):
 
 class MovementSystem(System):
     def process(self, entities):
-        for entity in entities:
-            if not entity.has(Movement):
-                continue
-
+        for entity in entities.filter(Movement):
             movement = entity.movement
 
             if movement.ready():

@@ -17,11 +17,11 @@
     var STUB;
     STUB = 'ent-';
     function Entity(data) {
-      var direction, frame, i, _len, _ref, _ref2;
+      var direction, frame, i, _len, _ref, _ref2, _ref3, _ref4;
       this.id = data.id;
       this.components = data.components;
-      this.hp = this.components.health.current;
-      this.mp = this.components.mana.current;
+      this.hp = (_ref = this.components.health) != null ? _ref.current : void 0;
+      this.mp = (_ref2 = this.components.mana) != null ? _ref2.current : void 0;
       this.name = this.components.name;
       this.level = this.components.level;
       this.experience = this.components.experience;
@@ -41,11 +41,11 @@
       this.type = 'unit';
       if (this.animate['walk']) {
         this.anim = {};
-        _ref = ['w', 'sw', 's', 'se', 'e', 'ne', 'n', 'nw'];
-        for (i = 0, _len = _ref.length; i < _len; i++) {
-          direction = _ref[i];
+        _ref3 = ['w', 'sw', 's', 'se', 'e', 'ne', 'n', 'nw'];
+        for (i = 0, _len = _ref3.length; i < _len; i++) {
+          direction = _ref3[i];
           this.anim[direction] = [];
-          for (frame = 0, _ref2 = this.animate['walk'] + this.animate['stand']; 0 <= _ref2 ? frame < _ref2 : frame > _ref2; 0 <= _ref2 ? frame++ : frame--) {
+          for (frame = 0, _ref4 = this.animate['walk'] + this.animate['stand']; 0 <= _ref4 ? frame < _ref4 : frame > _ref4; 0 <= _ref4 ? frame++ : frame--) {
             this.anim[direction].push("-" + (frame * this.width) + "px -" + (i * this.height) + "px");
           }
         }

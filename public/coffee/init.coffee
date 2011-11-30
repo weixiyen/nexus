@@ -20,7 +20,7 @@ events.init (data)->
   map.setup(data.map)
   game.setUserId(data.me)
   game.addEntities(data.entities)
-  game.addProps(data.props)
+#  game.addProps(data.props)
   game.centerOnUser()
   map.startRenderLoop()
 

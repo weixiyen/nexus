@@ -12,8 +12,8 @@ class @Entity
     @id = data.id
     @components = data.components
 
-    @hp = @components.health.current
-    @mp = @components.mana.current
+    @hp = @components.health?.current
+    @mp = @components.mana?.current
     @name = @components.name
     @level = @components.level
     @experience = @components.experience

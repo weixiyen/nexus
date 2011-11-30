@@ -11,9 +11,10 @@ class World(object):
         self.systems = manager.SystemManager(self)
         self.entities = manager.EntityManager(self)
         self.io = io.Network(self)
+        self.iteration = 0
 
         self._ioloop =  tornado.ioloop.IOLoop.instance()
-        self._step_rate = datetime.timedelta(milliseconds=1000.0 / self.step_rate)
+        self._step_rate = datetime.timedelta(milliseconds=1000 / self.step_rate)
 
     def set_io_flush_callback(self, callback):
         self._io_flush_callback = callback
@@ -25,6 +26,8 @@ class World(object):
         }
 
     def step(self):
+        self.iteration += 1
+
         for system in self.systems:
             system.process(self.entities)
 

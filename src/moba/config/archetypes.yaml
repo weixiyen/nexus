@@ -1,15 +1,5 @@
-Player:
-  moba.component.Name:
-  moba.component.Target:
+Character:
   venom2.component.Position:
-  moba.component.Health:
-    maximum: 1000
-  moba.component.Mana:
-    maximum: 1000
-  moba.component.Level:
-    level: 1
-  moba.component.Experience:
-    need: 1000
   venom2.component.Movement:
     speed: 2
   venom2.component.Sprite:
@@ -19,40 +9,74 @@ Player:
       - 'character/cray.png'
     walk: 6
     stand: 1
+  moba.component.Name:
+  moba.component.Target:
+  moba.component.Health:
+    maximum: 1000
+  moba.component.Mana:
+    maximum: 1000
+  moba.component.Attack:
+    power: 5
+  moba.component.Level:
+    level: 1
+  moba.component.Experience:
+    need: 1000
 
 Minion:
-  moba.component.Name:
   venom2.component.Position:
-  moba.component.Health:
   venom2.component.Movement:
-  moba.component.Target:
-#      Attack:
-#      Aggro:
+    speed: 4
   venom2.component.Sprite:
     src: 'character/robot.png'
     walk: 6
     stand: 1
+  moba.component.Name:
+    name: 'Minion'
+  moba.component.Health:
+    maximum: 50
+  moba.component.Kind:
+  moba.component.Target:
+  moba.component.Patrol:
+    radius: 8
+    rate: 10
+  moba.component.Attack:
+    power: 5
+  moba.component.Aggro:
+    radius: 3
 
 Nexus:
-  moba.component.Name:
   venom2.component.Position:
-  venom2.component.Collision:
-  moba.component.Health:
-  moba.component.Target:
-#      Attack:
   venom2.component.Sprite:
     src: 'structure/base1.png'
+  moba.component.Name:
+    name: 'Nexus'
+  moba.component.Health:
+    maximum: 500
+  moba.component.Target:
 
 Turret:
-  moba.component.Name:
   venom2.component.Position:
-  venom2.component.Collision:
-  moba.component.Health:
-  moba.component.Target:
-#      Attack:
-#      Aggro:
   venom2.component.Sprite:
     src: 'structure/tower1.png'
+  moba.component.Name:
+    name: 'Turret'
+  moba.component.Health:
+    maximum: 250
+  moba.component.Target:
+  moba.component.Attack:
+    power: 5
+    speed: 25
+  moba.component.Aggro:
+    radius: 10
+
+Projectile:
+  venom2.component.Position:
+  venom2.component.Movement:
+  venom2.component.Sprite:
+    src: 'projectile/bolt-blue.png'
+    walk: 3
+  moba.component.Target:
+  moba.component.Projectile:
 
 Tree:
   venom2.component.Position:

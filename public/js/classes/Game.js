@@ -94,8 +94,21 @@
     };
     Game.prototype.addEntity = function(entityData) {
       var entity, isUser, _ref;
-      if (entityData.archetype === 'Player') {
+      console.log(entityData);
+      if (entityData.archetype === 'Character') {
         entityData.kind = 'PlayerEntity';
+      }
+      if (entityData.archetype === 'Minion') {
+        entityData.kind = 'Minion';
+      }
+      if (entityData.archetype === 'Turret') {
+        entityData.kind = 'Tower';
+      }
+      if (entityData.archetype === 'Nexus') {
+        entityData.kind = 'Nexus';
+      }
+      if (entityData.archetype === 'Projectile') {
+        entityData.kind = 'TowerAttack';
       }
       if ((_ref = entityData.archetype) === 'Tree' || _ref === 'Rock') {
         entityData.kind = 'Prop';

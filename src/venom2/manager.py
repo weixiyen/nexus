@@ -8,7 +8,7 @@ from . import logger
 ARCHETYPES = 'config/archetypes.yaml'
 
 class EntityManager(object):
-    def __init__(self, world, archetypes=None):
+    def __init__(self, world):
         self.world = world
         self._id = itertools.count(1)
         self._entities = {}
@@ -45,6 +45,33 @@ class EntityManager(object):
         for entity in self._entities.values():
             yield entity
 
+    def filter(self, *components):
+        for entity in self:
+            has = True
+
+            for component in components:
+                if not entity.has(component):
+                    has = False
+                    break
+
+            if has:
+                yield entity
+
+    def at(self, x, y, radius=1):
+        entities = []
+
+        for entity in self.filter('position'):
+            position = entity.position
+            distance = self.world.map.distance((x, y), (position.x, position.y))
+
+            if distance <= radius:
+                entities.append((distance, entity))
+
+        entities.sort()
+
+        for _, entity in entities:
+            yield entity
+
     def next_id(self):
         return self._id.next()
 
@@ -75,6 +102,9 @@ class EntityManager(object):
         return entity
 
     def remove(self, key):
+        if not isinstance(key, int):
+            key = key.id
+
         del self._entities[key]
 
     def discard(self, key):
@@ -89,7 +119,9 @@ class SystemManager(object):
         self._systems = []
 
     def __iter__(self):
-        return self._systems.__iter__()
+        for mod, system in self._systems:
+            if not self.world.iteration % mod:
+                yield system
 
-    def install(self, system):
-        self._systems.append(system(self))
+    def install(self, system, mod=1):
+        self._systems.append((mod, system(self)))
