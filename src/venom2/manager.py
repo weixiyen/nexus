@@ -2,6 +2,7 @@ import itertools
 import yaml
 import importlib
 import os
+import collections
 from .entity import Entity
 from . import logger
 
@@ -12,6 +13,7 @@ class EntityManager(object):
         self.world = world
         self._id = itertools.count(1)
         self._entities = {}
+        self._components = collections.defaultdict(set)
 
         if os.path.exists(ARCHETYPES):
             from tornado import autoreload
@@ -46,16 +48,31 @@ class EntityManager(object):
             yield entity
 
     def filter(self, *components):
-        for entity in self:
-            has = True
+        entities = None
 
-            for component in components:
-                if not entity.has(component):
-                    has = False
-                    break
+        for component in components:
+            component = component if isinstance(component, basestring) else component.name()
 
-            if has:
-                yield entity
+            if entities is None:
+                entities = self._components[component].copy()
+            elif entities:
+                entities &= self._components[component]
+            else:
+                break
+
+        return entities
+
+#    def filter(self, *components):
+#        for entity in self:
+#            has = True
+#
+#            for component in components:
+#                if not entity.has(component):
+#                    has = False
+#                    break
+#
+#            if has:
+#                yield entity
 
     def at(self, x, y, radius=1):
         entities = []
@@ -101,6 +118,16 @@ class EntityManager(object):
 
         return entity
 
+    def reindex(self, entity, components):
+        for entities in self._components.values():
+            try:
+                entities.remove(entity)
+            except KeyError:
+                pass
+
+        for component in components:
+            self._components[component].add(entity)
+
     def remove(self, key):
         if not isinstance(key, int):
             key = key.id
@@ -110,6 +137,12 @@ class EntityManager(object):
     def discard(self, key):
         try:
             self.remove(key)
+
+            for entities in self._components.values():
+                try:
+                    entities.remove(key)
+                except KeyError:
+                    pass
         except KeyError:
             pass
 

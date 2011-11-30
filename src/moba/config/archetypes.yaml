@@ -18,9 +18,6 @@ Character:
   moba.component.Attack:
     power: 5
   moba.component.Level:
-    level: 1
-  moba.component.Experience:
-    need: 1000
 
 Minion:
   venom2.component.Position:

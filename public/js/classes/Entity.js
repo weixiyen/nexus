@@ -17,14 +17,14 @@
     var STUB;
     STUB = 'ent-';
     function Entity(data) {
-      var direction, frame, i, _len, _ref, _ref2, _ref3, _ref4;
+      var direction, frame, i, _len, _ref, _ref2, _ref3, _ref4, _ref5, _ref6;
       this.id = data.id;
       this.components = data.components;
       this.hp = (_ref = this.components.health) != null ? _ref.current : void 0;
       this.mp = (_ref2 = this.components.mana) != null ? _ref2.current : void 0;
       this.name = this.components.name;
-      this.level = this.components.level;
-      this.experience = this.components.experience;
+      this.level = (_ref3 = this.components.level) != null ? _ref3.level : void 0;
+      this.experience = (_ref4 = this.components.level) != null ? _ref4.experience : void 0;
       this.width = this.components.sprite.width;
       this.height = this.components.sprite.height;
       this.imgurl = IMGPATH + this.components.sprite.src;
@@ -41,11 +41,11 @@
       this.type = 'unit';
       if (this.animate['walk']) {
         this.anim = {};
-        _ref3 = ['w', 'sw', 's', 'se', 'e', 'ne', 'n', 'nw'];
-        for (i = 0, _len = _ref3.length; i < _len; i++) {
-          direction = _ref3[i];
+        _ref5 = ['w', 'sw', 's', 'se', 'e', 'ne', 'n', 'nw'];
+        for (i = 0, _len = _ref5.length; i < _len; i++) {
+          direction = _ref5[i];
           this.anim[direction] = [];
-          for (frame = 0, _ref4 = this.animate['walk'] + this.animate['stand']; 0 <= _ref4 ? frame < _ref4 : frame > _ref4; 0 <= _ref4 ? frame++ : frame--) {
+          for (frame = 0, _ref6 = this.animate['walk'] + this.animate['stand']; 0 <= _ref6 ? frame < _ref6 : frame > _ref6; 0 <= _ref6 ? frame++ : frame--) {
             this.anim[direction].push("-" + (frame * this.width) + "px -" + (i * this.height) + "px");
           }
         }
@@ -204,8 +204,6 @@
     Entity.prototype.levelUp = function(data) {
       this.experience = data.experience;
       this.increaseExperience(0);
-      this.setHp(data.hp);
-      this.setMp(data.mp);
       return this.setLevel(data.level);
     };
     Entity.prototype.setLevel = function(level) {

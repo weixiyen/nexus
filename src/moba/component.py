@@ -63,6 +63,9 @@ class Attack(Component):
             target.delete()
             self.io.emit('death', target.id)
 
+            if self.entity.has(Level):
+                self.entity.level.experience(50)
+
 class RangedAttack(Component):
     def initialize(self, power=0):
         self.power = power
@@ -138,21 +141,48 @@ class Mana(Health):
         }
 
 class Level(Component):
-    def initialize(self, level=0):
+    LEVEL = {}
+
+    for level in range(1, 20):
+        LEVEL[level] = 100 * level
+
+    MAX_LEVEL = max(LEVEL.keys())
+
+    def initialize(self, level=1):
+        self.set(level)
+
+    def set(self, level):
         self.level = level
-
-    def serialize(self):
-        return self.level
-
-class Experience(Component):
-    def initialize(self, need=0):
         self.have = 0
-        self.need = need
+        self.need = Level.LEVEL[level]
+
+    def experience(self, amt):
+        self.have += amt
+
+        overflow = self.have - self.need
+
+        if overflow >= 0:
+            if self.level < Level.MAX_LEVEL:
+                self.up(overflow)
+        else:
+            self.io.emit('experience', self.entity.id, amt)
+
+    def up(self, have=0):
+        self.set(self.level + 1)
+        self.have = have
+
+        self.io.emit('level-up', self.entity.id, self.serialize())
+
+        # in case we earned more then we need
+        self.experience(0)
 
     def serialize(self):
         return {
-            'have': self.have,
-            'need': self.need,
+            'level': self.level,
+            'experience': {
+                'have': self.have,
+                'need': self.need,
+            }
         }
 
 class Target(Component):

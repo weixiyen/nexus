@@ -39,7 +39,7 @@ class Entity(object):
         self._assembling = True
         yield self
         self._assembling = False
-        # inform systems
+        self.world.entities.reindex(self, self._components.keys())
 
     def _component_name(self, component):
         return component if isinstance(component, basestring) else component.name()

@@ -15,8 +15,8 @@ class @Entity
     @hp = @components.health?.current
     @mp = @components.mana?.current
     @name = @components.name
-    @level = @components.level
-    @experience = @components.experience
+    @level = @components.level?.level
+    @experience = @components.level?.experience
     @width = @components.sprite.width
     @height = @components.sprite.height
     @imgurl = IMGPATH + @components.sprite.src
@@ -176,8 +176,8 @@ class @Entity
   levelUp: (data)->
     @experience = data.experience
     @increaseExperience(0)
-    @setHp(data.hp)
-    @setMp(data.mp)
+#    @setHp(data.hp)
+#    @setMp(data.mp)
     @setLevel(data.level)
 
   setLevel: (level)->
