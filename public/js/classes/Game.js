@@ -93,23 +93,23 @@
       return _results;
     };
     Game.prototype.addEntity = function(entityData) {
-      var entity, isUser, _ref;
+      var entity, isUser, _ref, _ref2, _ref3, _ref4;
       if (entityData.archetype === 'Character') {
         entityData.kind = 'PlayerEntity';
       }
       if (entityData.archetype === 'Minion') {
         entityData.kind = 'Minion';
       }
-      if (entityData.archetype === 'Turret') {
+      if ((_ref = entityData.archetype) === 'Turret' || _ref === 'TurretPink') {
         entityData.kind = 'Tower';
       }
-      if (entityData.archetype === 'Nexus') {
+      if ((_ref2 = entityData.archetype) === 'Nexus' || _ref2 === 'NexusPink') {
         entityData.kind = 'Nexus';
       }
-      if (entityData.archetype === 'Projectile') {
+      if ((_ref3 = entityData.archetype) === 'Projectile' || _ref3 === 'ProjectilePink') {
         entityData.kind = 'TowerAttack';
       }
-      if ((_ref = entityData.archetype) === 'Tree' || _ref === 'Rock') {
+      if ((_ref4 = entityData.archetype) === 'Tree' || _ref4 === 'Rock') {
         entityData.kind = 'Prop';
       }
       isUser = false;

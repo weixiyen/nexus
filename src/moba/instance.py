@@ -30,13 +30,13 @@ class Instance(object):
         self.spawn('Turret', (62, 168), 0)
 
         # Team Pink
-        self.spawn('Nexus', (174, 117), 1)
-        self.spawn('Turret', (160, 97), 1)
-        self.spawn('Turret', (154, 112), 1)
-        self.spawn('Turret', (160, 127), 1)
-        self.spawn('Turret', (124, 62), 1)
-        self.spawn('Turret', (124, 121), 1)
-        self.spawn('Turret', (124, 168), 1)
+        self.spawn('NexusPink', (174, 117), 1)
+        self.spawn('TurretPink', (160, 97), 1)
+        self.spawn('TurretPink', (154, 112), 1)
+        self.spawn('TurretPink', (160, 127), 1)
+        self.spawn('TurretPink', (124, 62), 1)
+        self.spawn('TurretPink', (124, 121), 1)
+        self.spawn('TurretPink', (124, 168), 1)
 
         self.world.systems.install(MovementSystem)
         self.world.systems.install(PatrolSystem)
@@ -48,6 +48,10 @@ class Instance(object):
 
     def spawn(self, archetype, position=None, faction=None):
         entity = self.world.entities.create(archetype)
+
+        if faction is not None:
+            with entity.assemble():
+                entity.install(Faction, faction)
 
         if position is None:
             position = self.world.map.get_random_position()
@@ -76,7 +80,7 @@ class Instance(object):
     def add_player(self, conn, name):
         for character in self.characters:
             if character.player.uid == conn.uid:
-                character.name.set(name)
+                character.name.set(self._player_name(character, name))
                 character.player.connections.add(conn)
                 return character.player
 
@@ -93,13 +97,16 @@ class Instance(object):
             character.install(Player, conn.uid)
             character.install(Faction, faction)
 
-        character.name.set(name)
+        character.name.set(self._player_name(character, name))
         character.position.set(x, y)
         character.player.connections.add(conn)
 
         self.characters.add(character)
 
         return character.player
+
+    def _player_name(self, entity, name):
+        return name or 'Player %d' % entity.id
 
     def remove_player(self, conn):
         player = conn.player

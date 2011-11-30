@@ -5,11 +5,13 @@ import os
 import collections
 from .entity import Entity
 from . import logger
+from .lib.topsort import topsort
 
 ARCHETYPES = 'config/archetypes.yaml'
 
 class EntityManager(object):
     def __init__(self, world):
+
         self.world = world
         self._id = itertools.count(1)
         self._entities = {}
@@ -22,18 +24,32 @@ class EntityManager(object):
             with open(ARCHETYPES) as f:
                 self._archetypes = {}
 
-                for name, archetype in yaml.load(f.read()).items():
+                archetypes = yaml.load(f.read())
+
+                for name in topsort({name: archetype.get('extend') for name, archetype in archetypes.items()}):
+                    archetype = archetypes[name]
+
                     components = {}
 
-                    for component, kwargs in archetype.items():
-                        pieces = component.split('.')
-                        module = importlib.import_module('.'.join(pieces[:-1]))
+                    if 'extend' in archetype:
+                        components = self._archetypes[archetype['extend']].copy()
 
-                        try:
-                            components[getattr(module, pieces[-1])] = kwargs
-                        except Exception:
-                            logger.error('Unknown component "%s"' % component)
-                            exit(0)
+                    if 'components' in archetype:
+                        for component, kwargs in archetype['components'].items():
+                            pieces = component.split('.')
+                            module = importlib.import_module('.'.join(pieces[:-1]))
+
+                            try:
+                                cls = getattr(module, pieces[-1])
+
+                                if cls not in components:
+                                    components[cls] = kwargs
+                                else:
+                                    components[cls] = components[cls].copy()
+                                    components[cls].update(kwargs)
+                            except Exception:
+                                logger.error('Unknown component "%s"' % component)
+                                exit(0)
 
                     self._archetypes[name] = components
 

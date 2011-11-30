@@ -74,9 +74,9 @@ class @Game
   addEntity: (entityData)->
     entityData.kind = 'PlayerEntity' if entityData.archetype is 'Character'
     entityData.kind = 'Minion' if entityData.archetype is 'Minion'
-    entityData.kind = 'Tower' if entityData.archetype is 'Turret'
-    entityData.kind = 'Nexus' if entityData.archetype is 'Nexus'
-    entityData.kind = 'TowerAttack' if entityData.archetype is 'Projectile'
+    entityData.kind = 'Tower' if entityData.archetype in ['Turret', 'TurretPink']
+    entityData.kind = 'Nexus' if entityData.archetype in ['Nexus', 'NexusPink']
+    entityData.kind = 'TowerAttack' if entityData.archetype in ['Projectile', 'ProjectilePink']
     entityData.kind = 'Prop' if entityData.archetype in ['Tree', 'Rock']
 
     isUser = false

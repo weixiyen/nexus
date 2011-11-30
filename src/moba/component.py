@@ -2,12 +2,29 @@ from venom2.component import Component
 from venom2.timer import Timer
 import random
 
-class Kind(Component):
-    def initialize(self, kind=None):
-        self.kind = kind or self.entity._archetype
+class Family(Component):
+    def initialize(self, family=None):
+        self.family = family or self.entity._archetype
 
     def __eq__(self, other):
-        return self.kind == other
+        return self.family == other.family
+
+class Faction(Component):
+    def initialize(self, faction=None):
+        self.faction = faction
+
+    def __eq__(self, other):
+
+        if self.faction is None:
+            return False
+
+        return self.faction == other.faction
+
+    def set(self, faction):
+        self.faction = faction
+
+    def serialize(self):
+        return self.faction
 
 class Aggro(Component):
     def initialize(self, radius=0):
@@ -35,9 +52,10 @@ class Patrol(Component):
         return random.choice(self._points)
 
 class Attack(Component):
-    def initialize(self, power=0, speed=5):
+    def initialize(self, power=0, speed=5, projectile=None):
         self.power = power
         self.speed = speed
+        self.projectile = projectile
         self._timer = Timer(100.0 * speed)
 
     def ready(self):
@@ -71,14 +89,14 @@ class RangedAttack(Component):
         self.power = power
 
 class Name(Component):
-    def initialize(self, name=None):
-        self.name = name or 'Player %d' % self.entity.id
+    def initialize(self, name=''):
+        self.name = name
 
     def serialize(self):
         return self.name
 
     def set(self, name):
-        self.name = name or 'Player %d' % self.entity.id
+        self.name = name
         self.io.emit('name-change', self.entity.id, name)
 
 class Player(Component):
@@ -90,16 +108,6 @@ class Player(Component):
         return {
             'uid': self.uid
         }
-
-class Faction(Component):
-    def initialize(self, faction):
-        self.faction = faction
-
-    def set(self, faction):
-        self.faction = faction
-
-    def serialize(self):
-        return self.faction
 
 class Health(Component):
     def initialize(self, maximum=0):
@@ -193,10 +201,15 @@ class Target(Component):
         if isinstance(target, int):
             target = self.entity.world.entities[target]
 
+        if target and self.entity.has(Faction) and target.has(Faction) and self.entity.faction == target.faction:
+            return
+
+        if target == self.entity:
+            return
+
         self.target = target
 
-        world = self.entity.world
-        world.io.emit('target', self.entity.id, target.id if target else None)
+        self.io.emit('target', self.entity.id, target.id if target else None)
 
     def empty(self):
         return self.target is None

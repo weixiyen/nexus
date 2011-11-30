@@ -1,4 +1,4 @@
-from moba.component import Patrol, Aggro, Target, Health, Kind, Attack, Projectile, Mana
+from moba.component import Patrol, Aggro, Target, Health, Family, Attack, Projectile, Mana, Faction
 from venom2.system import System
 from venom2.component import Movement
 
@@ -29,15 +29,15 @@ class CombatSystem(System):
             target = entity.target.target
 
             if target.health.is_alive():
-                if entity.has(Movement):
-                    self.attack(entity, target)
-                else:
+                if not entity.has(Movement) and entity.attack.projectile:
                     self.projectile(entity, target)
+                else:
+                    self.attack(entity, target)
             else:
                 entity.target.set(None)
 
     def projectile(self, entity, target):
-        projectile = self.world.entities.create('Projectile')
+        projectile = self.world.entities.create(entity.attack.projectile)
         projectile.position.set(entity.position.x, entity.position.y - (entity.sprite.height / 16) + 1)
         projectile.target.set(target)
         projectile.projectile.parent = entity
@@ -97,7 +97,8 @@ class AggroSystem(System):
             if enemy == entity or \
                not enemy.has(Health) or \
                not enemy.health.is_alive() or \
-               (enemy.has(Kind) and entity.has(Kind) and enemy.kind == entity.kind):
+               (enemy.has(Family) and entity.has(Family) and enemy.family == entity.family) or \
+               (enemy.has(Faction) and entity.has(Faction) and enemy.faction == entity.faction):
                 continue
 
             yield enemy
