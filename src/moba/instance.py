@@ -17,7 +17,7 @@ class Instance(object):
             for i in xrange(25):
                 self.spawn(archetype)
 
-        for i in xrange(25):
+        for i in xrange(50):
             self.spawn('Minion')
 
         # Team Blue

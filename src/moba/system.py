@@ -78,11 +78,14 @@ class AggroSystem(System):
         for entity in entities.filter(Aggro):
             target = entity.target
 
-            if target.empty() or not entity.has(Movement):
+            stationary = not entity.has(Movement)
+
+            if target.empty() or stationary:
                 try:
                     target.set(self.get_nearby_enemies(entity, entity.aggro.radius).next())
                 except StopIteration:
-                    pass
+                    if stationary and not target.empty():
+                        target.set(None)
 
     def get_nearby_enemies(self, entity, radius):
         for enemy in self.world.entities.at(entity.position.x, entity.position.y, radius):
