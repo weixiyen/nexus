@@ -72,7 +72,6 @@ class @Game
       @addEntity entity
 
   addEntity: (entityData)->
-    console.log entityData
     entityData.kind = 'PlayerEntity' if entityData.archetype is 'Character'
     entityData.kind = 'Minion' if entityData.archetype is 'Minion'
     entityData.kind = 'Tower' if entityData.archetype is 'Turret'

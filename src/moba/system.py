@@ -1,6 +1,11 @@
-from moba.component import Patrol, Aggro, Target, Health, Kind, Attack, Player, Projectile
+from moba.component import Patrol, Aggro, Target, Health, Kind, Attack, Projectile, Mana
 from venom2.system import System
 from venom2.component import Movement
+
+class ManaRegenSystem(System):
+    def process(self, entities):
+        for entity in entities.filter(Mana):
+            entity.mana.regen()
 
 class ProjectileSystem(System):
     def process(self, entities):
@@ -33,7 +38,7 @@ class CombatSystem(System):
 
     def projectile(self, entity, target):
         projectile = self.world.entities.create('Projectile')
-        projectile.position.set(entity.position.x, entity.position.y)
+        projectile.position.set(entity.position.x, entity.position.y - (entity.sprite.height / 16) + 1)
         projectile.target.set(target)
         projectile.projectile.parent = entity
         self.io.emit('spawn', projectile.serialize())

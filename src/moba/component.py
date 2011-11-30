@@ -119,6 +119,17 @@ class Mana(Health):
     def initialize(self, maximum=0):
         self.current = maximum
         self.maximum = maximum
+        self._timer = Timer(1000.0)
+
+    def regen(self):
+        if self._timer.is_ready():
+            if self.current < self.maximum:
+                amount = self.maximum * 0.10
+                self.current = min(self.current + amount, self.maximum)
+                self.io.emit('mp', self.entity.id, amount)
+
+    def reduce(self, amount):
+        self.current = max(0, self.current - amount)
 
     def serialize(self):
         return {

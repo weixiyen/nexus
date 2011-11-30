@@ -67,7 +67,7 @@ Turret:
     power: 5
     speed: 25
   moba.component.Aggro:
-    radius: 10
+    radius: 20
 
 Projectile:
   venom2.component.Position:
