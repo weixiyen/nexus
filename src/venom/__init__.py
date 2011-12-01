@@ -1,2 +1,1 @@
-from .instance import Instance
-from . import logger
+from .world import World

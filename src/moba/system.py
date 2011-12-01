@@ -1,6 +1,6 @@
 from moba.component import Patrol, Aggro, Target, Health, Family, Attack, Projectile, Mana, Faction, Death, Respawn
-from venom2.system import System
-from venom2.component import Movement
+from venom.system import System
+from venom.component import Movement
 
 class SpawnSystem(System):
     def process(self, entities):
@@ -51,7 +51,10 @@ class CombatSystem(System):
         projectile = self.world.entities.create(entity.attack.projectile)
         projectile.position.set(entity.position.x, entity.position.y - (entity.sprite.height / 16) + 1)
         projectile.target.set(target)
-        projectile.projectile.parent = entity
+
+        if projectile.has(Projectile):
+            projectile.projectile.parent = entity
+
         self.io.emit('spawn', projectile.serialize())
 
     def attack(self, entity, target):

@@ -1,9 +1,9 @@
 Character:
   components:
-    venom2.component.Position:
-    venom2.component.Movement:
+    venom.component.Position:
+    venom.component.Movement:
       speed: 2
-    venom2.component.Sprite:
+    venom.component.Sprite:
       src:
         - 'character/nina.png'
         - 'character/ryu.png'
@@ -23,10 +23,10 @@ Character:
 
 Minion:
   components:
-    venom2.component.Position:
-    venom2.component.Movement:
+    venom.component.Position:
+    venom.component.Movement:
       speed: 4
-    venom2.component.Sprite:
+    venom.component.Sprite:
       src: 'character/robot.png'
       walk: 6
       stand: 1
@@ -47,8 +47,8 @@ Minion:
 
 Nexus:
   components:
-    venom2.component.Position:
-    venom2.component.Sprite:
+    venom.component.Position:
+    venom.component.Sprite:
       src: 'structure/base1.png'
     moba.component.Name:
       name: 'Nexus'
@@ -60,13 +60,13 @@ Nexus:
 NexusPink:
   extend: Nexus
   components:
-    venom2.component.Sprite:
+    venom.component.Sprite:
       src: 'structure/base6.png'
 
 Turret:
   components:
-    venom2.component.Position:
-    venom2.component.Sprite:
+    venom.component.Position:
+    venom.component.Sprite:
       src: 'structure/tower1.png'
     moba.component.Name:
       name: 'Turret'
@@ -76,7 +76,7 @@ Turret:
     moba.component.Attack:
       power: 5
       speed: 25
-      projectile: Projectile
+      projectile: Minion
     moba.component.Family:
     moba.component.Aggro:
       radius: 20
@@ -85,16 +85,16 @@ Turret:
 TurretPink:
   extend: Turret
   components:
-    venom2.component.Sprite:
+    venom.component.Sprite:
       src: 'structure/tower2.png'
     moba.component.Attack:
       projectile: ProjectilePink
 
 Projectile:
   components:
-    venom2.component.Position:
-    venom2.component.Movement:
-    venom2.component.Sprite:
+    venom.component.Position:
+    venom.component.Movement:
+    venom.component.Sprite:
       src: 'projectile/bolt-blue.png'
       walk: 3
     moba.component.Target:
@@ -103,15 +103,15 @@ Projectile:
 ProjectilePink:
   extend: Projectile
   components:
-    venom2.component.Sprite:
+    venom.component.Sprite:
       src: 'projectile/bolt-pink.png'
       walk: 3
 
 Tree:
   components:
-    venom2.component.Position:
-    venom2.component.Collision:
-    venom2.component.Sprite:
+    venom.component.Position:
+    venom.component.Collision:
+    venom.component.Sprite:
       src:
         - 'prop/tree1.png'
         - 'prop/tree2.png'
@@ -120,9 +120,9 @@ Tree:
 
 Rock:
   components:
-    venom2.component.Position:
-    venom2.component.Collision:
-    venom2.component.Sprite:
+    venom.component.Position:
+    venom.component.Collision:
+    venom.component.Sprite:
       src:
         - 'prop/rock1.png'
         - 'prop/rock2.png'

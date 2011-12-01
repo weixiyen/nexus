@@ -1,5 +1,5 @@
-from venom2.component import Component
-from venom2.timer import Timer
+from venom.component import Component
+from venom.timer import Timer
 import random
 
 class Death(Component):

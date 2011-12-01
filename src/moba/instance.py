@@ -1,5 +1,5 @@
-import venom2
-from venom2.system import MovementSystem
+import venom
+from venom.system import MovementSystem
 from component import Player, Faction
 from system import PatrolSystem, AggroSystem, FollowSystem, CombatSystem, ProjectileSystem, ManaRegenSystem, SpawnSystem
 
@@ -9,7 +9,7 @@ class Instance(object):
     def __init__(self, width, height):
         self.characters = set()
 
-        self.world = venom2.World(width, height)
+        self.world = venom.World(width, height)
         self.world.set_io_flush_callback(self._io_flush)
         self.world.step()
 
