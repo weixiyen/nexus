@@ -142,9 +142,9 @@ class EntityManager(object):
     def discard(self, key):
         try:
             self.remove(key)
-#
-#            for component in key._components.keys():
-#                self._components[component].remove(key)
+
+            for component in key._components.keys():
+                self._components[component].remove(key)
         except KeyError:
             pass
 
