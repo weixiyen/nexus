@@ -1,22 +1,21 @@
-from venom.component import Component
-from venom.timer import Timer
+import venom
 import random
 
-class Death(Component):
+class Death(venom.Component):
     def serialize(self):
         return True
 
-class Respawn(Component):
+class Respawn(venom.Component):
     pass
 
-class Family(Component):
+class Family(venom.Component):
     def initialize(self, family=None):
         self.family = family or self.entity._archetype
 
     def __eq__(self, other):
         return self.family == other.family
 
-class Faction(Component):
+class Faction(venom.Component):
     def initialize(self, faction=None):
         self.faction = faction
 
@@ -33,18 +32,18 @@ class Faction(Component):
     def serialize(self):
         return self.faction
 
-class Aggro(Component):
+class Aggro(venom.Component):
     def initialize(self, radius=0):
         self.radius = radius
 
-class Projectile(Component):
+class Projectile(venom.Component):
     def initialize(self):
         self.parent = None
 
-class Patrol(Component):
+class Patrol(venom.Component):
     def initialize(self, radius=0, rate=10):
         self.radius = radius
-        self._timer = Timer(1000.0 * rate)
+        self._timer = venom.utils.Timer(1000.0 * rate)
 
     def ready(self):
         return self._timer.is_ready()
@@ -58,12 +57,12 @@ class Patrol(Component):
 
         return random.choice(self._points)
 
-class Attack(Component):
+class Attack(venom.Component):
     def initialize(self, power=0, speed=5, projectile=None):
         self.power = power
         self.speed = speed
         self.projectile = projectile
-        self._timer = Timer(100.0 * speed)
+        self._timer = venom.utils.Timer(100.0 * speed)
 
     def ready(self):
         return self._timer.is_ready()
@@ -71,7 +70,7 @@ class Attack(Component):
     def damage(self, target):
         damage = self.power
 
-        if not target.has(Player) and target.target.empty():
+        if not target.has('player') and target.target.empty():
             target.target.set(self.entity)
 
         critcal = False
@@ -87,7 +86,7 @@ class Attack(Component):
         if not target.health.is_alive():
             self.entity.target.set(None)
 
-            if not target.has(Respawn):
+            if not target.has('respawn'):
                 target.delete()
             else:
                 target.target.set(None)
@@ -97,14 +96,14 @@ class Attack(Component):
 
             self.io.emit('death', target.id)
 
-            if self.entity.has(Level):
+            if self.entity.has('level'):
                 self.entity.level.experience(50)
 
-class RangedAttack(Component):
+class RangedAttack(venom.Component):
     def initialize(self, power=0):
         self.power = power
 
-class Name(Component):
+class Name(venom.Component):
     def initialize(self, name=''):
         self.name = name
 
@@ -115,7 +114,7 @@ class Name(Component):
         self.name = name
         self.io.emit('name-change', self.entity.id, name)
 
-class Player(Component):
+class Player(venom.Component):
     def initialize(self, uid=None):
         self.uid = uid
         self.connections = set()
@@ -125,7 +124,7 @@ class Player(Component):
             'uid': self.uid
         }
 
-class Health(Component):
+class Health(venom.Component):
     def initialize(self, maximum=0):
         self.current = maximum
         self.maximum = maximum
@@ -146,7 +145,7 @@ class Mana(Health):
     def initialize(self, maximum=0):
         self.current = maximum
         self.maximum = maximum
-        self._timer = Timer(1000.0)
+        self._timer = venom.utils.Timer(1000.0)
 
     def regen(self):
         if self._timer.is_ready():
@@ -164,7 +163,7 @@ class Mana(Health):
             'maximum': self.maximum,
         }
 
-class Level(Component):
+class Level(venom.Component):
     LEVEL = {}
 
     for level in range(1, 20):
@@ -209,7 +208,7 @@ class Level(Component):
             }
         }
 
-class Target(Component):
+class Target(venom.Component):
     def initialize(self, target=None):
         self.target = target
 
@@ -217,7 +216,7 @@ class Target(Component):
         if isinstance(target, int):
             target = self.entity.world.entities[target]
 
-        if target and self.entity.has(Faction) and target.has(Faction) and self.entity.faction == target.faction:
+        if target and self.entity.has('faction') and target.has('faction') and self.entity.faction == target.faction:
             return
 
         if target == self.entity:

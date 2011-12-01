@@ -5,7 +5,7 @@ import os
 import collections
 from .entity import Entity
 from . import logger
-from .lib.topsort import topsort
+import venom
 
 ARCHETYPES = 'config/archetypes.yaml'
 
@@ -26,7 +26,7 @@ class EntityManager(object):
 
                 archetypes = yaml.load(f.read())
 
-                for name in topsort({name: archetype.get('extend') for name, archetype in archetypes.items()}):
+                for name in venom.utils.topsort({name: archetype.get('extend') for name, archetype in archetypes.items()}):
                     archetype = archetypes[name]
 
                     components = {}
@@ -67,28 +67,17 @@ class EntityManager(object):
         entities = None
 
         for component in components:
-            component = component if isinstance(component, basestring) else component.name()
-
             if entities is None:
                 entities = self._components[component].copy()
             elif entities:
-                entities &= self._components[component]
+                if component.startswith('-'):
+                    entities -= self._components[component[1:]]
+                else:
+                    entities &= self._components[component]
             else:
                 break
 
         return entities
-
-#    def filter(self, *components):
-#        for entity in self:
-#            has = True
-#
-#            for component in components:
-#                if not entity.has(component):
-#                    has = False
-#                    break
-#
-#            if has:
-#                yield entity
 
     def at(self, x, y, radius=1):
         entities = []

@@ -1,7 +1,6 @@
 import venom
-from venom.system import MovementSystem
-from component import Player, Faction
-from system import PatrolSystem, AggroSystem, FollowSystem, CombatSystem, ProjectileSystem, ManaRegenSystem, SpawnSystem
+from components import Player, Faction
+from systems import PatrolSystem, AggroSystem, FollowSystem, CombatSystem, ProjectileSystem, ManaRegenSystem, SpawnSystem
 
 _instance = None
 
@@ -38,7 +37,7 @@ class Instance(object):
         self.spawn('TurretPink', (124, 121), 1)
         self.spawn('TurretPink', (124, 168), 1)
 
-        self.world.systems.install(MovementSystem)
+        self.world.systems.install(venom.systems.MovementSystem)
         self.world.systems.install(PatrolSystem)
         self.world.systems.install(CombatSystem)
         self.world.systems.install(AggroSystem, 10)

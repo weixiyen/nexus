@@ -1,117 +1,117 @@
 Character:
   components:
-    venom.component.Position:
-    venom.component.Movement:
+    venom.components.Position:
+    venom.components.Movement:
       speed: 2
-    venom.component.Sprite:
+    venom.components.Sprite:
       src:
         - 'character/nina.png'
         - 'character/ryu.png'
         - 'character/cray.png'
       walk: 6
       stand: 1
-    moba.component.Name:
-    moba.component.Target:
-    moba.component.Health:
+    moba.components.Name:
+    moba.components.Target:
+    moba.components.Health:
       maximum: 1000
-    moba.component.Mana:
+    moba.components.Mana:
       maximum: 1000
-    moba.component.Attack:
+    moba.components.Attack:
       power: 5
-    moba.component.Level:
-    moba.component.Respawn:
+    moba.components.Level:
+    moba.components.Respawn:
 
 Minion:
   components:
-    venom.component.Position:
-    venom.component.Movement:
+    venom.components.Position:
+    venom.components.Movement:
       speed: 4
-    venom.component.Sprite:
+    venom.components.Sprite:
       src: 'character/robot.png'
       walk: 6
       stand: 1
-    moba.component.Name:
+    moba.components.Name:
       name: 'Minion'
-    moba.component.Health:
+    moba.components.Health:
       maximum: 50
-    moba.component.Family:
-    moba.component.Target:
-    moba.component.Patrol:
+    moba.components.Family:
+    moba.components.Target:
+    moba.components.Patrol:
       radius: 8
       rate: 10
-    moba.component.Attack:
+    moba.components.Attack:
       power: 5
-    moba.component.Aggro:
+    moba.components.Aggro:
       radius: 3
-    moba.component.Respawn:
+    moba.components.Respawn:
 
 Nexus:
   components:
-    venom.component.Position:
-    venom.component.Sprite:
+    venom.components.Position:
+    venom.components.Sprite:
       src: 'structure/base1.png'
-    moba.component.Name:
+    moba.components.Name:
       name: 'Nexus'
-    moba.component.Health:
+    moba.components.Health:
       maximum: 500
-    moba.component.Target:
-    moba.component.Respawn:
+    moba.components.Target:
+    moba.components.Respawn:
 
 NexusPink:
   extend: Nexus
   components:
-    venom.component.Sprite:
+    venom.components.Sprite:
       src: 'structure/base6.png'
 
 Turret:
   components:
-    venom.component.Position:
-    venom.component.Sprite:
+    venom.components.Position:
+    venom.components.Sprite:
       src: 'structure/tower1.png'
-    moba.component.Name:
+    moba.components.Name:
       name: 'Turret'
-    moba.component.Health:
+    moba.components.Health:
       maximum: 250
-    moba.component.Target:
-    moba.component.Attack:
+    moba.components.Target:
+    moba.components.Attack:
       power: 5
       speed: 25
       projectile: Minion
-    moba.component.Family:
-    moba.component.Aggro:
+    moba.components.Family:
+    moba.components.Aggro:
       radius: 20
-    moba.component.Respawn:
+    moba.components.Respawn:
 
 TurretPink:
   extend: Turret
   components:
-    venom.component.Sprite:
+    venom.components.Sprite:
       src: 'structure/tower2.png'
-    moba.component.Attack:
+    moba.components.Attack:
       projectile: ProjectilePink
 
 Projectile:
   components:
-    venom.component.Position:
-    venom.component.Movement:
-    venom.component.Sprite:
+    venom.components.Position:
+    venom.components.Movement:
+    venom.components.Sprite:
       src: 'projectile/bolt-blue.png'
       walk: 3
-    moba.component.Target:
-    moba.component.Projectile:
+    moba.components.Target:
+    moba.components.Projectile:
 
 ProjectilePink:
   extend: Projectile
   components:
-    venom.component.Sprite:
+    venom.components.Sprite:
       src: 'projectile/bolt-pink.png'
       walk: 3
 
 Tree:
   components:
-    venom.component.Position:
-    venom.component.Collision:
-    venom.component.Sprite:
+    venom.components.Position:
+    venom.components.Collision:
+    venom.components.Sprite:
       src:
         - 'prop/tree1.png'
         - 'prop/tree2.png'
@@ -120,9 +120,9 @@ Tree:
 
 Rock:
   components:
-    venom.component.Position:
-    venom.component.Collision:
-    venom.component.Sprite:
+    venom.components.Position:
+    venom.components.Collision:
+    venom.components.Sprite:
       src:
         - 'prop/rock1.png'
         - 'prop/rock2.png'

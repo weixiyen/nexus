@@ -1,4 +1,4 @@
-from venom import buff
+from . import buffs
 
 def aoe(self, position):
     targets = []
@@ -15,15 +15,15 @@ def aoe(self, position):
 
 def poison(self, target):
     if target:
-        target.apply_buff(buff.Poison, source=self)
+        target.apply_buff(buffs.Poison, source=self)
 
 def slow(target):
     if target:
-        target.apply_buff(buff.Slow)
+        target.apply_buff(buffs.Slow)
 
 def haste(target):
     if target:
-        target.apply_buff(buff.Haste)
+        target.apply_buff(buffs.Haste)
 
 def ultimate(self):
     for entity in self.instance.entities:

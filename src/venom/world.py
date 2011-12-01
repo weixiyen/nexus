@@ -1,16 +1,14 @@
 import datetime
 import tornado.ioloop
-
-from . import manager, io
-from .map import Map
+import venom
 
 class World(object):
     def __init__(self, width, height):
         self.step_rate = 60
-        self.map = Map(width, height)
-        self.systems = manager.SystemManager(self)
-        self.entities = manager.EntityManager(self)
-        self.io = io.Network(self)
+        self.map = venom.Map(width, height)
+        self.systems = venom.SystemManager(self)
+        self.entities = venom.EntityManager(self)
+        self.io = venom.io.Network(self)
         self.iteration = 0
 
         self._ioloop =  tornado.ioloop.IOLoop.instance()

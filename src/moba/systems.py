@@ -1,10 +1,9 @@
-from moba.component import Patrol, Aggro, Target, Health, Family, Attack, Projectile, Mana, Faction, Death, Respawn
-from venom.system import System
-from venom.component import Movement
+from moba.components import Death
+import venom
 
-class SpawnSystem(System):
+class SpawnSystem(venom.System):
     def process(self, entities):
-        for entity in entities.filter(Death, Respawn):
+        for entity in entities.filter('death', 'respawn'):
             entity.health.current = entity.health.maximum
             entity.position.set(*entity.position.home)
 
@@ -13,14 +12,14 @@ class SpawnSystem(System):
 
             self.io.emit('spawn', entity.serialize())
 
-class ManaRegenSystem(System):
+class ManaRegenSystem(venom.System):
     def process(self, entities):
-        for entity in entities.filter(Mana):
+        for entity in entities.filter('mana'):
             entity.mana.regen()
 
-class ProjectileSystem(System):
+class ProjectileSystem(venom.System):
     def process(self, entities):
-        for entity in entities.filter(Projectile):
+        for entity in entities.filter('projectile'):
             suicide = not entity.target.target.health.is_alive()
 
             if not suicide and not entity.movement.busy():
@@ -31,16 +30,16 @@ class ProjectileSystem(System):
                 entity.delete()
                 self.io.emit('death', entity.id)
 
-class CombatSystem(System):
+class CombatSystem(venom.System):
     def process(self, entities):
-        for entity in entities.filter(Attack):
+        for entity in entities.filter('attack'):
             if entity.target.empty() or not entity.attack.ready():
                 continue
 
             target = entity.target.target
 
             if target.health.is_alive():
-                if not entity.has(Movement) and entity.attack.projectile:
+                if not entity.has('movement') and entity.attack.projectile:
                     self.projectile(entity, target)
                 else:
                     self.attack(entity, target)
@@ -52,7 +51,7 @@ class CombatSystem(System):
         projectile.position.set(entity.position.x, entity.position.y - (entity.sprite.height / 16) + 1)
         projectile.target.set(target)
 
-        if projectile.has(Projectile):
+        if projectile.has('projectile'):
             projectile.projectile.parent = entity
 
         self.io.emit('spawn', projectile.serialize())
@@ -63,21 +62,18 @@ class CombatSystem(System):
 
         entity.attack.damage(target)
 
-class PatrolSystem(System):
+class PatrolSystem(venom.System):
     def process(self, entities):
-        for entity in entities.filter(Patrol):
-            if entity.has(Death):
-                continue
-
+        for entity in entities.filter('patrol', '-death'):
             movement = entity.movement
             patrol = entity.patrol
 
             if not movement.busy() and patrol.ready():
                 movement.move(*patrol.next())
 
-class FollowSystem(System):
+class FollowSystem(venom.System):
     def process(self, entities):
-        for entity in entities.filter(Target, Movement):
+        for entity in entities.filter('target', 'movement'):
             if entity.target.empty():
                 continue
 
@@ -88,22 +84,19 @@ class FollowSystem(System):
 
             distance = self.world.map.distance(start, end)
 
-            if entity.has(Aggro) and distance > entity.aggro.radius * 8:
+            if entity.has('aggro') and distance > entity.aggro.radius * 8:
                 entity.target.set(None)
                 entity.movement.stop()
             elif distance > 1:
                 x, y = end
                 entity.movement.move(x, y, 1)
 
-class AggroSystem(System):
+class AggroSystem(venom.System):
     def process(self, entities):
-        for entity in entities.filter(Aggro):
-            if entity.has(Death):
-                continue
-
+        for entity in entities.filter('aggro', '-death'):
             target = entity.target
 
-            stationary = not entity.has(Movement)
+            stationary = not entity.has('movement')
 
             if target.empty() or stationary:
                 try:
@@ -115,10 +108,10 @@ class AggroSystem(System):
     def get_nearby_enemies(self, entity, radius):
         for enemy in self.world.entities.at(entity.position.x, entity.position.y, radius):
             if enemy == entity or \
-               not enemy.has(Health) or \
+               not enemy.has('health') or \
                not enemy.health.is_alive() or \
-               (enemy.has(Family) and entity.has(Family) and enemy.family == entity.family) or \
-               (enemy.has(Faction) and entity.has(Faction) and enemy.faction == entity.faction):
+               (enemy.has('family') and entity.has('family') and enemy.family == entity.family) or \
+               (enemy.has('faction') and entity.has('faction') and enemy.faction == entity.faction):
                 continue
 
             yield enemy

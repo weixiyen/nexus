@@ -41,20 +41,17 @@ class Entity(object):
         self._assembling = False
         self.world.entities.reindex(self, self._components.keys())
 
-    def _component_name(self, component):
-        return component if isinstance(component, basestring) else component.name()
-
     def install(self, component, *args, **kwargs):
         assert self._assembling
-        c = self._components[self._component_name(component)] = component(self)
+        c = self._components[component.name()] = component(self)
         c.initialize(*args, **kwargs)
 
     def uninstall(self, component):
         assert self._assembling
-        del self._components[self._component_name(component)]
+        del self._components[component.name()]
 
     def has(self, component):
-        return self._component_name(component) in self._components
+        return component in self._components
 
     def delete(self):
         """Delete the entity from its world. This removes all of its
