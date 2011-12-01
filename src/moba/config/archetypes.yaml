@@ -76,7 +76,7 @@ Turret:
     moba.components.Attack:
       power: 5
       speed: 25
-      projectile: Minion
+      projectile: Projectile
     moba.components.Family:
     moba.components.Aggro:
       radius: 20

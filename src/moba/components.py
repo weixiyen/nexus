@@ -99,10 +99,6 @@ class Attack(venom.Component):
             if self.entity.has('level'):
                 self.entity.level.experience(50)
 
-class RangedAttack(venom.Component):
-    def initialize(self, power=0):
-        self.power = power
-
 class Name(venom.Component):
     def initialize(self, name=''):
         self.name = name

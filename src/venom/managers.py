@@ -123,15 +123,15 @@ class EntityManager(object):
 
         return entity
 
-    def reindex(self, entity, components):
-        for entities in self._components.values():
-            try:
-                entities.remove(entity)
-            except KeyError:
-                pass
-
-        for component in components:
-            self._components[component].add(entity)
+#    def reindex(self, entity, components):
+#        for entities in self._components.values():
+#            try:
+#                entities.remove(entity)
+#            except KeyError:
+#                pass
+#
+#        for component in components:
+#            self._components[component].add(entity)
 
     def remove(self, key):
         if not isinstance(key, int):
@@ -142,12 +142,9 @@ class EntityManager(object):
     def discard(self, key):
         try:
             self.remove(key)
-
-            for entities in self._components.values():
-                try:
-                    entities.remove(key)
-                except KeyError:
-                    pass
+#
+#            for component in key._components.keys():
+#                self._components[component].remove(key)
         except KeyError:
             pass
 

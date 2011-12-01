@@ -39,15 +39,17 @@ class Entity(object):
         self._assembling = True
         yield self
         self._assembling = False
-        self.world.entities.reindex(self, self._components.keys())
+#        self.world.entities.reindex(self, self._components.keys())
 
     def install(self, component, *args, **kwargs):
         assert self._assembling
+        self.world.entities._components[component.name()].add(self)
         c = self._components[component.name()] = component(self)
         c.initialize(*args, **kwargs)
 
     def uninstall(self, component):
         assert self._assembling
+        self.world.entities._components[component.name()].remove(self)
         del self._components[component.name()]
 
     def has(self, component):

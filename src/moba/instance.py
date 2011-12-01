@@ -46,6 +46,7 @@ class Instance(object):
         self.world.systems.install(ManaRegenSystem)
         self.world.systems.install(SpawnSystem, 500)
 
+
     def spawn(self, archetype, position=None, faction=None):
         entity = self.world.entities.create(archetype)
 
