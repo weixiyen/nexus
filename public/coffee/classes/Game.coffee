@@ -72,6 +72,9 @@ class @Game
       @addEntity entity
 
   addEntity: (entityData)->
+    if entityData.components.death?
+      return
+
     entityData.kind = 'PlayerEntity' if entityData.archetype is 'Character'
     entityData.kind = 'Minion' if entityData.archetype is 'Minion'
     entityData.kind = 'Tower' if entityData.archetype in ['Turret', 'TurretPink']

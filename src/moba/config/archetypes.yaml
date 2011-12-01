@@ -19,6 +19,7 @@ Character:
     moba.component.Attack:
       power: 5
     moba.component.Level:
+    moba.component.Respawn:
 
 Minion:
   components:
@@ -42,6 +43,7 @@ Minion:
       power: 5
     moba.component.Aggro:
       radius: 3
+    moba.component.Respawn:
 
 Nexus:
   components:
@@ -53,6 +55,7 @@ Nexus:
     moba.component.Health:
       maximum: 500
     moba.component.Target:
+    moba.component.Respawn:
 
 NexusPink:
   extend: Nexus
@@ -77,6 +80,7 @@ Turret:
     moba.component.Family:
     moba.component.Aggro:
       radius: 20
+    moba.component.Respawn:
 
 TurretPink:
   extend: Turret

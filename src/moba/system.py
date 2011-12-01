@@ -1,6 +1,17 @@
-from moba.component import Patrol, Aggro, Target, Health, Family, Attack, Projectile, Mana, Faction
+from moba.component import Patrol, Aggro, Target, Health, Family, Attack, Projectile, Mana, Faction, Death, Respawn
 from venom2.system import System
 from venom2.component import Movement
+
+class SpawnSystem(System):
+    def process(self, entities):
+        for entity in entities.filter(Death, Respawn):
+            entity.health.current = entity.health.maximum
+            entity.position.set(*entity.position.home)
+
+            with entity.assemble():
+                entity.uninstall(Death)
+
+            self.io.emit('spawn', entity.serialize())
 
 class ManaRegenSystem(System):
     def process(self, entities):
@@ -44,7 +55,7 @@ class CombatSystem(System):
         self.io.emit('spawn', projectile.serialize())
 
     def attack(self, entity, target):
-        if self.world.map.distance((entity.position.x, entity.position.y), (target.position.x, target.position.y)) > 1:
+        if self.world.map.distance((entity.position.x, entity.position.y), (target.position.x, target.position.y)) > 2:
             return
 
         entity.attack.damage(target)
@@ -52,6 +63,9 @@ class CombatSystem(System):
 class PatrolSystem(System):
     def process(self, entities):
         for entity in entities.filter(Patrol):
+            if entity.has(Death):
+                continue
+
             movement = entity.movement
             patrol = entity.patrol
 
@@ -81,6 +95,9 @@ class FollowSystem(System):
 class AggroSystem(System):
     def process(self, entities):
         for entity in entities.filter(Aggro):
+            if entity.has(Death):
+                continue
+
             target = entity.target
 
             stationary = not entity.has(Movement)

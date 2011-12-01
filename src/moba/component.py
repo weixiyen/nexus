@@ -2,6 +2,13 @@ from venom2.component import Component
 from venom2.timer import Timer
 import random
 
+class Death(Component):
+    def serialize(self):
+        return True
+
+class Respawn(Component):
+    pass
+
 class Family(Component):
     def initialize(self, family=None):
         self.family = family or self.entity._archetype
@@ -78,7 +85,16 @@ class Attack(Component):
         self.io.emit('damage-taken', target.id, damage, critcal)
 
         if not target.health.is_alive():
-            target.delete()
+            self.entity.target.set(None)
+
+            if not target.has(Respawn):
+                target.delete()
+            else:
+                target.target.set(None)
+
+                with target.assemble():
+                    target.install(Death)
+
             self.io.emit('death', target.id)
 
             if self.entity.has(Level):

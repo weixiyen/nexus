@@ -94,6 +94,9 @@
     };
     Game.prototype.addEntity = function(entityData) {
       var entity, isUser, _ref, _ref2, _ref3, _ref4;
+      if (entityData.components.death != null) {
+        return;
+      }
       if (entityData.archetype === 'Character') {
         entityData.kind = 'PlayerEntity';
       }

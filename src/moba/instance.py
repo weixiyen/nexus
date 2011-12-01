@@ -1,7 +1,7 @@
 import venom2
 from venom2.system import MovementSystem
 from component import Player, Faction
-from system import PatrolSystem, AggroSystem, FollowSystem, CombatSystem, ProjectileSystem, ManaRegenSystem
+from system import PatrolSystem, AggroSystem, FollowSystem, CombatSystem, ProjectileSystem, ManaRegenSystem, SpawnSystem
 
 _instance = None
 
@@ -45,6 +45,7 @@ class Instance(object):
         self.world.systems.install(FollowSystem)
         self.world.systems.install(ProjectileSystem)
         self.world.systems.install(ManaRegenSystem)
+        self.world.systems.install(SpawnSystem, 500)
 
     def spawn(self, archetype, position=None, faction=None):
         entity = self.world.entities.create(archetype)

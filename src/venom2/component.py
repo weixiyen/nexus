@@ -25,15 +25,22 @@ class Component(object):
         return None
 
 class Position(Component):
-    def initialize(self, x=0, y=0):
-        self.set(x, y)
+    def initialize(self):
+        self.x = None
+        self.y = None
+        self.home = None
 
     def set(self, x, y):
+        first_position = self.x is None
+
         self.x = x
         self.y = y
 
-        if self.entity.has(Collision):
-            self.entity.collision.update()
+        if first_position:
+            self.home = (x, y)
+
+            if self.entity.has(Collision):
+                self.entity.collision.update()
 
     def serialize(self):
         return {
